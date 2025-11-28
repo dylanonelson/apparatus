@@ -10,16 +10,18 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.config import Config
 from app.data.users import Auth0UserInfoError, get_or_create_user
-from app.db import ReadingLocation, User, get_db_session
+from app.db import ReadingLocation, User, Viewport, get_db_session
 from app.model_connector import SEARCH_PUBLICATION_TOOL_NAME, get_connector
 from app.api_models import (
     AskRequestModel,
     AskResponseModel,
     HealthResponseModel,
     ReadingLocationResponseModel,
-    StoreReadingLocationRequestModel,
+    ReadingStateResponseModel,
+    StoreReadingStateRequestModel,
     UserResponseModel,
     LocatorModel,
+    ViewportResponseModel,
 )
 from app.prompts import get_messages
 from app.request_context import RequestContext
@@ -32,6 +34,7 @@ from app.tracing import setup_tracing
 from app.data import (
     create_reading_location,
     get_latest_reading_location,
+    upsert_viewport,
 )
 
 Config.initialize()
@@ -72,6 +75,14 @@ async def get_authenticated_user(
     return user
 
 
+def _ensure_timezone(timestamp: datetime | None) -> datetime | None:
+    if timestamp is None:
+        return None
+    if timestamp.tzinfo is None:
+        return timestamp.replace(tzinfo=timezone.utc)
+    return timestamp.astimezone(timezone.utc)
+
+
 def _build_reading_location_response(
     location: ReadingLocation,
 ) -> ReadingLocationResponseModel:
@@ -79,8 +90,19 @@ def _build_reading_location_response(
         id=location.id,
         publication_id=location.publication_id,
         locator=LocatorModel.model_validate(location.locator),
-        recorded_at=location.recorded_at,
-        created_at=location.created_at,
+        recorded_at=_ensure_timezone(location.recorded_at),
+        created_at=_ensure_timezone(location.created_at),
+    )
+
+
+def _build_viewport_response(viewport: Viewport) -> ViewportResponseModel:
+    return ViewportResponseModel(
+        id=viewport.id,
+        publication_id=viewport.publication_id,
+        positions=viewport.positions,
+        text=viewport.text,
+        recorded_at=_ensure_timezone(viewport.recorded_at),
+        updated_at=_ensure_timezone(viewport.updated_at),
     )
 
 
@@ -104,23 +126,46 @@ async def get_current_user(
 
 
 @app.post(
-    "/reading-locations",
-    response_model=ReadingLocationResponseModel,
+    "/reading-state",
+    response_model=ReadingStateResponseModel,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_reading_location_entry(
-    reading_location_request: StoreReadingLocationRequestModel,
+async def upsert_reading_state_entry(
+    reading_state_request: StoreReadingStateRequestModel,
     user: User = Depends(get_authenticated_user),
     session: AsyncSession = Depends(get_db_session),
-) -> ReadingLocationResponseModel:
+) -> ReadingStateResponseModel:
     location = await create_reading_location(
         session,
         user_id=user.id,
-        publication_id=reading_location_request.publication_id,
-        locator=reading_location_request.locator.model_dump(mode="json", exclude_none=True),
-        recorded_at=reading_location_request.recorded_at,
+        publication_id=reading_state_request.publication_id,
+        locator=reading_state_request.locator.model_dump(
+            mode="json", exclude_none=True
+        ),
+        recorded_at=reading_state_request.recorded_at,
+        commit=False,
     )
-    return _build_reading_location_response(location)
+    viewport_model: Viewport | None = None
+    if reading_state_request.viewport is not None:
+        viewport_model = await upsert_viewport(
+            session,
+            user_id=user.id,
+            publication_id=reading_state_request.publication_id,
+            positions=reading_state_request.viewport.positions,
+            text=reading_state_request.viewport.text,
+            recorded_at=reading_state_request.recorded_at,
+            commit=False,
+        )
+    await session.commit()
+    await session.refresh(location)
+    viewport_response: ViewportResponseModel | None = None
+    if viewport_model is not None:
+        await session.refresh(viewport_model)
+        viewport_response = _build_viewport_response(viewport_model)
+    return ReadingStateResponseModel(
+        reading_location=_build_reading_location_response(location),
+        viewport=viewport_response,
+    )
 
 
 @app.get(

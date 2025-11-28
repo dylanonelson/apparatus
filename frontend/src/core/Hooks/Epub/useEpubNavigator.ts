@@ -196,6 +196,95 @@ export const useEpubNavigator = () => {
     return navigatorInstance?.viewport?.positions;
   }, []);
 
+  const collectVisibleTextFromFrameDocument = (
+    document: Document,
+  ): string | null => {
+    const documentElement = document.documentElement;
+    const minClientLeft = 0;
+    const maxClientRight = documentElement.clientWidth;
+    // The first line of text overflows the top of the document :shrug:
+    const minClientTop = -2;
+    const maxClientBottom = documentElement.clientHeight;
+
+    const treeWalker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+      null,
+    );
+
+    let rangeStart: [Node, number] | null = null;
+    let rangeEnd: [Node, number] | null = null;
+    while (treeWalker.nextNode()) {
+      const currentNode = treeWalker.currentNode as Text;
+      for (let i = 0; i < currentNode.length; i += 1) {
+        const candidateRange = document.createRange();
+        candidateRange.setStart(currentNode, i);
+        candidateRange.setEnd(currentNode, i + 1);
+        const { bottom, left, right, top } =
+          candidateRange.getBoundingClientRect();
+        if (
+          left > minClientLeft &&
+          right < maxClientRight &&
+          top > minClientTop &&
+          bottom < maxClientBottom
+        ) {
+          if (rangeStart === null) {
+            rangeStart = [currentNode, i];
+          }
+          rangeEnd = [currentNode, i + 1];
+        }
+        if (right > maxClientRight || bottom > maxClientBottom) {
+          break;
+        }
+      }
+    }
+
+    if (rangeStart && rangeEnd) {
+      const resultRange = document.createRange();
+      resultRange.setStart(...rangeStart);
+      resultRange.setEnd(...rangeEnd);
+      return resultRange.toString();
+    } else {
+      return null;
+    }
+  };
+
+  const extractFrameWindow = (frame: unknown): Window | null => {
+    if (!frame || typeof frame !== "object") return null;
+    const maybeWindow = (frame as { window?: Window }).window;
+    if (maybeWindow && typeof maybeWindow.document !== "undefined") {
+      return maybeWindow;
+    }
+    const maybeIframeWindow = (frame as { iframe?: { contentWindow?: Window } })
+      .iframe?.contentWindow;
+    if (
+      maybeIframeWindow &&
+      typeof maybeIframeWindow.document !== "undefined"
+    ) {
+      return maybeIframeWindow;
+    }
+    return null;
+  };
+
+  const getVisibleText = useCallback((): string | null => {
+    const frames = navigatorInstance?._cframes ?? [];
+    const allText: string[] = [];
+
+    for (const frame of frames ?? []) {
+      const frameWindow = extractFrameWindow(frame);
+      if (!frameWindow?.document?.body) continue;
+      const visibleText = collectVisibleTextFromFrameDocument(
+        frameWindow.document,
+      );
+      if (visibleText) {
+        allText.push(visibleText);
+      }
+    }
+
+    const result = allText.join("\n\n");
+    return result;
+  }, []);
+
   const canGoBackward = useCallback(() => {
     return navigatorInstance?.canGoBackward;
   }, []);
@@ -236,6 +325,7 @@ export const useEpubNavigator = () => {
     canGoForward,
     isScrollStart,
     isScrollEnd,
+    getVisibleText,
     preferencesEditor: navigatorInstance?.preferencesEditor,
     getSetting,
     submitPreferences,

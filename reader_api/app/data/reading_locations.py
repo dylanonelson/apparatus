@@ -24,6 +24,7 @@ async def create_reading_location(
     publication_id: str,
     locator: dict[str, object],
     recorded_at: datetime | None = None,
+    commit: bool = True,
 ) -> ReadingLocation:
     """
     Persist a new reading location for a user without overwriting prior entries.
@@ -44,8 +45,11 @@ async def create_reading_location(
         recorded_at=timestamp,
     )
     session.add(location)
-    await session.commit()
-    await session.refresh(location)
+    if commit:
+        await session.commit()
+        await session.refresh(location)
+    else:
+        await session.flush()
     return location
 
 
@@ -82,5 +86,4 @@ async def get_latest_reading_location(
     ).limit(1)
     result = await session.execute(statement)
     return result.scalar_one_or_none()
-
 

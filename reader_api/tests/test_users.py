@@ -44,7 +44,7 @@ def test_get_current_user_creates_missing_user(
                 "name": "New User",
             }
 
-        monkeypatch.setattr("app.data._fetch_auth0_userinfo", fake_fetch)
+        monkeypatch.setattr("app.data.users.fetch_auth0_userinfo", fake_fetch)
 
         response = await helper.get("/users/me")
 
@@ -67,4 +67,3 @@ def test_get_current_user_returns_400_without_sub_claim(test_app: TestApp) -> No
         assert response.json()["detail"] == "Missing subject claim"
 
     asyncio.run(scenario())
-
