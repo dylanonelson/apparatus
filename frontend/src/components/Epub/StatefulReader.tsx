@@ -384,6 +384,7 @@ const StatefulReaderInner = ({
     navLayout,
     currentLocator,
     currentPositions,
+    getVisibleText,
     canGoBackward,
     canGoForward,
     isScrollStart,
@@ -431,8 +432,11 @@ const StatefulReaderInner = ({
     async (location: LocalStorageReadingLocation) => {
       if (!publicationId) return;
 
+      const positions = currentPositions() || [];
+      const viewportText = getVisibleText();
+
       try {
-        const response = await fetch("/api/reading-locations", {
+        const response = await fetch("/api/reading-state", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -444,20 +448,24 @@ const StatefulReaderInner = ({
               location.recordedAt && isValidDate(location.recordedAt)
                 ? location.recordedAt
                 : new Date().toISOString(),
+            viewport: {
+              positions,
+              text: viewportText,
+            },
           }),
         });
         if (!response.ok) {
           console.error(
-            "Failed to sync reading location",
+            "Failed to sync reading state",
             response.status,
             await response.text(),
           );
         }
       } catch (error) {
-        console.error("Failed to sync reading location", error);
+        console.error("Failed to sync reading state", error);
       }
     },
-    [publicationId],
+    [getVisibleText, currentPositions, publicationId],
   );
 
   const queueReadingLocationUpdate = useMemo(

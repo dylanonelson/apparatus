@@ -43,10 +43,16 @@ class LocatorModel(BaseModel):
     text: TextModel | None = None  # Optional: Text context
 
 
-class StoreReadingLocationRequestModel(BaseModel):
+class ViewportPayloadModel(BaseModel):
+    positions: list[int]
+    text: str
+
+
+class StoreReadingStateRequestModel(BaseModel):
     publication_id: str
     locator: LocatorModel
     recorded_at: datetime | None = None
+    viewport: ViewportPayloadModel | None = None
 
 
 class ReadingLocationResponseModel(BaseModel):
@@ -61,6 +67,22 @@ class ReadingLocationResponseModel(BaseModel):
     }
 
 
+class ViewportResponseModel(BaseModel):
+    id: UUID
+    publication_id: str
+    positions: list[int]
+    text: str
+    recorded_at: datetime | None = None
+    updated_at: datetime
+
+    model_config = {
+        "from_attributes": True,
+    }
+
+
+class ReadingStateResponseModel(BaseModel):
+    reading_location: ReadingLocationResponseModel
+    viewport: ViewportResponseModel | None = None
 
 
 class AskRequestModel(BaseModel):
@@ -81,5 +103,3 @@ class UserResponseModel(BaseModel):
     model_config = {
         "from_attributes": True,
     }
-
-

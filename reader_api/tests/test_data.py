@@ -51,7 +51,7 @@ def test_get_or_create_user_returns_existing(
             async def fake_fetch(_access_token: str) -> dict[str, object]:
                 raise AssertionError("Auth0 API should not be called for existing users")
 
-            monkeypatch.setattr("app.data._fetch_auth0_userinfo", fake_fetch)
+            monkeypatch.setattr("app.data.users.fetch_auth0_userinfo", fake_fetch)
 
             async with session_factory() as session:
                 user = await get_or_create_user(
@@ -81,7 +81,7 @@ def test_get_or_create_user_creates_when_missing(
                     "name": "New User",
                 }
 
-            monkeypatch.setattr("app.data._fetch_auth0_userinfo", fake_fetch)
+            monkeypatch.setattr("app.data.users.fetch_auth0_userinfo", fake_fetch)
 
             async with session_factory() as session:
                 user = await get_or_create_user(
@@ -101,4 +101,3 @@ def test_get_or_create_user_creates_when_missing(
             await engine.dispose()
 
     asyncio.run(scenario())
-

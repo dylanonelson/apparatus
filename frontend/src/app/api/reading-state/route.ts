@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     }
 
     const upstreamResponse = await fetch(
-      `${process.env.READER_API_ORIGIN}/reading-locations`,
+      `${process.env.READER_API_ORIGIN}/reading-state`,
       {
         method: "POST",
         headers: {
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
     if (!upstreamResponse.ok) {
       return NextResponse.json(
-        { error: body ?? "Failed to store reading location" },
+        { error: body ?? "Failed to store reading state" },
         { status: upstreamResponse.status },
       );
     }
