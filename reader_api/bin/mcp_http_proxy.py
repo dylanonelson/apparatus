@@ -75,12 +75,16 @@ async def main() -> None:
             ),
             PromptMessage(
                 role="user",
-                content=ResourceLink(
-                    uri="resource://ereader/viewport",
-                    annotations={
-                        "audience": ["assistant"],
-                        "priority": 1.0,
-                    },
+                content=ResourceLink.model_validate(
+                    {
+                        "type": "resource_link",
+                        "uri": "resource://ereader/viewport",
+                        "name": "Viewport",
+                        "annotations": {
+                            "audience": ["assistant"],
+                            "priority": 1.0,
+                        },
+                    }
                 ),
             ),
         ]
