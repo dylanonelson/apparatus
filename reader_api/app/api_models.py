@@ -104,6 +104,18 @@ class ReadingStatePayload(BaseModel):
     viewport: ViewportResponseModel | None
 
 
+class ViewportResourcePayload(BaseModel):
+    viewport_id: UUID
+    publication_id: str
+    positions: list[int]
+    text: str
+    recorded_at: datetime | None = None
+    updated_at: datetime | None = None
+    locator: LocatorModel | None = None
+    percent: float | None = None
+    token_estimate: int | None = None
+
+
 class AskRequestModel(BaseModel):
     question: str
     locator: LocatorModel

@@ -69,6 +69,17 @@ async def get_latest_viewport(
     return result.scalars().first()
 
 
+async def get_viewport_by_id(
+    session: AsyncSession, user_id: UUID, viewport_id: UUID
+) -> Viewport | None:
+    result = await session.execute(
+        select(Viewport).where(
+            Viewport.user_id == user_id, Viewport.id == viewport_id
+        )
+    )
+    return result.scalars().first()
+
+
 async def build_reading_state_payload(
     access_token: AccessToken,
     session_factory: async_sessionmaker[AsyncSession],
