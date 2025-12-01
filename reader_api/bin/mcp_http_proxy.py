@@ -44,7 +44,7 @@ async def main() -> None:
             await client._connect()
         return client
 
-    proxy = FastMCP.as_proxy(client_factory=client_factory)
+    proxy = FastMCP.as_proxy(client_factory)
 
     # Ensure the proxy advertises resource subscriptions so hosts know to subscribe.
     original_get_capabilities = proxy._mcp_server.get_capabilities
