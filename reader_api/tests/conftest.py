@@ -16,6 +16,10 @@ from httpx import ASGITransport, AsyncClient, Response
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlmodel import SQLModel
 
+# Override OTEL exporter during tests to avoid OTLP errors.
+os.environ.setdefault("OTEL_TRACES_EXPORTER", "console")
+os.environ.setdefault("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318")
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
@@ -177,4 +181,3 @@ def test_app() -> Generator[TestApp, None, None]:
     app.dependency_overrides.pop(require_auth_dependency, None)
 
     asyncio.run(engine.dispose())
-

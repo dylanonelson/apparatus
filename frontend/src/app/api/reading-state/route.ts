@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     }
 
     const upstreamResponse = await fetch(
-      `${process.env.READER_API_ORIGIN}/reading-state`,
+      `${process.env.READER_API_ORIGIN}/api/reading-state`,
       {
         method: "POST",
         headers: {

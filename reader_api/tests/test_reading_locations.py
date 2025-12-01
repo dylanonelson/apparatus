@@ -50,7 +50,7 @@ def test_create_reading_state_persists_location_without_viewport(
             "viewport": None,
         }
 
-        response = await helper.post("/reading-state", json=payload)
+        response = await helper.post("/api/reading-state", json=payload)
 
         assert response.status_code == 201, response.json()
         data = response.json()
@@ -96,7 +96,7 @@ def test_create_reading_state_persists_viewport_and_location(
             "viewport": _sample_viewport("Visible text for viewport"),
         }
 
-        response = await helper.post("/reading-state", json=payload)
+        response = await helper.post("/api/reading-state", json=payload)
 
         assert response.status_code == 201, response.json()
         data = response.json()
@@ -154,11 +154,11 @@ def test_get_latest_reading_location_filters_by_publication(test_app: TestApp) -
                 "recorded_at": recorded_at.isoformat(),
                 "viewport": None,
             }
-            response = await helper.post("/reading-state", json=payload)
+            response = await helper.post("/api/reading-state", json=payload)
             assert response.status_code == 201, response.json()
 
         response_pub = await helper.get(
-            "/reading-locations/latest?publication_id=pub-a"
+            "/api/reading-locations/latest?publication_id=pub-a"
         )
         assert response_pub.status_code == 200
         data_pub = response_pub.json()
@@ -166,7 +166,7 @@ def test_get_latest_reading_location_filters_by_publication(test_app: TestApp) -
         pub_recorded = datetime.fromisoformat(data_pub["recorded_at"])
         assert pub_recorded == base_time + timedelta(minutes=5)
 
-        response_all = await helper.get("/reading-locations/latest")
+        response_all = await helper.get("/api/reading-locations/latest")
         assert response_all.status_code == 200
         data_all = response_all.json()
         assert data_all["publication_id"] == "pub-b"
@@ -203,10 +203,10 @@ def test_reading_state_overwrites_viewport_entry(test_app: TestApp) -> None:
             },
         }
 
-        response_first = await helper.post("/reading-state", json=first_payload)
+        response_first = await helper.post("/api/reading-state", json=first_payload)
         assert response_first.status_code == 201, response_first.json()
 
-        response_second = await helper.post("/reading-state", json=second_payload)
+        response_second = await helper.post("/api/reading-state", json=second_payload)
         assert response_second.status_code == 201, response_second.json()
 
         async with helper.session_factory() as session:
@@ -235,7 +235,7 @@ def test_latest_reading_location_falls_back_to_created_at(test_app: TestApp) -> 
             "locator": _sample_locator("Initial Chapter"),
             "viewport": None,
         }
-        response_a = await helper.post("/reading-state", json=payload_a)
+        response_a = await helper.post("/api/reading-state", json=payload_a)
         assert response_a.status_code == 201, response_a.json()
 
         payload_b = {
@@ -243,11 +243,11 @@ def test_latest_reading_location_falls_back_to_created_at(test_app: TestApp) -> 
             "locator": _sample_locator("Next Chapter"),
             "viewport": None,
         }
-        response_b = await helper.post("/reading-state", json=payload_b)
+        response_b = await helper.post("/api/reading-state", json=payload_b)
         assert response_b.status_code == 201, response_b.json()
 
         response_latest = await helper.get(
-            "/reading-locations/latest?publication_id=pub-fallback"
+            "/api/reading-locations/latest?publication_id=pub-fallback"
         )
         assert response_latest.status_code == 200
         data = response_latest.json()
@@ -277,7 +277,7 @@ def test_get_latest_reading_location_returns_404_when_missing(test_app: TestApp)
         helper.set_claims({"sub": "auth0|reader-3"})
         await helper.create_user(auth0_id="auth0|reader-3", email="reader3@example.com")
 
-        response = await helper.get("/reading-locations/latest")
+        response = await helper.get("/api/reading-locations/latest")
 
         assert response.status_code == 404
         assert response.json()["detail"] == "No reading location found"
