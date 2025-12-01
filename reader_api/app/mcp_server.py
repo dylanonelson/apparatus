@@ -34,6 +34,9 @@ from app.reading_state import (
     get_viewport_by_id,
 )
 from app.data import get_latest_reading_location
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Globals allow test overrides
 get_access_token = _get_access_token
