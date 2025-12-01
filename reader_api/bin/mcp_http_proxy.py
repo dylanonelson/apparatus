@@ -37,10 +37,14 @@ async def main() -> None:
         token = token.split(" ", 1)[1].strip()
 
     client = Client(url, auth=token)
-    # Establish a persistent connection so the proxy reuses one MCP session.
-    await client.connect()
 
-    proxy = FastMCP.as_proxy(client)
+    async def client_factory() -> Client:
+        # Reuse a single connected client to preserve MCP session state across calls.
+        if not client.is_connected():
+            await client._connect()
+        return client
+
+    proxy = FastMCP.as_proxy(client_factory=client_factory)
 
     # Ensure the proxy advertises resource subscriptions so hosts know to subscribe.
     original_get_capabilities = proxy._mcp_server.get_capabilities
