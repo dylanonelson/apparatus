@@ -19,8 +19,14 @@ from types import MethodType
 
 from fastmcp.client.client import Client
 from fastmcp.server import FastMCP
-from mcp.types import ResourcesCapability
-from mcp.types import PromptMessage, ResourceLink, TextContent
+from mcp.types import PromptMessage, ResourceLink, ResourcesCapability, TextContent
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+logger = logging.getLogger("mcp_http_proxy")
 
 
 def _get_env(name: str, default: str | None = None) -> str:
@@ -89,6 +95,24 @@ async def main() -> None:
                     ),
                 ),
             ]
+
+        # Wrap the proxy's message handler to log incoming requests/notifications
+        original_handle_message = proxy._mcp_server._handle_message  # type: ignore[attr-defined]
+
+        async def _logging_handle_message(message):
+            try:
+                root = getattr(message, "root", None)
+                req = getattr(message, "request", None)
+                if req and hasattr(req, "root"):
+                    root = req.root
+                method = getattr(root, "method", None) or root.__class__.__name__ if root else type(message).__name__
+                params = getattr(root, "params", None)
+                logger.info("MCP incoming: %s %s", method, params)
+            except Exception:
+                logger.exception("Failed to log incoming MCP message")
+            return await original_handle_message(message)
+
+        proxy._mcp_server._handle_message = _logging_handle_message  # type: ignore[attr-defined]
 
         try:
             await proxy.run_stdio_async()
