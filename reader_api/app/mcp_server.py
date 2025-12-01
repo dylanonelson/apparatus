@@ -196,6 +196,7 @@ def create_mcp_server() -> tuple[
         },
     )
     async def get_viewport_resource() -> ViewportResourcePayload:
+        logger.info("mcp viewport resource requested")
         access_token = get_access_token()
         if access_token is None:
             raise PermissionError(
@@ -223,6 +224,7 @@ def create_mcp_server() -> tuple[
 
             viewport = await get_latest_viewport(session, user.id)
             if viewport is None:
+                logger.warning("No viewport for user %s", user.auth0_id)
                 raise NotFoundError("Viewport not found for the authenticated user.")
 
             reading_location = await get_latest_reading_location(
