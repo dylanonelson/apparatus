@@ -38,68 +38,63 @@ async def main() -> None:
 
     client = Client(url, auth=token)
 
-    async def client_factory() -> Client:
-        # Reuse a single connected client to preserve MCP session state across calls.
-        if not client.is_connected():
-            await client._connect()
-        return client
+    async with client:
+        proxy = FastMCP.as_proxy(client)
 
-    proxy = FastMCP.as_proxy(client_factory)
+        # Ensure the proxy advertises resource subscriptions so hosts know to subscribe.
+        original_get_capabilities = proxy._mcp_server.get_capabilities
 
-    # Ensure the proxy advertises resource subscriptions so hosts know to subscribe.
-    original_get_capabilities = proxy._mcp_server.get_capabilities
-
-    def _patched_get_capabilities(self, notification_options, experimental_capabilities):
-        capabilities = original_get_capabilities(
-            notification_options, experimental_capabilities
-        )
-        if capabilities.resources is None:
-            capabilities.resources = ResourcesCapability(
-                subscribe=True,
-                listChanged=notification_options.resources_changed,
+        def _patched_get_capabilities(self, notification_options, experimental_capabilities):
+            capabilities = original_get_capabilities(
+                notification_options, experimental_capabilities
             )
-        else:
-            capabilities.resources.subscribe = True
-        return capabilities
+            if capabilities.resources is None:
+                capabilities.resources = ResourcesCapability(
+                    subscribe=True,
+                    listChanged=notification_options.resources_changed,
+                )
+            else:
+                capabilities.resources.subscribe = True
+            return capabilities
 
-    proxy._mcp_server.get_capabilities = MethodType(
-        _patched_get_capabilities, proxy._mcp_server
-    )
+        proxy._mcp_server.get_capabilities = MethodType(
+            _patched_get_capabilities, proxy._mcp_server
+        )
 
-    @proxy.prompt("chat_with_book")
-    def chat_with_book() -> list[PromptMessage]:
-        return [
-            PromptMessage(
-                role="assistant",
-                content=TextContent(
-                    type="text",
-                    text=(
-                        "You are assisting a reader. Use the linked viewport "
-                        "resource for the current on-screen text and context."
+        @proxy.prompt("chat_with_book")
+        def chat_with_book() -> list[PromptMessage]:
+            return [
+                PromptMessage(
+                    role="assistant",
+                    content=TextContent(
+                        type="text",
+                        text=(
+                            "You are assisting a reader. Use the linked viewport "
+                            "resource for the current on-screen text and context."
+                        ),
                     ),
                 ),
-            ),
-            PromptMessage(
-                role="user",
-                content=ResourceLink.model_validate(
-                    {
-                        "type": "resource_link",
-                        "uri": "resource://ereader/viewport",
-                        "name": "Viewport",
-                        "annotations": {
-                            "audience": ["assistant"],
-                            "priority": 1.0,
-                        },
-                    }
+                PromptMessage(
+                    role="user",
+                    content=ResourceLink.model_validate(
+                        {
+                            "type": "resource_link",
+                            "uri": "resource://ereader/viewport",
+                            "name": "Viewport",
+                            "annotations": {
+                                "audience": ["assistant"],
+                                "priority": 1.0,
+                            },
+                        }
+                    ),
                 ),
-            ),
-        ]
+            ]
 
-    try:
-        await proxy.run_stdio_async()
-    except* BrokenPipeError:
-        # Client closed the pipe; exit cleanly.
-        pass
+        try:
+            await proxy.run_stdio_async()
+        except* BrokenPipeError:
+            # Client closed the pipe; exit cleanly.
+            pass
 
 
 if __name__ == "__main__":
