@@ -96,10 +96,8 @@ async def main() -> None:
                 ),
             ]
 
-        # Wrap the proxy's message handler to log incoming requests/notifications
-        original_handle_message = proxy._mcp_server._handle_message  # type: ignore[attr-defined]
-
-        async def _logging_handle_message(message):
+        # Log incoming MCP messages via the client message handler
+        async def log_message(message):
             try:
                 root = getattr(message, "root", None)
                 req = getattr(message, "request", None)
@@ -110,9 +108,9 @@ async def main() -> None:
                 logger.info("MCP incoming: %s %s", method, params)
             except Exception:
                 logger.exception("Failed to log incoming MCP message")
-            return await original_handle_message(message)
 
-        proxy._mcp_server._handle_message = _logging_handle_message  # type: ignore[attr-defined]
+        if hasattr(proxy._mcp_server, "_client") and hasattr(proxy._mcp_server._client, "message_handler"):  # type: ignore[attr-defined]
+            proxy._mcp_server._client.message_handler = log_message  # type: ignore[attr-defined]
 
         try:
             await proxy.run_stdio_async()
