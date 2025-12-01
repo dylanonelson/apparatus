@@ -23,17 +23,14 @@ from mcp.server.session import ServerSession
 from mcp.types import PromptMessage, ResourceLink, ResourcesCapability, TextContent
 from pydantic import AnyUrl
 
-from app.api_models import (
-    LocatorModel,
-    ReadingStatePayload,
-    ViewportResourcePayload,
-)
+from app.api_models import LocatorModel, ReadingStatePayload, ViewportResourcePayload
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
 from app.data.users import Auth0UserInfoError, get_or_create_user
 from app.reading_state import (
     build_reading_state_payload,
     ensure_timezone,
+    get_latest_viewport,
     get_viewport_by_id,
 )
 from app.data import get_latest_reading_location
@@ -47,19 +44,8 @@ _viewport_subscribers: dict[str, weakref.WeakSet[ServerSession]] = {}
 _subscriber_lock = asyncio.Lock()
 
 
-def _viewport_uri(viewport_id: str) -> str:
-    return f"resource://ereader/{viewport_id}"
-
-
-def _extract_viewport_id(uri: AnyUrl | str) -> str:
-    uri_str = str(uri)
-    prefix = "resource://ereader/"
-    if not uri_str.startswith(prefix):
-        raise ValueError(f"Unsupported resource URI: {uri_str}")
-    viewport_id = uri_str[len(prefix) :]
-    if not viewport_id:
-        raise ValueError("Viewport id is required in the resource URI.")
-    return viewport_id
+def _viewport_uri() -> str:
+    return "resource://ereader/viewport"
 
 
 def _get_request_session() -> ServerSession:
@@ -70,31 +56,29 @@ def _get_request_session() -> ServerSession:
 
 
 async def register_viewport_subscription(
-    viewport_id: str, session: ServerSession
+    subject: str, session: ServerSession
 ) -> None:
     async with _subscriber_lock:
-        subscribers = _viewport_subscribers.setdefault(
-            viewport_id, weakref.WeakSet()
-        )
+        subscribers = _viewport_subscribers.setdefault(subject, weakref.WeakSet())
         subscribers.add(session)
 
 
 async def unregister_viewport_subscription(
-    viewport_id: str, session: ServerSession
+    subject: str, session: ServerSession
 ) -> None:
     async with _subscriber_lock:
-        subscribers = _viewport_subscribers.get(viewport_id)
+        subscribers = _viewport_subscribers.get(subject)
         if subscribers is None:
             return
         subscribers.discard(session)
         if not subscribers:
-            _viewport_subscribers.pop(viewport_id, None)
+            _viewport_subscribers.pop(subject, None)
 
 
-async def notify_viewport_resource_updated(viewport_id: str) -> None:
-    uri = _viewport_uri(viewport_id)
+async def notify_viewport_resource_updated(subject: str) -> None:
+    uri = _viewport_uri()
     async with _subscriber_lock:
-        subscribers = list(_viewport_subscribers.get(viewport_id, ()))
+        subscribers = list(_viewport_subscribers.get(subject, ()))
 
     stale_sessions: list[ServerSession] = []
     for session in subscribers:
@@ -107,14 +91,12 @@ async def notify_viewport_resource_updated(viewport_id: str) -> None:
     if stale_sessions:
         async with _subscriber_lock:
             for session in stale_sessions:
-                _viewport_subscribers.get(viewport_id, weakref.WeakSet()).discard(
-                    session
-                )
+                _viewport_subscribers.get(subject, weakref.WeakSet()).discard(session)
             if (
-                viewport_id in _viewport_subscribers
-                and not _viewport_subscribers[viewport_id]
+                subject in _viewport_subscribers
+                and not _viewport_subscribers[subject]
             ):
-                _viewport_subscribers.pop(viewport_id, None)
+                _viewport_subscribers.pop(subject, None)
 
 
 def _normalize_auth0_base_url(domain: str) -> str:
@@ -201,16 +183,16 @@ def create_mcp_server() -> tuple[
         return await build_reading_state_payload(access_token, session_factory)
 
     @mcp_server.resource(
-        "resource://ereader/{viewport_id}",
+        "resource://ereader/viewport",
         name="Viewport",
-        description="Live viewport text plus metadata for the given viewport id.",
+        description="Live viewport text plus metadata for the authenticated user.",
         mime_type="application/json",
         annotations={
             "audience": ["assistant"],
             "priority": 1.0,
         },
     )
-    async def get_viewport_resource(viewport_id: str) -> ViewportResourcePayload:
+    async def get_viewport_resource() -> ViewportResourcePayload:
         access_token = get_access_token()
         if access_token is None:
             raise PermissionError(
@@ -226,10 +208,6 @@ def create_mcp_server() -> tuple[
             raise PermissionError("Missing access token value.")
 
         session_factory = get_session_factory()
-        try:
-            viewport_uuid = UUID(viewport_id)
-        except ValueError as exc:
-            raise NotFoundError("Viewport not found for the authenticated user.") from exc
         async with session_factory() as session:
             try:
                 user = await get_or_create_user(
@@ -240,9 +218,7 @@ def create_mcp_server() -> tuple[
             except Auth0UserInfoError as exc:
                 raise PermissionError(str(exc)) from exc
 
-            viewport = await get_viewport_by_id(
-                session, user.id, viewport_uuid
-            )
+            viewport = await get_latest_viewport(session, user.id)
             if viewport is None:
                 raise NotFoundError("Viewport not found for the authenticated user.")
 
@@ -259,17 +235,17 @@ def create_mcp_server() -> tuple[
             last_modified_dt.isoformat() if last_modified_dt else None
         )
 
-        viewport_resource_template.annotations = {
-            "audience": ["assistant"],
-            "priority": 1.0,
-            "lastModified": last_modified,
-        }
-
         locator = (
             LocatorModel.model_validate(reading_location.locator)
             if reading_location
             else None
         )
+
+        get_viewport_resource.annotations = {
+            "audience": ["assistant"],
+            "priority": 1.0,
+            "lastModified": last_modified,
+        }
 
         return ViewportResourcePayload(
             viewport_id=viewport.id,
@@ -282,10 +258,6 @@ def create_mcp_server() -> tuple[
             percent=_progress_percent(locator),
             token_estimate=_estimate_tokens(viewport.text),
         )
-
-    viewport_resource_template = cast(
-        FunctionResourceTemplate, get_viewport_resource
-    )
 
     @mcp_server.tool(
         "get_reading_state",
@@ -301,8 +273,8 @@ def create_mcp_server() -> tuple[
         return await build_reading_state_payload(access_token, session_factory)
 
     @mcp_server.prompt("chat_with_book")
-    def chat_with_book(viewport_id: str) -> list[PromptMessage]:
-        resource_uri = _viewport_uri(viewport_id)
+    def chat_with_book() -> list[PromptMessage]:
+        resource_uri = _viewport_uri()
         return [
             PromptMessage(
                 role="system",
@@ -370,6 +342,6 @@ def create_mcp_server() -> tuple[
         mcp_asgi_app,
         cast(FunctionResource, get_current_reading_state_resource),
         cast(FunctionTool, get_current_reading_state_tool),
-        viewport_resource_template,
+        cast(FunctionResourceTemplate, get_viewport_resource),
         chat_with_book,
     )

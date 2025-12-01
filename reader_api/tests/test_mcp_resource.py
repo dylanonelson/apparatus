@@ -178,7 +178,7 @@ def test_mcp_reading_state_tool_returns_not_found_without_data(
     asyncio.run(scenario())
 
 
-def test_mcp_viewport_resource_template_returns_payload(
+def test_mcp_viewport_resource_returns_payload(
     test_app: TestApp, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     async def scenario() -> None:
@@ -210,11 +210,8 @@ def test_mcp_viewport_resource_template_returns_payload(
             mcp_module, "get_session_factory", lambda: helper.session_factory
         )
 
-        resource = await main_module.viewport_resource_template.create_resource(
-            f"resource://ereader/{viewport_id}", {"viewport_id": viewport_id}
-        )
-        raw = await resource.read()
-        data = json.loads(raw)
+        raw_contents = await main_module.viewport_resource.read()
+        data = json.loads(raw_contents)
 
         assert data["viewport_id"] == viewport_id
         assert data["text"] == payload["viewport"]["text"]  # type: ignore
@@ -229,7 +226,7 @@ def test_mcp_viewport_update_notifies_subscribers(
     async def scenario() -> None:
         from app import mcp_server as mcp_module
 
-        viewport_id = "deadbeef-dead-beef-dead-beefdeadbeef"
+        subject = "auth0|notify-user"
         notifications: list[str] = []
 
         class FakeSession:
@@ -237,11 +234,11 @@ def test_mcp_viewport_update_notifies_subscribers(
                 notifications.append(str(uri))
 
         session = FakeSession()
-        await mcp_module.register_viewport_subscription(viewport_id, session)  # type: ignore[arg-type]
-        await mcp_module.notify_viewport_resource_updated(viewport_id)
-        await mcp_module.unregister_viewport_subscription(viewport_id, session)  # type: ignore[arg-type]
+        await mcp_module.register_viewport_subscription(subject, session)  # type: ignore[arg-type]
+        await mcp_module.notify_viewport_resource_updated(subject)
+        await mcp_module.unregister_viewport_subscription(subject, session)  # type: ignore[arg-type]
 
-        assert f"resource://ereader/{viewport_id}" in notifications
+        assert "resource://ereader/viewport" in notifications
 
     asyncio.run(scenario())
 

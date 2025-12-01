@@ -135,7 +135,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         if viewport_model is not None:
             await session.refresh(viewport_model)
             viewport_response = build_viewport_response(viewport_model)
-            await notify_viewport_resource_updated(str(viewport_model.id))
+            await notify_viewport_resource_updated(user.auth0_id)
         return ReadingStateResponseModel(
             reading_location=build_reading_location_response(location),
             viewport=viewport_response,

@@ -15,9 +15,11 @@ from __future__ import annotations
 import asyncio
 import os
 import sys
+from types import MethodType
 
 from fastmcp.client.client import Client
 from fastmcp.server import FastMCP
+from mcp.types import ResourcesCapability
 
 
 def _get_env(name: str, default: str | None = None) -> str:
@@ -34,7 +36,29 @@ async def main() -> None:
         token = token.split(" ", 1)[1].strip()
 
     client = Client(url, auth=token)
+
     proxy = FastMCP.as_proxy(client)
+
+    # Ensure the proxy advertises resource subscriptions so hosts know to subscribe.
+    original_get_capabilities = proxy._mcp_server.get_capabilities
+
+    def _patched_get_capabilities(self, notification_options, experimental_capabilities):
+        capabilities = original_get_capabilities(
+            notification_options, experimental_capabilities
+        )
+        if capabilities.resources is None:
+            capabilities.resources = ResourcesCapability(
+                subscribe=True,
+                listChanged=notification_options.resources_changed,
+            )
+        else:
+            capabilities.resources.subscribe = True
+        return capabilities
+
+    proxy._mcp_server.get_capabilities = MethodType(
+        _patched_get_capabilities, proxy._mcp_server
+    )
+
     try:
         await proxy.run_stdio_async()
     except* BrokenPipeError:

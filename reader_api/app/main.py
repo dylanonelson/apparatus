@@ -29,6 +29,7 @@ app.mount("/mcp", cast(ASGIApp, mcp_asgi_app))
 
 # Re-export for tests/overrides
 require_auth = auth0.require_auth
+viewport_resource = viewport_resource_template  # alias for backwards-compat in tests
 
 __all__ = [
     "app",
@@ -40,6 +41,7 @@ __all__ = [
     "reading_state_resource",
     "reading_state_tool",
     "viewport_resource_template",
+    "viewport_resource",
     "chat_with_book_prompt",
 ]
 
