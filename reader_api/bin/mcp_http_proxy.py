@@ -19,6 +19,7 @@ from types import MethodType
 
 from fastmcp.client.client import Client
 from fastmcp.server import FastMCP
+from fastmcp.server import proxy as proxy_mod
 from mcp.types import PromptMessage, ResourceLink, ResourcesCapability, TextContent
 import logging
 
@@ -66,6 +67,19 @@ async def main() -> None:
         proxy._mcp_server.get_capabilities = MethodType(
             _patched_get_capabilities, proxy._mcp_server
         )
+
+        # Preserve annotations when proxying resources so hosts see priority/audience.
+        original_from_mcp_resource = proxy_mod.ProxyResource.from_mcp_resource
+
+        @classmethod  # type: ignore[misc]
+        def _patched_from_mcp_resource(
+            cls, client, mcp_resource
+        ):  # pragma: no cover - runtime patch
+            resource = original_from_mcp_resource(cls, client, mcp_resource)
+            resource.annotations = mcp_resource.annotations
+            return resource
+
+        proxy_mod.ProxyResource.from_mcp_resource = _patched_from_mcp_resource  # type: ignore[assignment]
 
         @proxy.prompt("chat_with_book")
         def chat_with_book() -> list[PromptMessage]:
