@@ -20,6 +20,7 @@ from types import MethodType
 from fastmcp.client.client import Client
 from fastmcp.server import FastMCP
 from mcp.types import ResourcesCapability
+from mcp.types import PromptMessage, ResourceLink, TextContent
 
 
 def _get_env(name: str, default: str | None = None) -> str:
@@ -58,6 +59,31 @@ async def main() -> None:
     proxy._mcp_server.get_capabilities = MethodType(
         _patched_get_capabilities, proxy._mcp_server
     )
+
+    @proxy.prompt("chat_with_book")
+    def chat_with_book() -> list[PromptMessage]:
+        return [
+            PromptMessage(
+                role="system",
+                content=TextContent(
+                    type="text",
+                    text=(
+                        "You are assisting a reader. Use the linked viewport "
+                        "resource for the current on-screen text and context."
+                    ),
+                ),
+            ),
+            PromptMessage(
+                role="user",
+                content=ResourceLink(
+                    uri="resource://ereader/viewport",
+                    annotations={
+                        "audience": ["assistant"],
+                        "priority": 1.0,
+                    },
+                ),
+            ),
+        ]
 
     try:
         await proxy.run_stdio_async()
