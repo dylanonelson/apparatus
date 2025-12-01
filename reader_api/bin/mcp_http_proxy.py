@@ -64,7 +64,7 @@ async def main() -> None:
     def chat_with_book() -> list[PromptMessage]:
         return [
             PromptMessage(
-                role="system",
+                role="assistant",
                 content=TextContent(
                     type="text",
                     text=(
