@@ -12,7 +12,7 @@ export async function GET() {
         { status: 401 },
       );
     }
-    const resp = await fetch(`${process.env.READER_API_ORIGIN}/users/me`, {
+    const resp = await fetch(`${process.env.READER_API_ORIGIN}/api/users/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

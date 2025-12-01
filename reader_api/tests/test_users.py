@@ -17,7 +17,7 @@ def test_get_current_user_returns_user(test_app: TestApp) -> None:
             display_name="Test Reader",
         )
 
-        response = await helper.get("/users/me")
+        response = await helper.get("/api/users/me")
 
         assert response.status_code == 200
         payload = response.json()
@@ -46,7 +46,7 @@ def test_get_current_user_creates_missing_user(
 
         monkeypatch.setattr("app.data.users.fetch_auth0_userinfo", fake_fetch)
 
-        response = await helper.get("/users/me")
+        response = await helper.get("/api/users/me")
 
         assert response.status_code == 200
         payload = response.json()
@@ -61,7 +61,7 @@ def test_get_current_user_returns_400_without_sub_claim(test_app: TestApp) -> No
         helper = test_app
         helper.set_claims({})
 
-        response = await helper.get("/users/me")
+        response = await helper.get("/api/users/me")
 
         assert response.status_code == 400
         assert response.json()["detail"] == "Missing subject claim"

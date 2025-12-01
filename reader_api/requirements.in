@@ -3,6 +3,7 @@ uvicorn[standard]
 sse-starlette
 litellm
 dotenv
+fastmcp
 httpx
 opentelemetry-distro
 opentelemetry-exporter-otlp
