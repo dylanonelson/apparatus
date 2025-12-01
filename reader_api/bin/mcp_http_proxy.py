@@ -37,6 +37,8 @@ async def main() -> None:
         token = token.split(" ", 1)[1].strip()
 
     client = Client(url, auth=token)
+    # Establish a persistent connection so the proxy reuses one MCP session.
+    await client.connect()
 
     proxy = FastMCP.as_proxy(client)
 
