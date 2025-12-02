@@ -65,6 +65,12 @@ def create_mcp_server() -> tuple[
         base_url="https://ff07e236f922.ngrok-free.app",
         issuer_url="https://ff07e236f922.ngrok-free.app",
     )
+    # Ensure Dynamic Client Registration is enabled and scopes are advertised.
+    # Auth0Provider/OIDCProxy typically enables DCR by default, but some releases
+    # disable it when options are omitted. Force it on for Claude Desktop.
+    auth.client_registration_options.enabled = True
+    if not auth.client_registration_options.valid_scopes:
+        auth.client_registration_options.valid_scopes = auth.required_scopes
     mcp_server = FastMCP(
         name="Apparatus MCP",
         auth=auth,
