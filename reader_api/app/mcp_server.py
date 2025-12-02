@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from fastmcp import Context
 from fastmcp.server.auth.providers.auth0 import Auth0Provider
 from pydantic import AnyUrl
 
@@ -17,7 +18,7 @@ from fastmcp.server.auth.providers.jwt import JWTVerifier
 from fastmcp.server.dependencies import get_access_token as _get_access_token
 from fastmcp.server.http import StarletteWithLifespan
 from fastmcp.tools.tool import FunctionTool
-from mcp.types import ResourceLink, TextContent
+from mcp.types import EmbeddedResource, TextContent, TextResourceContents
 
 from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
@@ -126,7 +127,7 @@ def create_mcp_server() -> tuple[
         return await _get_current_reading_state()
 
     @mcp_server.prompt(name="Ask about a book")
-    async def ask_about_book() -> List[PromptMessage]:
+    async def ask_about_book(ctx: Context) -> List[PromptMessage]:
         """
         Ask a question about the book you're currently reading.
         """
@@ -143,6 +144,15 @@ def create_mcp_server() -> tuple[
             viewport_payload.text = reading_state.viewport.text
             viewport_payload.positions = reading_state.viewport.positions
 
+        reading_state_contents = await ctx.read_resource(
+            "resource://reading-state"
+        )
+        text = ""
+        if reading_state_contents:
+            result = reading_state_contents[0].content
+            if isinstance(result, str):
+                text = result
+
         return [
             PromptMessage(
                 role="user",
@@ -156,10 +166,12 @@ def create_mcp_server() -> tuple[
             ),
             PromptMessage(
                 role="user",
-                content=ResourceLink(
-                    type="resource_link",
-                    uri=AnyUrl("resource://reading-state"),
-                    name="Current reading state",
+                content=EmbeddedResource(
+                    type="resource",
+                    resource=TextResourceContents(
+                        uri=AnyUrl("resource://reading-state"),
+                        text=text,
+                    ),
                 ),
             ),
         ]
