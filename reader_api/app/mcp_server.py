@@ -219,7 +219,7 @@ def create_mcp_server() -> tuple[
             }
         )
 
-    mcp_asgi_app: StarletteWithLifespan = mcp_server.http_app(path="/")
+    mcp_asgi_app: StarletteWithLifespan = mcp_server.http_app(path="/mcp")
     return (
         mcp_server,
         mcp_asgi_app,
