@@ -103,6 +103,6 @@ def get_user_prompt(
     location: LocatorModel, viewport: ViewportPayloadModel
 ) -> str:
     return USER_PROMPT.format(
-        location_json=location.model_dump_json(),
-        viewport=viewport.model_dump_json(),
+        locator_json=location.model_dump_json(),
+        viewport_json=viewport.model_dump_json(),
     )
