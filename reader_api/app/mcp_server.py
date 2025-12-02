@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from fastmcp.server.auth.providers.auth0 import Auth0Provider
+
+Auth0Provider
+
 from typing import List, cast
 
 from fastapi import Request
@@ -15,10 +19,10 @@ from fastmcp.tools.tool import FunctionTool
 from mcp.types import TextContent
 
 from app import publications_catalog
-from app.api_models import ReadingStatePayload
+from app.api_models import ReadingStatePayload, ViewportPayloadModel
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
-from app.prompts import prompt_v0
+from app.prompts import prompt_v1
 from app.publication_reader import fetch_publication_files
 from app.reading_state import build_reading_state_payload
 
@@ -46,11 +50,24 @@ def _build_jwt_auth_provider() -> JWTVerifier:
 
 
 def create_mcp_server() -> tuple[
-    FastMCP, StarletteWithLifespan, FunctionResource, FunctionTool, FunctionTool
+    FastMCP,
+    StarletteWithLifespan,
+    Auth0Provider,
+    FunctionResource,
+    FunctionTool,
+    FunctionTool,
 ]:
+    auth = Auth0Provider(
+        config_url="https://dev-usf5eu2woue2lk2d.us.auth0.com/.well-known/openid-configuration",
+        client_id="tD9VSQQwq8bdiNrllCsKFgpU8kUps001",
+        client_secret="9_iDZ64ye5hRf_AapjdpIFiQXY2l10UACQ196862dL2XT8u6IBuO_DX7raFSDaHR",
+        audience="https://api.apparatus-ebooks.com",
+        base_url="https://ff07e236f922.ngrok-free.app",
+        issuer_url="https://ff07e236f922.ngrok-free.app",
+    )
     mcp_server = FastMCP(
         name="Apparatus MCP",
-        auth=_build_jwt_auth_provider(),
+        auth=auth,
     )
 
     @mcp_server.resource(
@@ -106,8 +123,8 @@ def create_mcp_server() -> tuple[
     async def get_current_reading_state_tool() -> ReadingStatePayload:
         return await _get_current_reading_state()
 
-    @mcp_server.prompt
-    async def ask_about_book(question: str) -> List[PromptMessage]:
+    @mcp_server.prompt(name="Ask about a book")
+    async def ask_about_book() -> List[PromptMessage]:
         """
         Ask a question about the book you're currently reading.
         """
@@ -119,12 +136,17 @@ def create_mcp_server() -> tuple[
             reading_state.reading_location.publication_id
         )
 
+        viewport_payload = ViewportPayloadModel(text="", positions=[])
+        if reading_state.viewport:
+            viewport_payload.text = reading_state.viewport.text
+            viewport_payload.positions = reading_state.viewport.positions
+
         return [
             PromptMessage(
                 role="user",
                 content=TextContent(
                     type="text",
-                    text=prompt_v0.get_system_prompt(
+                    text=prompt_v1.get_system_prompt(
                         publication.title,
                         publication.author,
                     ),
@@ -134,8 +156,9 @@ def create_mcp_server() -> tuple[
                 role="user",
                 content=TextContent(
                     type="text",
-                    text=prompt_v0.get_user_prompt(
-                        question, reading_state.reading_location.locator
+                    text=prompt_v1.get_user_prompt(
+                        location=reading_state.reading_location.locator,
+                        viewport=viewport_payload,
                     ),
                 ),
             ),
@@ -200,6 +223,7 @@ def create_mcp_server() -> tuple[
     return (
         mcp_server,
         mcp_asgi_app,
+        auth,
         cast(FunctionResource, get_current_reading_state_resource),
         cast(FunctionTool, get_current_reading_state_tool),
         cast(FunctionTool, download_publication_files_tool),
