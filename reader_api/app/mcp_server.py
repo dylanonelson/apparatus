@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from fastmcp.server.auth.providers.auth0 import Auth0Provider
+from pydantic import AnyUrl
 
 Auth0Provider
 
@@ -16,7 +17,7 @@ from fastmcp.server.auth.providers.jwt import JWTVerifier
 from fastmcp.server.dependencies import get_access_token as _get_access_token
 from fastmcp.server.http import StarletteWithLifespan
 from fastmcp.tools.tool import FunctionTool
-from mcp.types import TextContent
+from mcp.types import ResourceLink, TextContent
 
 from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
@@ -155,12 +156,10 @@ def create_mcp_server() -> tuple[
             ),
             PromptMessage(
                 role="user",
-                content=TextContent(
-                    type="text",
-                    text=prompt_v1.get_user_prompt(
-                        location=reading_state.reading_location.locator,
-                        viewport=viewport_payload,
-                    ),
+                content=ResourceLink(
+                    type="resource_link",
+                    uri=AnyUrl("resource://reading-state"),
+                    name="Current reading state",
                 ),
             ),
         ]

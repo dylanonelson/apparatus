@@ -88,10 +88,6 @@ The scene you're referring to, between Roman and Anton, takes place in the chapt
 
 
 USER_PROMPT = """
-Current location: {locator_json}
-
-Current viewport: {viewport_json}
-
 """
 
 
