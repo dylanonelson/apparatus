@@ -28,7 +28,7 @@ api_router, auth0, bearer_scheme, get_authenticated_user = create_api_router()
     download_publication_files_tool,
 ) = create_mcp_server()
 
-well_known_routes = auth_provider.get_well_known_routes()
+well_known_routes = auth_provider.get_well_known_routes(mcp_path="/mcp")
 logging.getLogger(__name__).info(well_known_routes)
 app = FastAPI(
     title="Apparatus API",
