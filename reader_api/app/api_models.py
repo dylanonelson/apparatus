@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class HealthResponseModel(BaseModel):
@@ -104,6 +104,20 @@ class ReadingStateResponseModel(BaseModel):
 class ReadingStatePayload(BaseModel):
     reading_location: ReadingLocationResponseModel | None
     viewport: ViewportResponseModel | None
+
+
+class TocItem(BaseModel):
+    href: str
+    title: str
+    totalPositions: int
+
+
+class PublicationContextPayload(BaseModel):
+    toc: list[TocItem] = Field(default_factory=list)
+
+
+class PublicationContextResponseModel(PublicationContextPayload):
+    pass
 
 
 class AskRequestModel(BaseModel):

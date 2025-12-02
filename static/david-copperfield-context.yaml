@@ -1,0 +1,289 @@
+- href: epub/text/titlepage.xhtml
+  title: Titlepage
+  start_position: 1
+  last_position: 1
+- href: epub/text/imprint.xhtml
+  title: Imprint
+  start_position: 2
+  last_position: 3
+- href: epub/text/preface-1850.xhtml
+  title: Preface to the 1850 Edition
+  start_position: 4
+  last_position: 5
+- href: epub/text/preface.xhtml
+  title: Preface to the Charles Dickens Edition
+  start_position: 6
+  last_position: 7
+- href: epub/text/dedication.xhtml
+  title: Dedication
+  start_position: 8
+  last_position: 8
+- href: epub/text/halftitlepage.xhtml
+  title: David Copperfield
+  start_position: 9
+  children:
+  - href: epub/text/chapter-1.xhtml
+    title: 'I: I Am Born'
+    start_position: 10
+    last_position: 20
+  - href: epub/text/chapter-2.xhtml
+    title: 'II: I Observe'
+    start_position: 21
+    last_position: 34
+  - href: epub/text/chapter-3.xhtml
+    title: 'III: I Have a Change'
+    start_position: 35
+    last_position: 49
+  - href: epub/text/chapter-4.xhtml
+    title: 'IV: I Fall Into Disgrace'
+    start_position: 50
+    last_position: 67
+  - href: epub/text/chapter-5.xhtml
+    title: 'V: I Am Sent Away from Home'
+    start_position: 68
+    last_position: 84
+  - href: epub/text/chapter-6.xhtml
+    title: 'VI: I Enlarge My Circle of Acquaintance'
+    start_position: 85
+    last_position: 92
+  - href: epub/text/chapter-7.xhtml
+    title: 'VII: My “First Half” at Salem House'
+    start_position: 93
+    last_position: 109
+  - href: epub/text/chapter-8.xhtml
+    title: 'VIII: My Holidays. Especially One Happy Afternoon'
+    start_position: 110
+    last_position: 123
+  - href: epub/text/chapter-9.xhtml
+    title: 'IX: I Have a Memorable Birthday'
+    start_position: 124
+    last_position: 135
+  - href: epub/text/chapter-10.xhtml
+    title: 'X: I Become Neglected, and Am Provided For'
+    start_position: 136
+    last_position: 153
+  - href: epub/text/chapter-11.xhtml
+    title: 'XI: I Begin Life on My Own Account, and Don’t Like It'
+    start_position: 154
+    last_position: 169
+  - href: epub/text/chapter-12.xhtml
+    title: 'XII: Liking Life on My Own Account No Better, I Form a Great Resolution'
+    start_position: 170
+    last_position: 179
+  - href: epub/text/chapter-13.xhtml
+    title: 'XIII: The Sequel of My Resolution'
+    start_position: 180
+    last_position: 198
+  - href: epub/text/chapter-14.xhtml
+    title: 'XIV: My Aunt Makes Up Her Mind About Me'
+    start_position: 199
+    last_position: 213
+  - href: epub/text/chapter-15.xhtml
+    title: 'XV: I Make Another Beginning'
+    start_position: 214
+    last_position: 223
+  - href: epub/text/chapter-16.xhtml
+    title: 'XVI: I Am a New Boy in More Senses Than One'
+    start_position: 224
+    last_position: 243
+  - href: epub/text/chapter-17.xhtml
+    title: 'XVII: Somebody Turns Up'
+    start_position: 244
+    last_position: 260
+  - href: epub/text/chapter-18.xhtml
+    title: 'XVIII: A Retrospect'
+    start_position: 261
+    last_position: 268
+  - href: epub/text/chapter-19.xhtml
+    title: 'XIX: I Look About Me, and Make a Discovery'
+    start_position: 269
+    last_position: 284
+  - href: epub/text/chapter-20.xhtml
+    title: 'XX: Steerforth’s Home'
+    start_position: 285
+    last_position: 293
+  - href: epub/text/chapter-21.xhtml
+    title: 'XXI: Little Em’ly'
+    start_position: 294
+    last_position: 312
+  - href: epub/text/chapter-22.xhtml
+    title: 'XXII: Some Old Scenes, and Some New People'
+    start_position: 313
+    last_position: 333
+  - href: epub/text/chapter-23.xhtml
+    title: 'XXIII: I Corroborate Mr. Dick, and Choose a Profession'
+    start_position: 334
+    last_position: 347
+  - href: epub/text/chapter-24.xhtml
+    title: 'XXIV: My First Dissipation'
+    start_position: 348
+    last_position: 356
+  - href: epub/text/chapter-25.xhtml
+    title: 'XXV: Good and Bad Angels'
+    start_position: 357
+    last_position: 374
+  - href: epub/text/chapter-26.xhtml
+    title: 'XXVI: I Fall Into Captivity'
+    start_position: 375
+    last_position: 389
+  - href: epub/text/chapter-27.xhtml
+    title: 'XXVII: Tommy Traddles'
+    start_position: 390
+    last_position: 399
+  - href: epub/text/chapter-28.xhtml
+    title: 'XXVIII: Mr. Micawber’s Gauntlet'
+    start_position: 400
+    last_position: 418
+  - href: epub/text/chapter-29.xhtml
+    title: 'XXIX: I Visit Steerforth at His Home, Again'
+    start_position: 419
+    last_position: 426
+  - href: epub/text/chapter-30.xhtml
+    title: 'XXX: A Loss'
+    start_position: 427
+    last_position: 434
+  - href: epub/text/chapter-31.xhtml
+    title: 'XXXI: A Greater Loss'
+    start_position: 435
+    last_position: 443
+  - href: epub/text/chapter-32.xhtml
+    title: 'XXXII: The Beginning of a Long Journey'
+    start_position: 444
+    last_position: 461
+  - href: epub/text/chapter-33.xhtml
+    title: 'XXXIII: Blissful'
+    start_position: 462
+    last_position: 477
+  - href: epub/text/chapter-34.xhtml
+    title: 'XXXIV: My Aunt Astonishes Me'
+    start_position: 478
+    last_position: 486
+  - href: epub/text/chapter-35.xhtml
+    title: 'XXXV: Depression'
+    start_position: 487
+    last_position: 505
+  - href: epub/text/chapter-36.xhtml
+    title: 'XXXVI: Enthusiasm'
+    start_position: 506
+    last_position: 521
+  - href: epub/text/chapter-37.xhtml
+    title: 'XXXVII: A Little Cold Water'
+    start_position: 522
+    last_position: 529
+  - href: epub/text/chapter-38.xhtml
+    title: 'XXXVIII: A Dissolution of Partnership'
+    start_position: 530
+    last_position: 546
+  - href: epub/text/chapter-39.xhtml
+    title: 'XXXIX: Wickfield and Heep'
+    start_position: 547
+    last_position: 564
+  - href: epub/text/chapter-40.xhtml
+    title: 'XL: The Wanderer'
+    start_position: 565
+    last_position: 573
+  - href: epub/text/chapter-41.xhtml
+    title: 'XLI: Dora’s Aunts'
+    start_position: 574
+    last_position: 588
+  - href: epub/text/chapter-42.xhtml
+    title: 'XLII: Mischief'
+    start_position: 589
+    last_position: 607
+  - href: epub/text/chapter-43.xhtml
+    title: 'XLIII: Another Retrospect'
+    start_position: 608
+    last_position: 616
+  - href: epub/text/chapter-44.xhtml
+    title: 'XLIV: Our Housekeeping'
+    start_position: 617
+    last_position: 630
+  - href: epub/text/chapter-45.xhtml
+    title: 'XLV: Mr. Dick Fulfils My Aunt’s Predictions'
+    start_position: 631
+    last_position: 645
+  - href: epub/text/chapter-46.xhtml
+    title: 'XLVI: Intelligence'
+    start_position: 646
+    last_position: 658
+  - href: epub/text/chapter-47.xhtml
+    title: 'XLVII: Martha'
+    start_position: 659
+    last_position: 669
+  - href: epub/text/chapter-48.xhtml
+    title: 'XLVIII: Domestic'
+    start_position: 670
+    last_position: 680
+  - href: epub/text/chapter-49.xhtml
+    title: 'XLIX: I Am Involved in Mystery'
+    start_position: 681
+    last_position: 693
+  - href: epub/text/chapter-50.xhtml
+    title: 'L: Mr. Peggotty’s Dream Comes True'
+    start_position: 694
+    last_position: 703
+  - href: epub/text/chapter-51.xhtml
+    title: 'LI: The Beginning of a Longer Journey'
+    start_position: 704
+    last_position: 719
+  - href: epub/text/chapter-52.xhtml
+    title: 'LII: I Assist at an Explosion'
+    start_position: 720
+    last_position: 741
+  - href: epub/text/chapter-53.xhtml
+    title: 'LIII: Another Retrospect'
+    start_position: 742
+    last_position: 746
+  - href: epub/text/chapter-54.xhtml
+    title: 'LIV: Mr. Micawber’s Transactions'
+    start_position: 747
+    last_position: 761
+  - href: epub/text/chapter-55.xhtml
+    title: 'LV: Tempest'
+    start_position: 762
+    last_position: 773
+  - href: epub/text/chapter-56.xhtml
+    title: 'LVI: The New Wound, and the Old'
+    start_position: 774
+    last_position: 780
+  - href: epub/text/chapter-57.xhtml
+    title: 'LVII: The Emigrants'
+    start_position: 781
+    last_position: 791
+  - href: epub/text/chapter-58.xhtml
+    title: 'LVIII: Absence'
+    start_position: 792
+    last_position: 798
+  - href: epub/text/chapter-59.xhtml
+    title: 'LIX: Return'
+    start_position: 799
+    last_position: 813
+  - href: epub/text/chapter-60.xhtml
+    title: 'LX: Agnes'
+    start_position: 814
+    last_position: 822
+  - href: epub/text/chapter-61.xhtml
+    title: 'LXI: I Am Shown Two Interesting Penitents'
+    start_position: 823
+    last_position: 834
+  - href: epub/text/chapter-62.xhtml
+    title: 'LXII: A Light Shines on My Way'
+    start_position: 835
+    last_position: 842
+  - href: epub/text/chapter-63.xhtml
+    title: 'LXIII: A Visitor'
+    start_position: 843
+    last_position: 850
+  - href: epub/text/chapter-64.xhtml
+    title: 'LXIV: A Last Retrospect'
+    start_position: 851
+    last_position: 855
+  last_position: 9
+- href: epub/text/colophon.xhtml
+  title: Colophon
+  start_position: 856
+  last_position: 857
+- href: epub/text/uncopyright.xhtml
+  title: Uncopyright
+  start_position: 858
+  last_position: 859

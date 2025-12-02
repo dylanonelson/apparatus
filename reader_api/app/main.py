@@ -23,9 +23,7 @@ api_router, auth0, bearer_scheme, get_authenticated_user = create_api_router()
 app.include_router(api_router, prefix="/api")
 
 # MCP setup
-mcp_server, mcp_asgi_app, reading_state_resource, reading_state_tool = (
-    create_mcp_server()
-)
+mcp_server, mcp_asgi_app, reading_state_resource, reading_state_tool, download_publication_files_tool = create_mcp_server()
 app.router.lifespan_context = mcp_asgi_app.router.lifespan_context
 app.mount("/mcp", cast(ASGIApp, mcp_asgi_app))
 
@@ -41,6 +39,7 @@ __all__ = [
     "get_access_token",
     "reading_state_resource",
     "reading_state_tool",
+    "download_publication_files_tool",
 ]
 
 logging.getLogger(__name__).info("Application startup complete.")

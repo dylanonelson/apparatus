@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import cast
+from typing import List, cast
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from fastmcp.prompts import PromptMessage
 from fastmcp.resources.resource import FunctionResource
 from fastmcp.server import FastMCP
 from fastmcp.server.auth import AccessToken
@@ -11,10 +12,14 @@ from fastmcp.server.auth.providers.jwt import JWTVerifier
 from fastmcp.server.dependencies import get_access_token as _get_access_token
 from fastmcp.server.http import StarletteWithLifespan
 from fastmcp.tools.tool import FunctionTool
+from mcp.types import TextContent
 
+from app import publications_catalog
 from app.api_models import ReadingStatePayload
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
+from app.prompts import prompt_v0
+from app.publication_reader import fetch_publication_files
 from app.reading_state import build_reading_state_payload
 
 # Globals allow test overrides
@@ -41,7 +46,7 @@ def _build_jwt_auth_provider() -> JWTVerifier:
 
 
 def create_mcp_server() -> tuple[
-    FastMCP, StarletteWithLifespan, FunctionResource, FunctionTool
+    FastMCP, StarletteWithLifespan, FunctionResource, FunctionTool, FunctionTool
 ]:
     mcp_server = FastMCP(
         name="Apparatus MCP",
@@ -63,11 +68,29 @@ def create_mcp_server() -> tuple[
         session_factory = get_session_factory()
         return await build_reading_state_payload(access_token, session_factory)
 
-    @mcp_server.tool(
-        "get_reading_state",
-        description="Return the latest reading location and viewport for the authenticated user.",
-    )
-    async def get_current_reading_state_tool() -> ReadingStatePayload:
+    # @mcp_server.resource(
+    #     "resource://current-publication/position-index",
+    #     name="Current publication context",
+    # )
+    # async def get_current_publication_context_resource() -> (
+    #     PublicationContextResponseModel
+    # ):
+    #     """
+    #     A json object describing the publication the user has open right now,
+    #     including the positions in the publication, the readable assets contained in
+    #     the publication, and their titles
+    #     """
+    #     access_token = get_access_token()
+    #     if access_token is None:
+    #         raise PermissionError(
+    #             "Authentication is required to access publication context."
+    #         )
+    #     session_factory = get_session_factory()
+    #     return await build_publication_context_payload(
+    #         access_token, session_factory
+    #     )
+
+    async def _get_current_reading_state() -> ReadingStatePayload:
         access_token = get_access_token()
         if access_token is None:
             raise PermissionError(
@@ -75,6 +98,78 @@ def create_mcp_server() -> tuple[
             )
         session_factory = get_session_factory()
         return await build_reading_state_payload(access_token, session_factory)
+
+    @mcp_server.tool(
+        "get_reading_state",
+        description="Return the latest reading location and viewport for the authenticated user.",
+    )
+    async def get_current_reading_state_tool() -> ReadingStatePayload:
+        return await _get_current_reading_state()
+
+    @mcp_server.prompt
+    async def ask_about_book(question: str) -> List[PromptMessage]:
+        """
+        Ask a question about the book you're currently reading.
+        """
+        reading_state = await _get_current_reading_state()
+        if reading_state is None or reading_state.reading_location is None:
+            raise ValueError("No reading state found")
+
+        publication = publications_catalog.get_publication(
+            reading_state.reading_location.publication_id
+        )
+
+        return [
+            PromptMessage(
+                role="user",
+                content=TextContent(
+                    type="text",
+                    text=prompt_v0.get_system_prompt(
+                        publication.title,
+                        publication.author,
+                    ),
+                ),
+            ),
+            PromptMessage(
+                role="user",
+                content=TextContent(
+                    type="text",
+                    text=prompt_v0.get_user_prompt(
+                        question, reading_state.reading_location.locator
+                    ),
+                ),
+            ),
+        ]
+
+    @mcp_server.tool(
+        "download_publication_files",
+        description=(
+            "Download up to 2 files from a publication by href. "
+            "The hrefs must exist within the publication manifest."
+        ),
+    )
+    async def download_publication_files_tool(
+        publication_id: str, hrefs: list[str]
+    ) -> dict[str, object]:
+        access_token = get_access_token()
+        if access_token is None:
+            raise PermissionError(
+                "Authentication is required to download publication files."
+            )
+        if not publication_id:
+            raise ValueError("publication_id is required")
+        if not isinstance(hrefs, list) or len(hrefs) == 0:
+            raise ValueError("hrefs must contain at least one href")
+        if len(hrefs) > 2:
+            raise ValueError("hrefs cannot exceed 2 items")
+        cleaned_hrefs: list[str] = []
+        for href in hrefs:
+            if not isinstance(href, str) or not href.strip():
+                raise ValueError("hrefs must be non-empty strings")
+            cleaned_hrefs.append(href.strip())
+        return await fetch_publication_files(
+            publication_id=publication_id, hrefs=cleaned_hrefs
+        )
 
     @mcp_server.custom_route("/auth/diagnostic", methods=["GET"])
     async def mcp_auth_diagnostic(request: Request) -> JSONResponse:
@@ -107,4 +202,5 @@ def create_mcp_server() -> tuple[
         mcp_asgi_app,
         cast(FunctionResource, get_current_reading_state_resource),
         cast(FunctionTool, get_current_reading_state_tool),
+        cast(FunctionTool, download_publication_files_tool),
     )
