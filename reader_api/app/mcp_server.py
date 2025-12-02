@@ -220,7 +220,9 @@ def create_mcp_server() -> tuple[
             }
         )
 
-    mcp_asgi_app: StarletteWithLifespan = mcp_server.http_app(path="/mcp")
+    # Expose MCP under the FastAPI mount path (/mcp) while keeping internal routes root-scoped.
+    # http_app path stays at "/" so mounted path is the only prefix.
+    mcp_asgi_app: StarletteWithLifespan = mcp_server.http_app(path="/")
     return (
         mcp_server,
         mcp_asgi_app,
