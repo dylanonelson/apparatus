@@ -15,17 +15,25 @@ class LocationsModel(BaseModel):
     https://readium.org/architecture/models/locators/
     """
 
-    fragments: list[str] | None = (
-        None  # List of one or more fragment in the resource referenced by the locator
+    fragments: list[str] | None = Field(
+        None,
+        description="Fragments (e.g., epubcfi) pointing into the resource.",
+        examples=[["epubcfi(/6/4!/2)"]],
     )
-    position: int | None = (
-        None  # Position in the publication (page number, etc.)
+    position: int | None = Field(
+        None,
+        description="Position within the publication spine (e.g., page number).",
+        examples=[12],
     )
-    progression: float | None = (
-        None  # Progression within the resource (0.0 to 1.0)
+    progression: float | None = Field(
+        None,
+        description="Progression within the resource (0.0-1.0).",
+        examples=[0.42],
     )
-    totalProgression: float | None = (
-        None  # Progression within the entire publication (0.0 to 1.0)
+    totalProgression: float | None = Field(
+        None,
+        description="Progression within the entire publication (0.0-1.0).",
+        examples=[0.27],
     )
 
 
@@ -35,9 +43,21 @@ class TextModel(BaseModel):
     https://readium.org/architecture/models/locators/
     """
 
-    before: str | None = None  # Text before the locator
-    highlight: str | None = None  # Text at the locator
-    after: str | None = None  # Text after the locator
+    before: str | None = Field(
+        None,
+        description="Text immediately preceding the locator.",
+        examples=["He opened the door and"],
+    )
+    highlight: str | None = Field(
+        None,
+        description="Text highlighted at the locator.",
+        examples=["stepped into the bright sunlight"],
+    )
+    after: str | None = Field(
+        None,
+        description="Text immediately after the locator.",
+        examples=["not knowing what he'd find next."],
+    )
 
 
 class LocatorModel(BaseModel):
@@ -46,36 +66,95 @@ class LocatorModel(BaseModel):
     https://readium.org/architecture/models/locators/#the-locator-object
     """
 
-    href: str  # Required: The URI of the resource
-    type: str  # Media type of the resource
-    title: str | None = None  # Optional: Title of the chapter or section
+    href: str = Field(
+        ...,
+        description="Spine item href for the current location.",
+        examples=["/text/chapter1.xhtml"],
+    )
+    type: str = Field(
+        ...,
+        description="Media type of the resource.",
+        examples=["application/xhtml+xml"],
+    )
+    title: str | None = Field(
+        None,
+        description="Optional title for the chapter/section.",
+        examples=["Chapter 1"],
+    )
 
     # Locations object - one or more ways to locate a position
-    locations: LocationsModel | None = (
-        None  # Contains position, progression, totalProgression, etc.
+    locations: LocationsModel | None = Field(
+        None,
+        description="Ways to locate a position within the resource.",
     )
-    text: TextModel | None = None  # Optional: Text context
+    text: TextModel | None = Field(
+        None,
+        description="Optional text context around the locator.",
+    )
 
 
 class ViewportPayloadModel(BaseModel):
-    positions: list[int]
-    text: str
-    selection_text: str | None = None
+    positions: list[int] = Field(
+        ...,
+        description=(
+            "Ordered character offsets in the current spine item that are visible "
+            "in the viewport."
+        ),
+        examples=[[0, 120]],
+    )
+    text: str = Field(
+        ...,
+        description="Visible text snippet for the user's current viewport.",
+        examples=[
+            "It was a bright cold day in April, and the clocks were striking thirteen."
+        ],
+    )
+    selection_text: str | None = Field(
+        None,
+        description=(
+            "The text that the user currently has selected from their current viewport"
+        ),
+        examples=["thirteen"],
+    )
 
 
 class StoreReadingStateRequestModel(BaseModel):
-    publication_id: str
-    locator: LocatorModel
-    recorded_at: datetime | None = None
-    viewport: ViewportPayloadModel | None = None
+    publication_id: str = Field(
+        ...,
+        description="Publication identifier associated with the reading state.",
+    )
+    locator: LocatorModel = Field(
+        ...,
+        description="Locator describing the user's current position.",
+    )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Timestamp when the reading state was captured.",
+    )
+    viewport: ViewportPayloadModel | None = Field(
+        None,
+        description="Optional viewport text and positions snapshot.",
+    )
 
 
 class ReadingLocationResponseModel(BaseModel):
     id: UUID
-    publication_id: str
-    locator: LocatorModel
-    recorded_at: datetime | None = None
-    created_at: datetime | None = None
+    publication_id: str = Field(
+        ...,
+        description="Publication identifier for this reading location.",
+    )
+    locator: LocatorModel = Field(
+        ...,
+        description="Locator describing the user's latest known position.",
+    )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Timestamp when the reading location was captured.",
+    )
+    created_at: datetime | None = Field(
+        None,
+        description="Timestamp when the reading location was stored.",
+    )
 
     model_config = {
         "from_attributes": True,
@@ -84,26 +163,59 @@ class ReadingLocationResponseModel(BaseModel):
 
 class ViewportResponseModel(BaseModel):
     id: UUID
-    publication_id: str
-    positions: list[int]
-    text: str
-    selection_text: str | None = None
-    recorded_at: datetime | None = None
-    updated_at: datetime | None = None
-
-    model_config = {
-        "from_attributes": True,
-    }
+    publication_id: str = Field(
+        ...,
+        description="Publication identifier for the viewport snapshot.",
+    )
+    positions: list[int] = Field(
+        ...,
+        description="Ordered character offsets visible in the viewport.",
+        examples=[[0, 120]],
+    )
+    text: str = Field(
+        ...,
+        description="Visible text snippet captured from the viewport.",
+        examples=[
+            "It was a bright cold day in April, and the clocks were striking thirteen."
+        ],
+    )
+    selection_text: str | None = Field(
+        None,
+        description=(
+            "The text that the user currently has selected from their current viewport"
+        ),
+        examples=["thirteen"],
+    )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Timestamp when the viewport was captured.",
+    )
+    updated_at: datetime | None = Field(
+        None,
+        description="Timestamp when the viewport was last updated.",
+    )
 
 
 class ReadingStateResponseModel(BaseModel):
-    reading_location: ReadingLocationResponseModel
-    viewport: ViewportResponseModel | None = None
+    reading_location: ReadingLocationResponseModel = Field(
+        ...,
+        description="Latest known reading location for the user.",
+    )
+    viewport: ViewportResponseModel | None = Field(
+        None,
+        description="Viewport text and offsets associated with the location, if available.",
+    )
 
 
 class ReadingStatePayload(BaseModel):
-    reading_location: ReadingLocationResponseModel | None
-    viewport: ViewportResponseModel | None
+    reading_location: ReadingLocationResponseModel | None = Field(
+        None,
+        description="Latest known reading location; null if none is saved for the user.",
+    )
+    viewport: ViewportResponseModel | None = Field(
+        None,
+        description="Viewport text and offsets linked to the reading location, if available.",
+    )
 
 
 class TocItem(BaseModel):

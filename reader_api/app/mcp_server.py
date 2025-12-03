@@ -1,26 +1,22 @@
 from __future__ import annotations
 
 import logging
-
-from fastmcp import Context
-from fastmcp.server.auth.providers.auth0 import Auth0Provider
-from pydantic import AnyUrl
-
-Auth0Provider
-
 from typing import List, cast
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from fastmcp import Context
 from fastmcp.prompts import PromptMessage
 from fastmcp.resources.resource import FunctionResource
 from fastmcp.server import FastMCP
 from fastmcp.server.auth import AccessToken
+from fastmcp.server.auth.providers.auth0 import Auth0Provider
 from fastmcp.server.auth.providers.jwt import JWTVerifier
 from fastmcp.server.dependencies import get_access_token as _get_access_token
 from fastmcp.server.http import StarletteWithLifespan
 from fastmcp.tools.tool import FunctionTool
 from mcp.types import EmbeddedResource, TextContent, TextResourceContents
+from pydantic import AnyUrl
 
 from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
@@ -71,14 +67,24 @@ def create_mcp_server() -> tuple[
     )
     mcp_server = FastMCP(
         name="Apparatus MCP",
+        instructions=(
+            "Read-only access to the user's current reading position, viewport "
+            "text, and limited publication file download (up to two manifest hrefs). "
+            "All operations require an Auth0 bearer token."
+        ),
         auth=auth,
     )
 
     @mcp_server.resource(
         "resource://reading-state",
         name="Current Reading State",
-        description="Latest reading location and viewport for the authenticated user.",
-        mime_type="application/json",
+        description=(
+            "Latest reading location for the authenticated user, including "
+            "publication id, locator (href/cfi), and current viewport text with "
+            "positions. Requires bearer token. Returns JSON ReadingStatePayload; "
+            "returns 404/NotFound when no reading history exists."
+        ),
+        mime_type="application/json; charset=utf-8",
     )
     async def get_current_reading_state_resource() -> ReadingStatePayload:
         access_token = get_access_token()
@@ -122,25 +128,41 @@ def create_mcp_server() -> tuple[
 
     @mcp_server.tool(
         "get_reading_state",
-        description="Return the latest reading location and viewport for the authenticated user.",
+        description=(
+            "Return the latest reading location and viewport for the authenticated "
+            "user. Requires bearer token. Raises NotFoundError when the user has no "
+            "saved reading state."
+        ),
     )
     async def get_current_reading_state_tool() -> ReadingStatePayload:
         return await _get_current_reading_state()
 
-    @mcp_server.prompt(name="Ask about a book")
+    @mcp_server.prompt(
+        name="Ask about a book",
+        description=(
+            "Answer questions about the book the user currently has open by injecting "
+            "the current publication metadata and reading state."
+        ),
+    )
     async def ask_about_book(ctx: Context) -> List[PromptMessage]:
         """
-        Ask a question about the book you're currently reading.
+        Ask a question about the book you're currently reading. Uses the latest
+        reading state and publication metadata to provide context for the answer.
         """
         reading_state = await _get_current_reading_state()
         if reading_state is None or reading_state.reading_location is None:
-            raise ValueError("No reading state found")
+            raise ValueError(
+                "No reading state found for this user; ask them to open a book and "
+                "sync reading progress."
+            )
 
         publication = publications_catalog.get_publication(
             reading_state.reading_location.publication_id
         )
 
-        viewport_payload = ViewportPayloadModel(text="", positions=[])
+        viewport_payload = ViewportPayloadModel(
+            text="", positions=[], selection_text=None
+        )
         if reading_state.viewport:
             viewport_payload.text = reading_state.viewport.text
             viewport_payload.positions = reading_state.viewport.positions
@@ -184,8 +206,10 @@ def create_mcp_server() -> tuple[
     @mcp_server.tool(
         "download_publication_files",
         description=(
-            "Download up to 2 files from a publication by href. "
-            "The hrefs must exist within the publication manifest."
+            "Download up to two files from a publication by manifest href. "
+            "Requires bearer token. Input: publication_id and 1-2 hrefs. "
+            "Returns a map of href to file content and metadata; errors if an href "
+            "is missing, invalid, or not in the manifest."
         ),
     )
     async def download_publication_files_tool(
