@@ -100,7 +100,7 @@ async def build_reading_state_payload(
         )
         viewport = await get_latest_viewport(session, user.id)
         logging.getLogger(__name__).info(
-            "build_reading_state_payload > get_latest_viewport: %v", viewport
+            f"build_reading_state_payload > get_latest_viewport: {viewport}"
         )
 
     if reading_location is None and viewport is None:
