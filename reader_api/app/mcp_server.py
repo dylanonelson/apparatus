@@ -68,7 +68,6 @@ def create_mcp_server() -> tuple[
         audience="https://api.apparatus-ebooks.com",
         base_url="https://ff07e236f922.ngrok-free.app",
         issuer_url="https://ff07e236f922.ngrok-free.app",
-        require_authorization_consent=False,
     )
     mcp_server = FastMCP(
         name="Apparatus MCP",
