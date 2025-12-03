@@ -11,14 +11,14 @@ const books = [
   {
     title: "Anna Karenina",
     author: "Leo Tolstoy",
-    cover: "",
+    cover: "/covers/anna-karenina.svg",
     url: "/read/anna-karenina",
     rendition: "Reflowable",
   },
   {
     title: "David Copperfield",
     author: "Charles Dickens",
-    cover: "",
+    cover: "/covers/david-copperfield.svg",
     url: "/read/david-copperfield",
     rendition: "Reflowable",
   },
@@ -52,6 +52,40 @@ export default function Home() {
           )}
         />
       </div>
+
+      <footer className="page-footer">
+        <p>
+          Ebook files sourced from{" "}
+          <a
+            href="https://standardebooks.org/ebooks"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Standard Ebooks
+          </a>
+        </p>
+        <p>
+          Reader forked from{" "}
+          <a
+            href="https://github.com/edrlab/thorium-web"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Thorium Web
+          </a>
+          , built on{" "}
+          <a
+            href="https://readium.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Readium Web
+          </a>
+        </p>
+        <p className="disclaimer">
+          A personal project, offered as-is and without warranty
+        </p>
+      </footer>
     </main>
   );
 }

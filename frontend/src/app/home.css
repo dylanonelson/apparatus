@@ -63,3 +63,35 @@
   font-size: 0.9rem;
   color: #1a1a1a;
 }
+
+.page-footer {
+  margin-top: 4rem;
+  padding: 2rem;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.page-footer p {
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.page-footer a {
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 1px solid #e0e0e0;
+  transition: border-color 0.2s;
+}
+
+.page-footer a:hover {
+  border-bottom-color: #1a1a1a;
+}
+
+.page-footer .disclaimer {
+  margin-top: 1.5rem;
+  font-style: italic;
+  color: #999;
+  font-size: 0.8rem;
+}
