@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from typing import cast
 from uuid import UUID
@@ -7,8 +8,8 @@ from uuid import UUID
 from fastmcp.exceptions import NotFoundError
 from fastmcp.server.auth import AccessToken
 from sqlalchemy import desc
-from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.sql.elements import ColumnElement
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -62,12 +63,12 @@ async def get_latest_viewport(
         ColumnElement[datetime],
         Viewport.updated_at,
     )
-    result = await session.execute(
+    result = await session.exec(
         select(Viewport)
         .where(Viewport.user_id == user_id)
         .order_by(desc(updated_at_column))
     )
-    return result.scalars().first()
+    return result.first()
 
 
 async def build_reading_state_payload(
@@ -98,9 +99,14 @@ async def build_reading_state_payload(
             user_id=user.id,
         )
         viewport = await get_latest_viewport(session, user.id)
+        logging.getLogger(__name__).info(
+            "build_reading_state_payload > get_latest_viewport: %v", viewport
+        )
 
     if reading_location is None and viewport is None:
-        raise NotFoundError("No reading state found for the authenticated user.")
+        raise NotFoundError(
+            "No reading state found for the authenticated user."
+        )
 
     return ReadingStatePayload(
         reading_location=(
