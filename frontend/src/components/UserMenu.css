@@ -1,0 +1,93 @@
+.user-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 1px solid #1a1a1a;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.user-avatar:hover {
+  opacity: 0.8;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-initials {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-family: Iowa, Georgia, "Times New Roman", serif;
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  min-width: 220px;
+  padding: 1rem;
+  margin-top: 8px;
+  z-index: 1000;
+  font-family: Iowa, Georgia, "Times New Roman", serif;
+}
+
+.user-menu-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.user-menu-info {
+  padding-bottom: 0.75rem;
+}
+
+.user-menu-email {
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+.user-menu-method {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
+
+.user-menu-divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 0.75rem 0;
+}
+
+.user-menu-logout {
+  display: block;
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  transition: opacity 0.2s;
+}
+
+.user-menu-logout:hover {
+  opacity: 0.6;
+}

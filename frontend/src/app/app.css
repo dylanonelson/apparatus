@@ -1,7 +1,8 @@
 html,
 body {
-  color: var(--theme-text);
-  background-color: var(--theme-background);
+  color: var(--theme-text, #1a1a1a);
+  background-color: var(--theme-background, #fafaf8);
   height: 100%;
   margin: 0;
+  font-family: Iowa, Georgia, "Times New Roman", serif;
 }

@@ -1,29 +1,26 @@
 .publicationGrid {
-  --color-text: #333;
+  --color-text: #1a1a1a;
   --color-text-secondary: #666;
   --color-background: #fff;
   --color-primary: #e0e0e0;
 
   padding: 1rem;
   width: 100%;
+  font-family: Iowa, Georgia, "Times New Roman", serif;
 }
 
 .publicationCard {
   display: flex;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--color-primary);
-  border-radius: 8px;
+  border: 1px solid #e0e0e0;
   overflow: hidden;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
   background: white;
 }
 
 .publicationCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-color: #1a1a1a;
 }
 
 .publicationCover {
@@ -31,6 +28,7 @@
   height: 180px;
   flex-shrink: 0;
   margin: 0;
+  border-right: 1px solid #e0e0e0;
 }
 
 .publicationImage {
@@ -40,7 +38,7 @@
 }
 
 .publicationInfo {
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -48,25 +46,28 @@
 
 .publicationTitle {
   margin: 0 0 0.5rem;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 1.25rem;
-  color: var(--color-text);
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
 }
 
 .publicationAuthor {
   margin: 0 0 0.75rem;
-  color: var(--color-text-secondary);
-  font-size: 1rem;
+  color: #666;
+  font-size: 0.95rem;
+  font-style: italic;
 }
 
 .publicationRendition {
-  background: var(--color-primary);
-  color: var(--color-text);
-  padding: 0.25rem 0.75rem;
+  background: transparent;
+  color: #666;
+  padding: 0;
   margin: 0;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 400;
   margin-top: auto;
   align-self: flex-start;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

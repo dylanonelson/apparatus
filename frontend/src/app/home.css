@@ -1,10 +1,36 @@
 #home {
-  margin: 20px;
+  min-height: 100vh;
+  background: #fafaf8;
+  font-family: Iowa, Georgia, "Times New Roman", serif;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 4.5rem;
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+  background: white;
+}
+
+.app-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 0;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
+}
+
+.content {
+  padding: 3rem 2rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin: 0 0 2.5rem 0;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
 }
 
 .logo-container {
@@ -18,19 +44,22 @@
   object-fit: contain;
 }
 
-h1 {
-  font-size: 2rem;
-  margin: 0 0 1rem;
-  color: var(--color-text);
-}
-
-.subtitle {
-  font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 .dev-books {
   margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.dev-books p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.dev-books code {
+  background: #f0f0f0;
+  padding: 0.2rem 0.4rem;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  color: #1a1a1a;
 }
