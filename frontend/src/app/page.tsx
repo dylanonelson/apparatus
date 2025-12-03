@@ -49,8 +49,7 @@ export default function Home() {
   const [protectedError, setProtectedError] = useState<string | null>(null);
   const [isCallingProtected, setIsCallingProtected] = useState<boolean>(false);
 
-  const { user, isLoading, error } = useUser();
-  const isLoggedIn = !error && user !== undefined && user !== null;
+  const { user, isLoading } = useUser();
 
   const onCallProtectedClick = async () => {
     setIsCallingProtected(true);
@@ -106,11 +105,7 @@ export default function Home() {
         </p>
         {user && <p>Welcome {user.name}</p>}
         <p>
-          {isLoggedIn ? (
-            <a href="/auth/logout">Logout</a>
-          ) : (
-            <a href="/auth/login">Login</a>
-          )}
+          <a href="/auth/logout">Logout</a>
         </p>
         <button
           type="button"
