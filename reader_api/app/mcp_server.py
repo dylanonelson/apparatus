@@ -84,7 +84,7 @@ def create_mcp_server() -> tuple[
             "positions. Requires bearer token. Returns JSON ReadingStatePayload; "
             "returns 404/NotFound when no reading history exists."
         ),
-        mime_type="application/json; charset=utf-8",
+        mime_type="application/json",
     )
     async def get_current_reading_state_resource() -> ReadingStatePayload:
         access_token = get_access_token()
