@@ -60,6 +60,7 @@ class LocatorModel(BaseModel):
 class ViewportPayloadModel(BaseModel):
     positions: list[int]
     text: str
+    selection_text: str | None = None
 
 
 class StoreReadingStateRequestModel(BaseModel):
@@ -86,6 +87,7 @@ class ViewportResponseModel(BaseModel):
     publication_id: str
     positions: list[int]
     text: str
+    selection_text: str | None = None
     recorded_at: datetime | None = None
     updated_at: datetime | None = None
 

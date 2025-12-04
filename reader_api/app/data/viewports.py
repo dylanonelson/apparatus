@@ -21,6 +21,7 @@ async def upsert_viewport(
     publication_id: str,
     positions: Sequence[int],
     text: str,
+    selection_text: str | None = None,
     recorded_at: datetime | None = None,
     commit: bool = True,
 ) -> Viewport:
@@ -45,6 +46,7 @@ async def upsert_viewport(
             publication_id=publication_id,
             positions=list(positions),
             text=text,
+            selection_text=selection_text,
             recorded_at=timestamp,
         )
         session.add(viewport)
@@ -52,6 +54,7 @@ async def upsert_viewport(
         viewport.publication_id = publication_id
         viewport.positions = list(positions)
         viewport.text = text
+        viewport.selection_text = selection_text
         viewport.recorded_at = timestamp
         session.add(viewport)
 

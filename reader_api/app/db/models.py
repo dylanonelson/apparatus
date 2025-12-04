@@ -187,6 +187,14 @@ class Viewport(SQLModel, table=True):
             comment="Full text currently visible to the user",
         ),
     )
+    selection_text: str | None = Field(
+        default=None,
+        sa_column=Column(
+            Text(),
+            nullable=True,
+            comment="Text currently selected by the user within the viewport",
+        ),
+    )
     recorded_at: datetime | None = Field(
         sa_column=Column(
             DateTime(timezone=True),

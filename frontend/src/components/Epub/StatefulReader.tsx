@@ -385,6 +385,7 @@ const StatefulReaderInner = ({
     currentLocator,
     currentPositions,
     getVisibleText,
+    getSelectionText,
     canGoBackward,
     canGoForward,
     isScrollStart,
@@ -429,11 +430,15 @@ const StatefulReaderInner = ({
   );
 
   const syncReadingLocationToServer = useCallback(
-    async (location: LocalStorageReadingLocation) => {
+    async (
+      location: LocalStorageReadingLocation,
+      selectionTextOverride?: string | null,
+    ) => {
       if (!publicationId) return;
 
       const positions = currentPositions() || [];
       const viewportText = getVisibleText();
+      const selectionText = selectionTextOverride ?? getSelectionText();
 
       try {
         const response = await fetch("/api/reading-state", {
@@ -451,6 +456,7 @@ const StatefulReaderInner = ({
             viewport: {
               positions,
               text: viewportText,
+              selection_text: selectionText,
             },
           }),
         });
@@ -465,7 +471,7 @@ const StatefulReaderInner = ({
         console.error("Failed to sync reading state", error);
       }
     },
-    [getVisibleText, currentPositions, publicationId],
+    [getVisibleText, getSelectionText, currentPositions, publicationId],
   );
 
   const queueReadingLocationUpdate = useMemo(
@@ -870,7 +876,22 @@ const StatefulReaderInner = ({
         }
         return false;
       },
-      textSelected: function (_selection: BasicTextSelection): void {},
+      textSelected: function (selection: BasicTextSelection): void {
+        const locator = currentLocator();
+        if (!locator) return;
+
+        const timestamp = new Date().toISOString();
+        const nextLocation: LocalStorageReadingLocation = {
+          publicationId,
+          locator,
+          recordedAt: timestamp,
+        };
+
+        lastRecordedLocation.current = nextLocation;
+        setLocalReadingLocation(locator, timestamp);
+        const selectionText = selection.text?.trim() || null;
+        syncReadingLocationToServer(nextLocation, selectionText);
+      },
     }),
     [
       initReadingEnv,
@@ -878,12 +899,16 @@ const StatefulReaderInner = ({
       peripherals,
       navLayout,
       queueReadingLocationUpdate,
+      currentLocator,
       canGoBackward,
       canGoForward,
       dispatch,
       handleTap,
       isScrollStart,
       isScrollEnd,
+      setLocalReadingLocation,
+      syncReadingLocationToServer,
+      publicationId,
     ],
   );
 

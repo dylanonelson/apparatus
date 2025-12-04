@@ -31,6 +31,7 @@ def _sample_viewport(text: str) -> dict[str, object]:
     return {
         "positions": [1, 2],
         "text": text,
+        "selection_text": None,
     }
 
 
@@ -93,7 +94,10 @@ def test_create_reading_state_persists_viewport_and_location(
             "publication_id": "pub-viewport",
             "locator": _sample_locator("Viewport Chapter"),
             "recorded_at": recorded_at.isoformat(),
-            "viewport": _sample_viewport("Visible text for viewport"),
+            "viewport": {
+                **_sample_viewport("Visible text for viewport"),
+                "selection_text": "Currently selected",
+            },
         }
 
         response = await helper.post("/api/reading-state", json=payload)
@@ -108,6 +112,7 @@ def test_create_reading_state_persists_viewport_and_location(
         assert viewport["publication_id"] == payload["publication_id"]
         assert viewport["positions"] == payload["viewport"]["positions"]
         assert viewport["text"] == payload["viewport"]["text"]
+        assert viewport["selection_text"] == payload["viewport"]["selection_text"]
 
         async with helper.session_factory() as session:
             result_locations = await session.execute(select(ReadingLocation))
@@ -118,6 +123,7 @@ def test_create_reading_state_persists_viewport_and_location(
             viewports = result_viewports.scalars().all()
             assert len(viewports) == 1
             assert viewports[0].text == payload["viewport"]["text"]
+            assert viewports[0].selection_text == payload["viewport"]["selection_text"]
 
     asyncio.run(scenario())
 
@@ -200,6 +206,7 @@ def test_reading_state_overwrites_viewport_entry(test_app: TestApp) -> None:
             "viewport": {
                 "positions": [3],
                 "text": "Updated viewport text",
+                "selection_text": "Updated selection text",
             },
         }
 
@@ -220,6 +227,10 @@ def test_reading_state_overwrites_viewport_entry(test_app: TestApp) -> None:
             assert viewports[0].text == second_payload["viewport"]["text"]
             assert viewports[0].positions == second_payload["viewport"]["positions"]
             assert viewports[0].publication_id == second_payload["publication_id"]
+            assert (
+                viewports[0].selection_text
+                == second_payload["viewport"]["selection_text"]
+            )
 
     asyncio.run(scenario())
 

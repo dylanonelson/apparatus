@@ -285,6 +285,22 @@ export const useEpubNavigator = () => {
     return result;
   }, []);
 
+  const getSelectionText = useCallback((): string | null => {
+    const frames = navigatorInstance?._cframes ?? [];
+
+    for (const frame of frames ?? []) {
+      const frameWindow = extractFrameWindow(frame);
+      const selection = frameWindow?.getSelection();
+      const selectedText = selection?.toString().trim();
+      if (selectedText) {
+        return selectedText;
+      }
+    }
+
+    const selectedText = window.getSelection()?.toString().trim();
+    return selectedText || null;
+  }, []);
+
   const canGoBackward = useCallback(() => {
     return navigatorInstance?.canGoBackward;
   }, []);
@@ -326,6 +342,7 @@ export const useEpubNavigator = () => {
     isScrollStart,
     isScrollEnd,
     getVisibleText,
+    getSelectionText,
     preferencesEditor: navigatorInstance?.preferencesEditor,
     getSetting,
     submitPreferences,
