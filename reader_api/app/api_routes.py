@@ -125,6 +125,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
                 publication_id=reading_state_request.publication_id,
                 positions=reading_state_request.viewport.positions,
                 text=reading_state_request.viewport.text,
+                selection_text=reading_state_request.viewport.selection_text,
                 recorded_at=reading_state_request.recorded_at,
                 commit=False,
             )

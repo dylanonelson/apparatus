@@ -49,6 +49,7 @@ def build_viewport_response(viewport: Viewport) -> ViewportResponseModel:
         publication_id=viewport.publication_id,
         positions=viewport.positions,
         text=viewport.text,
+        selection_text=viewport.selection_text,
         recorded_at=ensure_timezone(viewport.recorded_at),
         updated_at=ensure_timezone(viewport.updated_at),
     )

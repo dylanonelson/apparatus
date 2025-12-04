@@ -35,7 +35,7 @@ async function fetchLatestReadingLocation(
     const response = await fetch(
       `${
         process.env.READER_API_ORIGIN
-      }/reading-locations/latest?publication_id=${encodeURIComponent(
+      }/api/reading-locations/latest?publication_id=${encodeURIComponent(
         publicationId,
       )}`,
       {

@@ -22,6 +22,7 @@ def _sample_payload(publication_id: str, text: str) -> dict[str, object]:
         "viewport": {
             "positions": [1, 2],
             "text": text,
+            "selection_text": "selected text",
         },
         "recorded_at": recorded_at.isoformat(),
     }
@@ -66,6 +67,10 @@ def test_mcp_reading_state_resource_returns_latest(
         )
         assert result.viewport is not None
         assert result.viewport.text == payload["viewport"]["text"]  # type: ignore
+        assert (
+            result.viewport.selection_text
+            == payload["viewport"]["selection_text"]  # type: ignore
+        )
 
     asyncio.run(scenario())
 
@@ -140,6 +145,10 @@ def test_mcp_reading_state_tool_returns_latest(
         )
         assert result.viewport is not None
         assert result.viewport.text == payload["viewport"]["text"]  # type: ignore
+        assert (
+            result.viewport.selection_text
+            == payload["viewport"]["selection_text"]  # type: ignore
+        )
 
     asyncio.run(scenario())
 
