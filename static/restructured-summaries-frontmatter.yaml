@@ -1,0 +1,35 @@
+TITLEPAGE:
+  text: "Title page for the Standard Ebooks digital edition displaying the book's title 'David Copperfield' and author attribution 'By Charles Dickens' with titlepage.svg branding."
+  notable_events: []
+  notable_characters: []
+  notable_passages: []
+
+IMPRINT:
+  text: "Publication information explaining this Standard Ebooks volunteer-produced edition uses sources from Project Gutenberg and Internet Archive, with copyright and licensing details."
+  notable_events: []
+  notable_characters: []
+  notable_passages: []
+
+PREFACE_1850:
+  text: "Dickens's original 1850 preface expressing emotional difficulty completing the novel after two years, describing pleasure and regret at separating from his characters."
+  notable_events: []
+  notable_characters: []
+  notable_passages: ["dismissing some portion of himself into the shadowy world"]
+
+PREFACE_1869:
+  text: "Later preface for the Charles Dickens Edition revealing his famous declaration: 'Of all my books, I like this the best' and calling David Copperfield his 'favourite child.'"
+  notable_events: []
+  notable_characters: []
+  notable_passages: ["Of all my books, I like this the best", "favourite child"]
+
+DEDICATION:
+  text: "Formal dedication affectionately inscribing the novel to Hon. Mr. and Mrs. Richard Watson of Rockingham, Northamptonshire, reflecting Dickens's personal relationships."
+  notable_events: []
+  notable_characters: []
+  notable_passages: []
+
+HALFTITLEPAGE:
+  text: "Minimalist page containing only the novel's title 'David Copperfield,' following traditional publishing convention of a half-title page before the main title page."
+  notable_events: []
+  notable_characters: []
+  notable_passages: []

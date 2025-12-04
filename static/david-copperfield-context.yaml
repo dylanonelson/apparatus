@@ -1,289 +1,1467 @@
 - href: epub/text/titlepage.xhtml
-  title: Titlepage
-  start_position: 1
   last_position: 1
+  start_position: 1
+  summary: 'This file serves as the title page for the digital edition of Charles Dickens''s novel "David
+    Copperfield." It is a minimalist XHTML document that follows the Standard Ebooks format, utilizing
+    proper XML namespacing and EPUB specifications for digital publishing. The file contains three primary
+    elements: the book''s title "David Copperfield," the author attribution "By Charles Dickens," and
+    a reference to a titlepage.svg image that provides visual branding. The document is marked with semantic
+    metadata indicating it belongs to the frontmatter section of the book and specifically serves as the
+    titlepage. The file links to two CSS stylesheets (core.css and se.css) that control the visual presentation
+    and formatting of the page. The language is set to British English (en-GB), which is appropriate given
+    Dickens''s nationality and the novel''s original publication context. The structure is clean and straightforward,
+    designed to present essential bibliographic information to readers in a professional manner. This
+    titlepage acts as the formal entry point to the novel, establishing the work''s identity and authorship
+    before readers encounter the actual narrative content. The use of semantic EPUB types and structured
+    markup ensures accessibility and proper rendering across different e-reading devices and platforms,
+    making it compatible with modern digital reading technologies while maintaining traditional book conventions.'
+  title: Titlepage
 - href: epub/text/imprint.xhtml
-  title: Imprint
-  start_position: 2
   last_position: 3
+  start_position: 2
+  summary: 'This imprint page provides essential publication information and legal details about the Standard
+    Ebooks edition of "David Copperfield." The file explains that this ebook is a volunteer-produced work
+    from Standard Ebooks, a project dedicated to creating high-quality digital editions of public domain
+    literature. The content acknowledges the source materials, specifically noting that the transcription
+    comes from Project Gutenberg and digital scans from the Internet Archive, demonstrating the collaborative
+    nature of digital preservation efforts. The imprint includes important copyright information, clarifying
+    that while the source text and artwork are believed to be in the United States public domain, users
+    in other countries must verify their local copyright laws. Contributors to this edition have dedicated
+    their work to the worldwide public domain through the CC0 1.0 Universal Public Domain Dedication.
+    The page emphasizes Standard Ebooks'' mission: producing freely distributed ebook editions using modern
+    typography, technology, and editorial standards. Multiple hyperlinks are provided for users to access
+    Standard Ebooks'' website, Project Gutenberg, the Internet Archive, and Creative Commons licensing
+    information. The document includes the Standard Ebooks logo as a visual branding element. This imprint
+    page serves a crucial legal and informational function, ensuring transparency about the edition''s
+    provenance, establishing proper attribution for source materials, clarifying copyright status, and
+    providing users with resources for further exploration of public domain literature projects.'
+  title: Imprint
 - href: epub/text/preface-1850.xhtml
-  title: Preface to the 1850 Edition
-  start_position: 4
   last_position: 5
+  start_position: 4
+  summary: This file contains Charles Dickens's original preface written for the 1850 edition of "David
+    Copperfield," composed immediately after completing the novel. The preface is deeply personal and
+    reflective, revealing Dickens's intimate emotional connection to his work. He candidly expresses the
+    difficulty of achieving composure when writing about a book he has just finished, describing his mind
+    as "divided between pleasure and regret"—pleasure in accomplishing a long-planned design, and regret
+    at separating from the many characters who had been his companions throughout the creative process.
+    Dickens acknowledges that he has little to say formally about the story beyond what he has already
+    expressed within the narrative itself. He poignantly describes the sorrowful experience of laying
+    down his pen after a two-year imaginative task, comparing it to "dismissing some portion of himself
+    into the shadowy world" as the creatures of his imagination depart from him forever. Rather than dwelling
+    on the completion, Dickens chooses to look forward optimistically to his future monthly publications,
+    metaphorically described as "two green leaves once a month." He concludes with grateful remembrance
+    of the favorable reception ("genial sun and showers") that the serialized publication of David Copperfield
+    received, which brought him happiness. The preface is dated London, October 1850, and provides valuable
+    insight into Dickens's creative process and the emotional investment he placed in this particular
+    novel.
+  title: Preface to the 1850 Edition
 - href: epub/text/preface.xhtml
-  title: Preface to the Charles Dickens Edition
-  start_position: 6
   last_position: 7
+  start_position: 6
+  summary: 'This preface, written for the Charles Dickens Edition in 1869, represents Dickens''s later
+    reflections on "David Copperfield" nearly two decades after its original publication. The preface
+    begins by referencing and partially repeating content from his 1850 preface, reaffirming the emotions
+    he felt upon completing the novel—the difficulty of achieving composure, the divided feelings of pleasure
+    and regret, and the sensation of dismissing creatures of his imagination into the shadowy world. However,
+    this later preface adds a profoundly significant new revelation that has become one of Dickens''s
+    most famous statements about his work. After confirming that his earlier sentiments remain true, Dickens
+    takes readers into "one confidence more," declaring: "Of all my books, I like this the best." He acknowledges
+    being a fond parent to all his literary creations and loving the entire family of his works dearly,
+    but admits that like many fond parents, he has "in my heart of hearts a favourite child. And his name
+    is David Copperfield." This declaration is particularly meaningful given Dickens''s prolific output
+    and the many beloved novels he produced throughout his career. The statement ends poignantly with
+    "David Copperfield" appearing as a signature, dated 1869. This preface has become historically significant
+    for literary scholars and Dickens enthusiasts because it explicitly identifies which of his many masterpieces
+    the author himself cherished most deeply, providing unique insight into his personal preferences and
+    the special place this semi-autobiographical novel held in his affections.'
+  title: Preface to the Charles Dickens Edition
 - href: epub/text/dedication.xhtml
-  title: Dedication
-  start_position: 8
   last_position: 8
-- href: epub/text/halftitlepage.xhtml
-  title: David Copperfield
-  start_position: 9
-  children:
+  start_position: 8
+  summary: 'This dedication page is a brief, formal document that inscribes "David Copperfield" to specific
+    individuals from Dickens''s personal life. The file contains a simple but elegant dedication reading:
+    "Affectionately inscribed to the Hon. Mr. and Mrs. Richard Watson, of Rockingham, Northamptonshire."
+    This dedicatory inscription follows traditional 19th-century literary conventions where authors would
+    honor friends, patrons, or important figures by dedicating their works to them. The use of "affectionately"
+    suggests a warm personal relationship between Dickens and the Watsons, moving beyond mere formal courtesy.
+    Richard Watson and his wife were evidently people of some social standing, as indicated by the honorific
+    "Hon." (Honourable) and their association with Rockingham in Northamptonshire, England. Historically,
+    Rockingham House was a significant estate, and the Watsons were among Dickens''s circle of friends.
+    Such dedications served multiple purposes in Victorian literature: they acknowledged personal relationships,
+    potentially provided a measure of patronage or social endorsement, and demonstrated the author''s
+    connections within society. The dedication is structured as frontmatter content within the XHTML document,
+    properly categorized with semantic markup for digital publishing. While minimal in content, this page
+    represents an important element of the book''s original publication, preserving the personal dimension
+    of Dickens''s work and his relationships with contemporaries who supported or inspired his writing.
+    The dedication adds historical and biographical context to the novel.'
+  title: Dedication
+- children:
   - href: epub/text/chapter-1.xhtml
-    title: 'I: I Am Born'
-    start_position: 10
     last_position: 20
+    start_position: 10
+    summary: 'David Copperfield begins his autobiography on a Friday at midnight, with superstitious whispers
+      that he was born to see ghosts and that he will be unlucky in life. His father died six months before
+      his birth, leaving his young mother Clara as a widow. The family home is Blunderstone Rookery in
+      Suffolk. David''s formidable great-aunt, Betsey Trotwood, arrives on the night of his birth, having
+      quarreled with David''s father years earlier. She is convinced the baby will be a girl named after
+      herself. When she discovers the infant is a boy, she storms out in disappointment and disappears
+      from their lives for years. David''s early childhood is idyllic, spent with his gentle mother and
+      their devoted servant Peggotty. The household is peaceful and loving. Peggotty, with her cheerful
+      disposition and rough red fingers, becomes David''s surrogate mother figure. The chapter establishes
+      the major themes of the novel: fate versus self-determination, the importance of surrogate families,
+      and the power of memory in shaping identity. Famous passage: "Whether I shall turn out to be the
+      hero of my own life, or whether that station will be held by anybody else, these pages must show."
+      This opening line immediately establishes the narrative''s self-reflective quality and questions
+      about agency and identity that permeate the entire novel. The chapter masterfully sets up David''s
+      orphan status while introducing the eccentric Aunt Betsey who will become crucial to his salvation
+      later.'
+    title: 'I: I Am Born'
   - href: epub/text/chapter-2.xhtml
-    title: 'II: I Observe'
-    start_position: 21
     last_position: 34
+    start_position: 21
+    summary: 'Young David enjoys an idyllic childhood with his mother and Peggotty. He notices a change
+      when a mysterious gentleman, Mr. Murdstone, begins paying attention to his mother during church
+      and taking walks with her. David feels jealous and possessive of his mother''s affection. Peggotty
+      proposes taking David to visit her family at Yarmouth for a fortnight, which his mother eagerly
+      approves. At Yarmouth, David meets Peggotty''s brother Mr. Peggotty, a kind-hearted fisherman who
+      lives in an upturned boat converted into a home on the beach. There David meets Ham, Mr. Peggotty''s
+      nephew, a gentle giant of a young man, and most importantly, little Emily, Mr. Peggotty''s orphaned
+      niece whom David immediately adores. Emily, with her wild beauty and capricious nature, captures
+      David''s heart. She dreams of becoming a lady and expresses fear of the sea despite living beside
+      it. They play together as childhood sweethearts, and David promises to marry her when they grow
+      up. The boat-house home represents warmth, simplicity, and genuine family love despite the occupants
+      being a makeshift family of orphans and strays. This visit provides David with happy memories and
+      establishes the Peggotty family as his alternative refuge. Famous passage: Emily''s declaration
+      that she wishes she could be a lady foreshadows her tragic trajectory. When David returns home,
+      he discovers his mother has married Mr. Murdstone during his absence, a betrayal that shatters his
+      childhood innocence and marks the end of his carefree existence.'
+    title: 'II: I Observe'
   - href: epub/text/chapter-3.xhtml
-    title: 'III: I Have a Change'
-    start_position: 35
     last_position: 49
+    start_position: 35
+    summary: 'David returns from Yarmouth to find his mother married to the stern Mr. Murdstone. His childhood
+      paradise is destroyed. Mr. Murdstone is cold, authoritarian, and methodical in his cruelty, believing
+      in "firmness" as the guiding principle. He transforms the once-happy household into a prison of
+      discipline and fear. David''s mother, though still loving, becomes weak and fearful under her new
+      husband''s dominance. Mr. Murdstone''s equally harsh sister, Jane Murdstone, arrives to take over
+      household management, further isolating David''s mother. She carries keys ominously, symbolizing
+      her control over everything. The sisters and their brother form an alliance against the child, treating
+      him with calculated coldness. David is sent to his room as punishment, isolated from his mother.
+      He finds solace in reading his late father''s books, especially adventure stories like "Tom Jones,"
+      "The Vicar of Wakefield," and "Robinson Crusoe," which become his refuge. These books feed his imagination
+      and provide escape. Mr. Murdstone imposes rigorous lessons on David, who becomes paralyzed with
+      fear and cannot perform. When he fails at his lessons, severe punishment is threatened. The psychological
+      torture is methodical—the Murdstones deliberately break David''s spirit and his mother''s will.
+      The chapter depicts child abuse through coldness, intimidation, and emotional manipulation. Famous
+      passage: David''s description of reading as his sanctuary establishes literature as salvation. The
+      chapter shows how quickly domestic tyranny can destroy happiness, and how the vulnerable—both David
+      and his mother—suffer under authoritarian cruelty that masquerades as moral firmness and proper
+      discipline.'
+    title: 'III: I Have a Change'
   - href: epub/text/chapter-4.xhtml
-    title: 'IV: I Fall Into Disgrace'
-    start_position: 50
     last_position: 67
+    start_position: 50
+    summary: 'Mr. Murdstone continues David''s education with brutal severity. During lessons, David becomes
+      so terrified he cannot concentrate or remember anything. When he fails repeatedly, Mr. Murdstone
+      decides to beat him. David''s mother pleads for mercy, but Miss Murdstone holds her back. In desperation,
+      during the beating, David bites Mr. Murdstone''s hand in self-defense. This act of resistance seals
+      his fate. He is immediately labeled vicious and uncontrollable. David is imprisoned in his room
+      for five days, seeing no one but Miss Murdstone, who brings his meals in stern silence. On the fifth
+      day, he is informed he is being sent away to boarding school. Before he leaves, he is permitted
+      to see his mother one final time. The goodbye is heartbreaking—his mother holds him tenderly, but
+      Miss Murdstone cuts their farewell short. Peggotty secretly comes to his room that night to comfort
+      him and give him money, pressing coins into his hand and promising her enduring love and loyalty.
+      David is taken away by Mr. Barkis, the carrier, who drives him to the coaching inn. Mr. Barkis,
+      taciturn but kind, learns David knows Peggotty and asks him to deliver a message: "Barkis is willin'',"
+      indicating his romantic interest in Peggotty. This simple phrase becomes a recurring motif. David
+      travels alone to London, feeling abandoned and labeled with a sign warning that he bites, which
+      humiliates him before strangers. At Salem House school in Blackheath, he arrives to find it empty
+      during holidays. The chapter captures David''s first major exile from home, the trauma of physical
+      and emotional abuse, and his classification as a "problem child" when he is actually a victim.'
+    title: 'IV: I Fall Into Disgrace'
   - href: epub/text/chapter-5.xhtml
-    title: 'V: I Am Sent Away from Home'
-    start_position: 68
     last_position: 84
+    start_position: 68
+    summary: 'David arrives at Salem House school during holidays and meets Mr. Creakle, the tyrannical
+      headmaster with a terrible reputation for cruelty. Mr. Creakle, whose voice is a harsh whisper due
+      to throat problems, is assisted by Tungay, his equally brutal servant. David is humiliated by being
+      forced to wear a sign on his back reading "Take care of him. He bites," ensuring all boys will mock
+      him. During the empty holiday period, David befriends two people who will become important: Tommy
+      Traddles, a good-natured boy who draws skeletons on his slate and will later become a close friend,
+      and James Steerforth, a handsome, charismatic older boy who treats David with condescending kindness.
+      Steerforth embodies everything David admires: confidence, good looks, aristocratic bearing, and
+      power over others. David immediately idolizes him, lending him money and telling him stories. Steerforth
+      exploits this worship casually, spending David''s money on luxuries they share, but David considers
+      it an honor. The chapter establishes Steerforth as David''s hero despite early warning signs of
+      his selfishness and moral carelessness. When school begins, Salem House proves to be exactly as
+      terrible as feared. Mr. Creakle rules through fear and physical punishment, beating boys regularly
+      with cruel enthusiasm. He particularly enjoys humiliating David because of his sign. The assistant
+      headmaster, Mr. Sharp, is also harsh, though less sadistic. Only the elderly head Latin master,
+      Mr. Mell, shows any kindness, though he is poor, shabby, and looked down upon by Steerforth. The
+      school represents Victorian educational brutality. Dickens based Salem House on his own traumatic
+      school experiences, making this a powerful critique of institutional cruelty toward children.'
+    title: 'V: I Am Sent Away from Home'
   - href: epub/text/chapter-6.xhtml
-    title: 'VI: I Enlarge My Circle of Acquaintance'
-    start_position: 85
     last_position: 92
+    start_position: 85
+    summary: 'David adjusts to life at Salem House under Mr. Creakle''s brutal regime. He finds solace
+      in friendships with Traddles and continued worship of Steerforth. One day, Steerforth publicly humiliates
+      Mr. Mell, the poor but kind teacher, by revealing that his mother lives in an almshouse, attacking
+      his poverty and position. Mr. Creakle, supporting Steerforth because of his wealthy background,
+      dismisses Mr. Mell from the school. David witnesses this injustice but doesn''t recognize Steerforth''s
+      cruelty, remaining loyal to his hero. David''s adoration of Steerforth blinds him to significant
+      character flaws—his casual cruelty, class snobbery, and exploitation of those weaker than himself.
+      This pattern of David''s misjudgment of Steerforth foreshadows future tragedy. Life at school continues
+      with regular beatings and misery. David distinguishes himself academically but suffers under Creakle''s
+      tyranny. During the holidays, David expects to go home but receives devastating news: his mother
+      has died shortly after giving birth to a baby boy, who has also died. David is shattered by grief.
+      His idyllic childhood memories are now all he has left of his mother. Peggotty arrives to collect
+      him and take him home to Blunderstone for the funeral. She provides comfort and tells him details
+      about his mother''s decline under the Murdstones'' harsh treatment. The chapter marks a profound
+      turning point—David''s loss of his last true parent and the end of any possibility of returning
+      to the happiness of his early childhood. His mother''s death leaves him essentially orphaned and
+      completely at the Murdstones'' mercy. The theme of surrogate families becomes even more important.
+      Famous passage: David''s description of his mother''s death and his inability to imagine her as
+      anything but young and beautiful.'
+    title: 'VI: I Enlarge My Circle of Acquaintance'
   - href: epub/text/chapter-7.xhtml
-    title: 'VII: My “First Half” at Salem House'
-    start_position: 93
     last_position: 109
+    start_position: 93
+    summary: 'After his mother''s funeral, David returns to Blunderstone Rookery, but now it feels cold
+      and unwelcoming under the Murdstones'' complete control. The house is transformed from his childhood
+      home into a prison. Miss Murdstone rules with absolute authority while Mr. Murdstone coldly ignores
+      David. He is kept isolated from everyone except Peggotty, who remains fiercely loyal despite the
+      Murdstones'' hostility toward her. David receives no education and is left in neglect, seemingly
+      forgotten. This state of limbo continues for months. The Murdstones make no plans for his future.
+      He exists in isolation, reading in his room. Eventually, Mr. Murdstone decides David''s future:
+      he will not continue his education but will be sent to work. David, only ten years old, is taken
+      to London by Mr. Murdstone and delivered to Murdstone and Grinby''s warehouse, a wine bottling establishment
+      near the Thames. He is to work washing and labeling bottles alongside working-class boys for six
+      or seven shillings a week. This is his punishment and abandonment. At the warehouse, David experiences
+      the trauma of child labor. He meets his coworkers: young boys including Mick Walker and a boy he
+      calls Mealy Potatoes due to his diet. The work is degrading, mechanical, and soul-destroying for
+      a sensitive child who had expected to be educated as a gentleman. David feels profound shame at
+      his fall in status. The warehouse episode is based on Dickens''s own traumatic childhood experience
+      working at Warren''s Blacking Factory, which haunted him throughout his life. This autobiographical
+      element gives the chapter particular power and emotional authenticity. David''s sense of abandonment,
+      social humiliation, and lost potential reflects Dickens''s own psychological wounds. Dickens waited
+      until near death to reveal this childhood trauma publicly.'
+    title: 'VII: My “First Half” at Salem House'
   - href: epub/text/chapter-8.xhtml
-    title: 'VIII: My Holidays. Especially One Happy Afternoon'
-    start_position: 110
     last_position: 123
+    start_position: 110
+    summary: David works at Murdstone and Grinby's warehouse in misery and isolation. His lodgings are
+      arranged with Mr. and Mrs. Micawber at their house in Windsor Terrace, City Road. The Micawbers
+      are perpetually in financial crisis despite Mr. Micawber's grand manner and optimistic declarations
+      that "something will turn up." They live in genteel poverty, constantly harassed by creditors, pawning
+      possessions, and scheming to avoid debtors' prison. Despite their circumstances, the Micawbers are
+      warm and generous to David, treating him almost as family. Mrs. Micawber, dramatically loyal to
+      her improvident husband, repeatedly declares she will never desert Mr. Micawber. Their twins and
+      other children add to the household chaos. David, though a child himself, often acts as the adult,
+      managing their pawning transactions and struggling to help them. He becomes intimately acquainted
+      with poverty, pawnshops, and the constant anxiety of debt. The Micawbers' financial catastrophe
+      finally arrives when Mr. Micawber is arrested for debt and imprisoned in the King's Bench Prison.
+      David visits him there regularly. The family moves into the prison with him, a common practice when
+      debtors were incarcerated. Eventually, Mr. Micawber's debts are settled through insolvency proceedings,
+      and he is released. The family decides to move to Plymouth for a fresh start. Before leaving, they
+      have an emotional parting with David, promising eternal friendship. Mr. Micawber's declaration that
+      "something will turn up" becomes his catchphrase and a symbol of his eternal optimism despite repeated
+      disasters. The chapter brilliantly portrays the precariousness of middle-class existence and the
+      debtor system's cruelty. Micawber is both comic and tragic—his pompous speech and eternal optimism
+      clash with his genuine suffering and inability to provide for his family.
+    title: 'VIII: My Holidays. Especially One Happy Afternoon'
   - href: epub/text/chapter-9.xhtml
-    title: 'IX: I Have a Memorable Birthday'
-    start_position: 124
     last_position: 135
+    start_position: 124
+    summary: 'After the Micawbers leave London, David''s loneliness becomes unbearable. He continues working
+      at the warehouse but has nowhere to live. He takes miserable lodgings with a Mrs. Crupp-like landlady
+      who treats him poorly. His isolation and degradation deepen. He wanders London streets, hungry and
+      desperate, spending his meager wages on cheap food. He becomes familiar with London''s poorest neighborhoods
+      and the life of working children. On Sundays, David sometimes visits monuments and churches, trying
+      to maintain dignity and hope. He occasionally encounters Steerforth''s mother and her companion,
+      Rosa Dartle, though he avoids identifying himself due to shame over his circumstances. One day,
+      David impulsively decides he cannot continue this life. He resolves to run away and find his only
+      living relative who might help him: his great-aunt Betsey Trotwood in Dover. He has only met her
+      once on the night of his birth, but she represents his last hope. David plans his escape carefully.
+      He has a small box of possessions and needs to transport it to Dover. He hires a young carrier to
+      take his box but is immediately robbed—the carrier steals the box and the half-guinea David paid
+      him. David begins the journey on foot with almost nothing. The three-day journey to Dover is an
+      ordeal. David, exhausted and hungry, walks about seventy miles. He sells his waistcoat for money
+      to buy food. He sleeps rough, encountering various characters on the road, some threatening. He
+      is repeatedly robbed and cheated. By the time he reaches Dover, he is filthy, ragged, and desperate.
+      The chapter depicts David at his lowest point, demonstrating remarkable courage and determination
+      for a child to undertake such a desperate journey alone.'
+    title: 'IX: I Have a Memorable Birthday'
   - href: epub/text/chapter-10.xhtml
-    title: 'X: I Become Neglected, and Am Provided For'
-    start_position: 136
     last_position: 153
+    start_position: 136
+    summary: 'David arrives in Dover exhausted, filthy, and desperate. He must find his Aunt Betsey Trotwood''s
+      house but doesn''t know where she lives. He asks various people for directions to "Miss Trotwood,"
+      eventually learning she lives on the outskirts of Dover. When he finally finds her cottage, which
+      has a neat garden, he sees her for the first time since his birth. Aunt Betsey is initially startled
+      by the ragged, dusty boy who appears at her gate. David identifies himself, and she is shocked to
+      recognize her grand-nephew. She immediately takes charge, though in her abrupt, eccentric manner.
+      She rails against the donkeys that trespass on her precious green in front of the house, chasing
+      them away energetically—this is her peculiar obsession. Aunt Betsey listens to David''s story with
+      growing indignation at the Murdstones'' treatment of him. She has him bathed and fed, and he sleeps
+      properly for the first time in weeks. She consults her lodger, Mr. Dick, a harmless, gentle man
+      with a mysterious past who lives in the house. Mr. Dick is "simple" or mentally fragile, rescued
+      by Aunt Betsey from his family who wanted to institutionalize him. He works constantly on a "Memorial"
+      (a petition) that is never completed because he cannot keep King Charles the First''s head out of
+      it—an obsession representing his mental disturbance. Despite his oddities, Mr. Dick is kind and
+      perceptive. When Aunt Betsey asks his advice about what to do with David, he offers simple but profound
+      wisdom. Aunt Betsey writes to the Murdstones to inform them David is with her. David anxiously awaits
+      their response, terrified he will be sent back. The chapter introduces Aunt Betsey as David''s salvation—eccentric,
+      sharp-tongued, but fundamentally just and loving. She represents an alternative to the Murdstones''
+      cruelty: discipline with affection, high standards with support.'
+    title: 'X: I Become Neglected, and Am Provided For'
   - href: epub/text/chapter-11.xhtml
-    title: 'XI: I Begin Life on My Own Account, and Don’t Like It'
-    start_position: 154
     last_position: 169
+    start_position: 154
+    summary: 'This chapter actually covers David''s time at Murdstone and Grinby''s warehouse in more
+      detail, describing the psychological impact of his child labor and degradation. David describes
+      the warehouse location near the Thames, surrounded by coal barges and rats. The building is dilapidated
+      and filthy. His job is washing, rinsing, and labeling bottles—monotonous, degrading work that crushes
+      his spirit. David works alongside boys from the working class: Mick Walker and Mealy Potatoes, who
+      accept their station in life. David, however, was raised with expectations of education and gentlemanly
+      status, making his fall more traumatic. He suffers profound shame, keeping his circumstances secret
+      from everyone. The work represents more than physical hardship—it''s a spiritual and psychological
+      death of his potential and dreams. David fears this is his permanent fate, that his childhood promise
+      is being destroyed forever. He learns about adult poverty and struggle prematurely. He becomes familiar
+      with pawnshops, where he regularly goes to pawn the Micawbers'' possessions. He learns to stretch
+      pennies, buying the cheapest food—saveloys and pudding slices. He describes wandering London streets,
+      observing the theatrical life of the city: covent Garden, street performers, shop windows full of
+      items he cannot afford. The experience leaves permanent scars on David''s psyche. Even as an adult
+      narrator, he describes these memories with pain. The famous passage is Dickens''s declaration that
+      "No words can express the secret agony of my soul" at this degradation. The autobiographical intensity
+      gives this chapter extraordinary emotional power. Dickens rarely spoke of his own childhood warehouse
+      trauma, making David''s experience a veiled confession of his own suffering and shame that shaped
+      his entire life and work.'
+    title: 'XI: I Begin Life on My Own Account, and Don’t Like It'
   - href: epub/text/chapter-12.xhtml
-    title: 'XII: Liking Life on My Own Account No Better, I Form a Great Resolution'
-    start_position: 170
     last_position: 179
+    start_position: 170
+    summary: 'David continues suffering at the warehouse and in his lonely lodgings. After the Micawbers
+      leave, his isolation becomes complete. He takes new lodgings that are even worse, with a suspicious
+      landlady. His solitary existence consists of work, cheap meals, and aimless walking through London.
+      On weekends, he wanders to different parts of London, observing life but participating in none of
+      it. He becomes a ghost in the city. Sometimes he goes to Covent Garden to watch the theater crowds,
+      or to the City to observe the markets. He peers into shop windows and imagines different lives.
+      The loneliness and degradation become unbearable. David realizes that the Murdstones have essentially
+      abandoned him to permanent poverty and obscurity. They have made no provisions for his education
+      or future. He understands that if he remains, his entire life will be this warehouse existence.
+      This realization crystallizes into desperate resolve: he must escape and seek help from his only
+      remaining relative, Aunt Betsey Trotwood. Though he barely knows her and she seemingly wanted nothing
+      to do with his family after his birth, she represents his only hope. David makes careful plans for
+      his escape. He has a small box with his few possessions and clothes. He must get both himself and
+      the box to Dover, about seventy miles away. Having saved a small amount of money, he hires a young
+      man with a cart to transport his box. However, he is immediately swindled—the carrier steals both
+      the box and the money, leaving David with almost nothing. Undeterred, David begins walking to Dover.
+      The journey takes days. He must buy food with his few remaining coins. He sleeps outdoors or in
+      haystacks. Various people cheat and rob him along the way. He sells his waistcoat for money. By
+      the time he approaches Dover, he is filthy, exhausted, and in rags, having walked nearly seventy
+      miles.'
+    title: 'XII: Liking Life on My Own Account No Better, I Form a Great Resolution'
   - href: epub/text/chapter-13.xhtml
-    title: 'XIII: The Sequel of My Resolution'
-    start_position: 180
     last_position: 198
+    start_position: 180
+    summary: David arrives in Dover after his arduous journey from London, exhausted and desperate. He
+      must locate his Aunt Betsey's house but knows only that she lives in Dover. He asks various townspeople
+      for directions to "Miss Trotwood" and eventually learns she lives in a cottage on the outskirts.
+      When he finally arrives at her neat cottage with its garden and green in front, he sees his aunt
+      for the first time since his birth. She is gardening and immediately notices the ragged, dusty boy
+      at her gate. David introduces himself, and Aunt Betsey is astonished to recognize her grand-nephew
+      David Copperfield. She exclaims her shock while simultaneously shooing away donkeys that trespass
+      on her green—a peculiar obsession that interrupts even this dramatic moment. She takes David inside,
+      giving him food and having the servant Janet prepare a bath. She listens to his story with growing
+      fury at the Murdstones' treatment. She consults with her lodger, Mr. Dick (Mr. Richard Babley),
+      a gentle, eccentric man she rescued from his family's attempt to institutionalize him. Mr. Dick
+      lives upstairs working on a "Memorial" to petition the Lord Chancellor about his affairs, but he
+      cannot complete it because King Charles the First's head keeps appearing in the text—his obsession
+      and symbol of mental disturbance. Despite his oddities, Mr. Dick is perceptive and kind. When Aunt
+      Betsey asks his advice about David, he suggests having clothes made for him. Aunt Betsey writes
+      to the Murdstones informing them of David's location. She offers David a bedroom and clean clothes
+      while they await the response. David is anxious and fearful that the Murdstones will force him to
+      return. The chapter establishes Aunt Betsey as David's potential savior—eccentric, abrupt, but fundamentally
+      just and compassionate, representing a stark contrast to the Murdstones' cruelty.
+    title: 'XIII: The Sequel of My Resolution'
   - href: epub/text/chapter-14.xhtml
-    title: 'XIV: My Aunt Makes Up Her Mind About Me'
-    start_position: 199
     last_position: 213
+    start_position: 199
+    summary: 'David waits anxiously at Aunt Betsey''s house for the Murdstones'' response to her letter.
+      He fears being returned to his miserable life. Aunt Betsey maintains her usual routine, consulting
+      Mr. Dick about his Memorial''s progress. She explains Mr. Dick''s history to David: he was considered
+      "mad" by his brother and nearly institutionalized, but Aunt Betsey rescued him. His obsession with
+      King Charles the First stems from the disturbance he suffered when his beloved sister married badly.
+      Mr. Dick writes his troubles on his Memorial and then copies them onto a kite, flying it to disperse
+      his troubles into the sky—a therapeutic ritual. David becomes fond of Mr. Dick. Finally, the Murdstones
+      arrive—both Mr. Murdstone and his sister Jane on horseback. Miss Murdstone rides her donkey across
+      Aunt Betsey''s sacred green, enraging her and beginning the confrontation badly. Aunt Betsey initially
+      chases the donkey away with her usual fury before learning who the riders are. Once inside, the
+      Murdstones present themselves as David''s injured parties. Mr. Murdstone describes David as sullen,
+      rebellious, and ungrateful with a violent temper, claiming they tried to correct his vices but failed.
+      Miss Murdstone confirms that David is the worst boy in the world. They explain they placed him in
+      a respectable business (the warehouse), which he abandoned. Mr. Murdstone demands David''s return
+      and warns Aunt Betsey that if she harbors him, she must keep him permanently—the Murdstones will
+      close their doors to him forever. Aunt Betsey questions them sharply about whether they would have
+      treated David the same if he were their own son, about his mother''s property, and about the boy''s
+      welfare. David, positioned behind a chair like a prisoner in a dock, watches the confrontation.
+      When asked if he wants to return to the Murdstones, David passionately refuses, begging Aunt Betsey
+      to protect him. He testifies that the Murdstones made his mother miserable and have been cruel to
+      him. Aunt Betsey turns to Mr. Dick for advice.'
+    title: 'XIV: My Aunt Makes Up Her Mind About Me'
   - href: epub/text/chapter-15.xhtml
-    title: 'XV: I Make Another Beginning'
-    start_position: 214
     last_position: 223
+    start_position: 214
+    summary: 'Mr. Dick''s advice is simple but perfect: "Have him measured for a suit of clothes directly."
+      Aunt Betsey triumphantly accepts this wisdom and declares to the Murdstones that she will take responsibility
+      for David. She dismisses them with a devastating speech about how they destroyed David''s mother
+      through their tyranny and cruelty. She accuses Mr. Murdstone of courting Clara with false sweetness,
+      then systematically breaking her spirit once married. She tells Miss Murdstone that if she ever
+      rides a donkey across her green again, she will knock off her bonnet. The Murdstones leave humiliated.
+      David is overwhelmed with relief and gratitude. Aunt Betsey announces he will be renamed Trotwood
+      Copperfield, marking his new beginning. She has clothes purchased and marked with his new name.
+      David''s life is transformed. He spends happy time with Aunt Betsey and Mr. Dick, particularly enjoying
+      flying the great kite with Mr. Dick. David observes how Mr. Dick finds peace when flying the kite,
+      as if it lifts his troubled thoughts into the sky. Aunt Betsey decides David needs proper education
+      and chooses Doctor Strong''s school in Canterbury. She takes David to Canterbury to visit Mr. Wickfield,
+      a lawyer and her business agent, to make arrangements. At Mr. Wickfield''s ancient, spotless house,
+      they meet Uriah Heep, a cadaverous young clerk with red hair, no eyebrows or eyelashes, and a skeleton-like
+      hand. His appearance immediately unsettles David. They also meet Mr. Wickfield himself, a distinguished
+      man with white hair and a fondness for port wine. He is devoted to his young daughter Agnes, who
+      is about David''s age. When they meet Agnes, David is struck by her serene, angelic quality—her
+      calm face reminds him of a stained-glass church window. The school proves excellent, but suitable
+      boarding is difficult to find. Mr. Wickfield offers to let David lodge with them, and Aunt Betsey
+      gratefully accepts. Before leaving, Aunt Betsey gives David advice: "never be mean, never be false,
+      never be cruel," and departs emotionally. David settles into his new life at Mr. Wickfield''s house.'
+    title: 'XV: I Make Another Beginning'
   - href: epub/text/chapter-16.xhtml
-    title: 'XVI: I Am a New Boy in More Senses Than One'
-    start_position: 224
     last_position: 243
+    start_position: 224
+    summary: David begins at Doctor Strong's school, meeting the absent-minded, kind-hearted headmaster
+      who is much older than his pretty young wife, Annie Strong. The school is excellent—run on honor
+      and trust, completely opposite to Salem House's tyranny. David learns that Annie Strong married
+      the elderly Doctor for his status and to help her poor relations, particularly her cousin Jack Maldon.
+      Mr. Wickfield is arranging a position for Jack Maldon abroad in India, suggesting he should be sent
+      away from Mrs. Strong's presence. On his first day, David feels alienated from his schoolfellows.
+      His experiences—working at the warehouse, knowing the Micawbers, sleeping in the King's Bench Prison,
+      and his degraded life in London—separate him from their innocent boyhood. He fears they will discover
+      his shameful past and judges himself harshly for knowledge he wishes he didn't have. However, the
+      atmosphere at Mr. Wickfield's house soothes him. Agnes is the "little housekeeper," managing the
+      household with mature grace despite being David's age. Her mother is dead; her portrait hangs in
+      the house, and Agnes resembles her. Mr. Wickfield is devoted to Agnes but drinks heavily. David
+      observes the father's dependence on his daughter. At dinner, Jack Maldon visits to discuss his imminent
+      departure to India. He speaks disrespectfully about Doctor Strong ("the old Doctor") and hints that
+      Mrs. Strong has influence over her elderly husband, implying an inappropriate power dynamic in their
+      marriage. Mr. Wickfield rebukes his presumption firmly. After dinner, David encounters Uriah Heep
+      in his office, studying legal texts. Uriah repeatedly describes himself and his late father as "'umble"
+      people, claiming humility as his defining characteristic. However, his manner is unsettling—he has
+      a writhing way of moving, his hands feel clammy and fishlike, and his eyes stare in an unblinking,
+      uncomfortable way. When David politely suggests Uriah might someday become Mr. Wickfield's partner,
+      Uriah insists he is far too humble for such advancement. He invites David to visit his humble home
+      to meet his mother.
+    title: 'XVI: I Am a New Boy in More Senses Than One'
   - href: epub/text/chapter-17.xhtml
-    title: 'XVII: Somebody Turns Up'
-    start_position: 244
     last_position: 260
+    start_position: 244
+    summary: David writes to Peggotty from Dover and Doctor Strong's school in Canterbury. He learns that
+      the Murdstones have left and his childhood home is shuttered. Mr. Dick visits David regularly on
+      Wednesdays, becoming beloved by the schoolboys despite his eccentricity. Mr. Dick reveals a mysterious
+      man who frightens Aunt Betsey and to whom she secretly gives money in the moonlight. David suspects
+      this may involve attempts to remove Mr. Dick from his aunt's protection. One day, David is invited
+      to tea at Uriah Heep's humble dwelling, where Uriah and his mother persistently extract information
+      about Mr. Wickfield and Agnes through their obsequious questioning. The visit becomes uncomfortable
+      as David realizes he's revealed more than intended. Suddenly, Mr. Micawber appears at the door—the
+      memorable character from David's childhood. Micawber is as eloquent and impecunious as ever, speaking
+      of "something turning up" while residing temporarily in Canterbury with his wife. After a convivial
+      dinner together featuring punch and reminiscences, Micawber sends David a characteristic despairing
+      letter announcing financial ruin, only for David to see him the next morning departing cheerfully
+      on the London coach, eating walnuts. This chapter reunites David with colorful figures from his
+      past while introducing the unsettling dynamic of Uriah Heep's manipulation.
+    title: 'XVII: Somebody Turns Up'
   - href: epub/text/chapter-18.xhtml
-    title: 'XVIII: A Retrospect'
-    start_position: 261
     last_position: 268
+    start_position: 261
+    summary: This poetic, impressionistic chapter captures David's school years through a series of vignettes
+      rather than linear narrative. David recalls his early infatuation with Miss Shepherd, a boarding-school
+      girl he adores from afar, eventually kissing her in the cloakroom before their relationship ends
+      when she prefers another boy. He describes fighting the local butcher to defend Doctor Strong's
+      honor, suffering a beating but earning Agnes's sympathetic care. Time passes swiftly—Adams, once
+      head boy, becomes a barrister; David himself becomes head boy. Agnes transforms from child to woman,
+      becoming his "sweet sister" and counselor. David, now wearing a gold watch and using bear's grease
+      in his hair, falls desperately in love with the eldest Miss Larkins, a woman of thirty. He spends
+      agonized hours outside her house, fantasizes about rescuing her from fire, and thrills when she
+      dances a waltz with him at a ball, giving him a flower. His romantic dreams shatter when Agnes announces
+      Miss Larkins's engagement to Mr. Chestle, a hop-grower. Dejected, David throws away the faded flower,
+      fights the butcher again (this time victoriously), and resumes wearing his ring. The chapter memorably
+      captures the intensity of adolescent emotions, the acceleration of time, and David's progression
+      toward young manhood, all filtered through the haze of memory.
+    title: 'XVIII: A Retrospect'
   - href: epub/text/chapter-19.xhtml
-    title: 'XIX: I Look About Me, and Make a Discovery'
-    start_position: 269
     last_position: 284
+    start_position: 269
+    summary: 'David''s schooldays end, and he must choose a profession. After deliberations with Aunt
+      Betsey and Mr. Dick (who suggests "Brazier"), his aunt proposes he become a proctor in Doctors''
+      Commons. She sends David on a preliminary trip to Yarmouth to visit Peggotty and gain perspective.
+      In Canterbury, he bids farewell to Agnes, who warns him against Steerforth as his "bad Angel," though
+      David defends his friend passionately. Agnes reveals troubling news: Uriah Heep is becoming her
+      father''s partner. She explains that Uriah has made himself indispensable, mastering Mr. Wickfield''s
+      weaknesses and creating a situation where her father is "afraid of him." Agnes accepted the partnership
+      to relieve her father''s distress, though she grieves over his deterioration. At Doctor Strong''s,
+      David learns of plans for the Doctor''s retirement and hears concerning news about Annie Strong''s
+      cousin, Jack Maldon, returning from India due to illness. David observes Mr. Wickfield watching
+      Annie Strong with suspicious intensity and recalls a troubling scene from Maldon''s departure. David
+      begins to doubt the innocence of the Doctor''s young wife. Leaving Canterbury with these dark suspicions
+      clouding his memory of his happy schooldays, David travels to London, where he unexpectedly encounters
+      Steerforth at the inn, joyfully renewing their friendship.'
+    title: 'XIX: I Look About Me, and Make a Discovery'
   - href: epub/text/chapter-20.xhtml
-    title: 'XX: Steerforth’s Home'
-    start_position: 285
     last_position: 293
+    start_position: 285
+    summary: 'David accompanies Steerforth to Highgate, where he meets Steerforth''s proud, devoted mother
+      and the sharp-tongued Rosa Dartle, a poor relation living with the family. Rosa bears a scar on
+      her lip from a hammer that Steerforth threw at her in boyhood anger. David is attended by Littimer,
+      Steerforth''s supremely respectable manservant, whose presence makes David feel excruciatingly young
+      and inadequate. Rosa Dartle displays a peculiar manner of speaking—hinting rather than stating directly,
+      making insinuating observations that often have a sarcastic edge. She questions Mrs. Steerforth
+      about university life and later interrogates David about Mr. Peggotty''s family, wondering if such
+      "common people" are "really animals and clods." Steerforth dismisses this, claiming such people
+      are "not easily wounded" due to their "coarse rough skins." Rosa makes a cutting remark about how
+      "consoling" it is to know that when such people suffer, "they don''t feel." The evening reveals
+      the complex dynamics of the household: Mrs. Steerforth''s overwhelming devotion to her son, Rosa''s
+      barely concealed intense feelings toward Steerforth, and the undercurrents of class consciousness.
+      David retires to find Rosa Dartle''s portrait in his room, her scar seeming to come and go in the
+      shadows, creating an unsettling presence that troubles his sleep.'
+    title: 'XX: Steerforth’s Home'
   - href: epub/text/chapter-21.xhtml
-    title: 'XXI: Little Em’ly'
-    start_position: 294
     last_position: 312
+    start_position: 294
+    summary: 'David and Steerforth spend a fortnight in Yarmouth. David introduces Steerforth to the Peggotty
+      household, and their arrival coincides with joyous news: Little Em''ly has agreed to marry Ham after
+      initially refusing him. Mr. Peggotty radiates happiness, and the household celebrates. Steerforth
+      charms everyone with his easy manners and natural grace. He sings beautifully, tells captivating
+      stories, and even rouses the melancholy Mrs. Gummidge to cheerfulness. David observes Em''ly watching
+      Steerforth with fascinated attention while keeping some distance from Ham. When they leave, Steerforth
+      calls Em''ly "an engaging little Beauty" and describes the gathering as "quite a new sensation."
+      He makes a dismissive comment about Ham being "rather a chuckle-headed fellow," which briefly shocks
+      David, but Steerforth laughingly deflects any criticism. David passionately defends Steerforth''s
+      genuine sympathy for common people, despite what he says to Miss Dartle. Steerforth responds enigmatically:
+      "Daisy, I believe you are in earnest, and are good. I wish we all were!" The chapter introduces
+      Littimer, Steerforth''s manservant, whose respectability makes everyone feel inferior. Steerforth
+      reveals he has bought a boat to be captained by Mr. Peggotty and renamed the "Little Em''ly." David
+      interprets this as characteristic generosity, though modern readers may detect more sinister motives.
+      The chapter ends with foreboding undertones beneath the surface cheerfulness.'
+    title: 'XXI: Little Em’ly'
   - href: epub/text/chapter-22.xhtml
-    title: 'XXII: Some Old Scenes, and Some New People'
-    start_position: 313
     last_position: 333
+    start_position: 313
+    summary: 'David and Steerforth''s visit continues, with the friends separating frequently—Steerforth
+      sailing with Mr. Peggotty while David makes melancholy pilgrimages to Blunderstone, visiting his
+      parents'' grave and viewing his ruined childhood home. One dark evening, David finds Steerforth
+      alone in brooding contemplation. Steerforth erupts in uncharacteristic despair, wishing he had "a
+      judicious father" and could "guide myself better," declaring he''d rather be "this poor Peggotty"
+      than himself. The mood passes quickly and Steerforth laughs it off. David and Steerforth encounter
+      a mysterious, haggard woman following Ham and Em''ly. At dinner, they meet Miss Mowcher, an eccentric
+      dwarf who works as hairdresser and cosmetician to the wealthy. She''s witty, sharp, and volatile.
+      When Steerforth describes Em''ly in detail—her name, occupation, engagement to Ham, her beauty—Miss
+      Mowcher responds knowingly. Later, David encounters Ham outside Mr. Barkis''s house. Ham explains
+      Em''ly is inside with Martha Endell, a fallen woman and former friend desperately wanting to escape
+      Yarmouth''s shame for London. After Martha leaves, Em''ly weeps bitterly, expressing her fears about
+      not being good enough: "I am not as good a girl as I ought to be!" She clings to Peggotty and asks
+      everyone to help her be better, revealing her inner turmoil. The chapter ends with Em''ly clinging
+      to Ham as they walk home in the moonlight—a moment of apparent security that feels ominously fragile.'
+    title: 'XXII: Some Old Scenes, and Some New People'
   - href: epub/text/chapter-23.xhtml
-    title: 'XXIII: I Corroborate Mr. Dick, and Choose a Profession'
-    start_position: 334
     last_position: 347
+    start_position: 334
+    summary: 'David resolves to become a proctor after Steerforth describes Doctors'' Commons as a "lazy
+      old nook" dealing with ecclesiastical law, wills, and maritime disputes. During a London visit with
+      Aunt Betsey, a disturbing incident occurs: a threatening man approaches them on the street, and
+      David''s aunt frantically orders David away, goes off with the stranger, and returns having given
+      him all her money. This corroborates Mr. Dick''s mysterious observations. David and his aunt visit
+      the offices of Spenlow and Jorkins to arrange his articles. Mr. Spenlow, extremely starched and
+      formal, explains the premium is £1,000, blaming the inflexible "Mr. Jorkins" for any difficult terms—though
+      David later learns Jorkins is merely a device to deflect complaints. David tours the Consistory
+      Court, finding it sleepy and antiquated, filled with Doctors in wigs arguing obscure ecclesiastical
+      cases. Aunt Betsey arranges furnished chambers for David in Buckingham Street, Adelphi, where the
+      previous tenant died of drink and smoke. Mrs. Crupp, the landlady, will provide services. David
+      moves in, delighted with his independence. The transition from schoolboy to young professional is
+      underway, though David feels overwhelmed by the ancient, arcane world of Doctors'' Commons. His
+      aunt departs for Dover, leaving David to navigate London life alone. The chapter marks David''s
+      entry into adulthood and professional life, though he remains very young and inexperienced despite
+      his new responsibilities.'
+    title: 'XXIII: I Corroborate Mr. Dick, and Choose a Profession'
   - href: epub/text/chapter-24.xhtml
-    title: 'XXIV: My First Dissipation'
-    start_position: 348
     last_position: 356
+    start_position: 348
+    summary: David revels in his new independence, but evenings in his chambers grow lonely. He misses
+      Agnes. After several days, Steerforth visits, and David impulsively invites him and two Oxford friends
+      to dinner. The meal, prepared by the incompetent Mrs. Crupp through a pastrycook, includes various
+      disasters, but David is determined to impress. His guests—Grainger and Markham—arrive, and David,
+      nervous about appearing young, drinks too much wine. The evening becomes increasingly chaotic. David
+      proposes extravagant toasts to Steerforth, becomes maudlin, drinks more, and eventually loses coherent
+      control. Someone suggests the theatre. In David's drunken haze, they attend a performance where,
+      to his horror, he encounters Agnes in a box with her friends. She's distressed by his condition
+      and quietly begs him to leave for his sake. The next morning brings crushing shame. David suffers
+      terrible physical and moral anguish, remembering "that indelible look which Agnes had given me."
+      He can't contact her, doesn't know where she's staying, and feels he's betrayed everything good
+      in their relationship. The following evening, Steerforth appears, and David confesses his wretchedness.
+      Steerforth takes it lightly, but the incident has deepened David's sense of Agnes as his "good Angel"
+      and moral compass. The chapter brilliantly captures the misery of youthful excess and the particular
+      shame of disappointing someone whose good opinion matters most.
+    title: 'XXIV: My First Dissipation'
   - href: epub/text/chapter-25.xhtml
-    title: 'XXV: Good and Bad Angels'
-    start_position: 357
     last_position: 374
+    start_position: 357
+    summary: Still suffering from shame, David receives a kind note from Agnes asking him to visit. At
+      Mr. Waterbrook's house, David tearfully apologizes, and Agnes gently forgives him. She then warns
+      him against Steerforth—his "bad Angel"—basing her judgment on Steerforth's character and influence
+      over David. Though David defends Steerforth passionately, Agnes's words create a shadow over his
+      feelings. Agnes reveals that Uriah Heep is entering partnership with her father, exploiting Mr.
+      Wickfield's weaknesses until "papa is afraid of him." She accepted this sacrifice to relieve her
+      father's distress. That evening, David attends a stiff dinner party at the Waterbrooks' where guests
+      obsess over aristocratic "Blood." David happily reunites with Traddles, now reading for the bar.
+      Afterward, David reluctantly invites Uriah home for coffee. At David's chambers, Uriah reveals he's
+      in love with Agnes and intends to marry her, having wormed his way into the family's dependence.
+      He asks David to keep his secret and not oppose him. David is horrified but powerless. Uriah, unable
+      to return to his boarding house, sleeps before David's fire. David spends a nightmarish, sleepless
+      night haunted by the image of this "red-headed animal" aspiring to Agnes, even checking on the sleeping
+      Uriah multiple times in revulsion. The chapter powerfully contrasts Agnes's pure goodness with Uriah's
+      repulsive manipulation, deepening the threat to the Wickfield household.
+    title: 'XXV: Good and Bad Angels'
   - href: epub/text/chapter-26.xhtml
-    title: 'XXVI: I Fall Into Captivity'
-    start_position: 375
     last_position: 389
+    start_position: 375
+    summary: Mr. Spenlow invites David to his home in Norwood. David arrives to meet Spenlow's daughter
+      Dora—and instantly falls desperately in love. Dora is pretty, childlike, and accompanied by her
+      little dog Jip. To David's shock, Dora's companion is Miss Murdstone, his childhood tormentor. Miss
+      Murdstone coldly proposes they maintain distant civility given their history, and David agrees.
+      But David barely notices, consumed by infatuation with Dora. That night he can only think of her
+      "girlish, bright-eyed lovely" perfection. Next morning, David encounters Dora in the garden. She
+      complains that Miss Murdstone is "so absurd" and talks only to her dog Jip, who jealously barks
+      at David. At church, David hears nothing but Dora. Returning to London, David becomes obsessed.
+      He buys expensive waistcoats, wears tight boots, and walks miles hoping to glimpse Dora. He haunts
+      fashionable streets and shops. His work at Doctors' Commons becomes a daydream about Dora—he sees
+      her name engraved on the silver oar of the Admiralty Court. Mrs. Crupp, his landlady, penetrates
+      his secret, noting his changed eating and grooming habits as symptoms of love. She offers motherly
+      advice to "cheer up" and suggests distracting himself with skittles. The chapter brilliantly captures
+      the all-consuming, irrational nature of first love, with David completely transformed into a lovesick
+      young man, his practical judgment entirely overthrown by passion for the enchanting but shallow
+      Dora.
+    title: 'XXVI: I Fall Into Captivity'
   - href: epub/text/chapter-27.xhtml
-    title: 'XXVII: Tommy Traddles'
-    start_position: 390
     last_position: 399
+    start_position: 390
+    summary: 'David visits his old schoolfellow Traddles in Camden Town, finding him in modest lodgings
+      above dubious neighbors. Traddles, cheerful despite poverty, is reading for the bar while doing
+      legal copying and encyclopedia work to survive. He shares chambers with three others and employs
+      a quarter-share of a clerk. Traddles reveals he''s engaged to "the dearest girl"—a curate''s daughter
+      in Devonshire, one of ten children. They''ve begun accumulating furniture: a flowerpot and a small
+      marble-topped table. Traddles explains they operate on the motto "Wait and hope," prepared for a
+      long engagement. The landlords below are revealed to be the Micawbers. Mr. Micawber appears, unchanged
+      in his theatrical eloquence and financial distress. Mrs. Micawber, "a little more slatternly," nearly
+      faints with emotion at seeing David. The Micawbers are as impecunious as ever, with Mr. Micawber
+      working on commission selling corn (unsuccessfully) while waiting for "something to turn up." They
+      invite David to return for dinner. Later, Mr. Micawber confides he''s engaged in corn sales and
+      expecting a new addition to the family, while his wife''s relations express "dissatisfaction," which
+      Micawber repels "with scorn, and with defiance!" The chapter reunites David with two contrasting
+      figures from his past: the steadfast, patient Traddles, whose good nature and optimism persist despite
+      hardship, and the ever-hopeful, ever-impoverished Micawbers, whose cheerful resilience masks perpetual
+      crisis. Both represent forms of honorable struggle against adversity.'
+    title: 'XXVII: Tommy Traddles'
   - href: epub/text/chapter-28.xhtml
-    title: 'XXVIII: Mr. Micawber’s Gauntlet'
-    start_position: 400
     last_position: 418
+    start_position: 400
+    summary: 'David hosts dinner for the Micawbers and Traddles. Despite Mrs. Crupp''s incompetence ruining
+      the food, Mr. Micawber saves the meal by improvising "deviled" mutton on the gridiron, and the party
+      becomes merry. Mrs. Micawber delivers a speech about her husband''s prospects, dismissing corn and
+      coals as "not remunerative." She proposes he "throw down the gauntlet to society" through advertisements,
+      financed by raising money on a bill. After toasting "D." (Dora), Micawber slips David a desperate
+      letter: he''s "Crushed," a broker''s man possesses his lodgings, and Traddles''s £23 acceptance
+      is unpaid. David warns Traddles about lending his name, but Traddles has already done so. Later,
+      Steerforth arrives from Yarmouth with news: Mr. Barkis is dying. Steerforth has been secretly visiting
+      Yarmouth and speaks of the Peggottys dismissively. He urges David to "Ride on over all obstacles"
+      in life. David decides to visit dying Barkis. Steerforth invites him to Highgate first, enigmatically
+      asking David to "stand between Rosa Dartle and me." They part warmly, Steerforth asking David to
+      "think of me at my best" if they''re ever separated. David nearly confesses his doubts but holds
+      back out of loyalty to Agnes''s confidence. Watching Steerforth walk home, David wishes "for the
+      first time, that he had some worthy race to run," sensing something amiss beneath his friend''s
+      brilliance and restless energy.'
+    title: 'XXVIII: Mr. Micawber’s Gauntlet'
   - href: epub/text/chapter-29.xhtml
-    title: 'XXIX: I Visit Steerforth at His Home, Again'
-    start_position: 419
     last_position: 426
+    start_position: 419
+    summary: 'David visits Highgate before traveling to Yarmouth. Rosa Dartle watches him intensely, comparing
+      his face with Steerforth''s, searching for something. She confronts David privately, desperately
+      asking what is leading Steerforth—"anger, hatred, pride, restlessness, wild fancy, love?" David
+      honestly knows nothing. Rosa''s scar throbs as she makes him swear secrecy. At dinner, Rosa speculates
+      whether people of similar temperament would divide more deeply if they quarreled. Mrs. Steerforth
+      dismisses any possibility of quarreling with her son. Throughout the day, Steerforth charms Rosa
+      from sharpness into pleased companionship. That evening, Rosa plays harp and sings an unearthly
+      Irish song with fearful passion. Steerforth puts his arm around her affectionately; Rosa strikes
+      him "with the fury of a wild cat" and storms out. Mrs. Steerforth attributes this to Rosa''s "soured
+      temper." That night, Steerforth asks David to promise: "If anything should ever separate us, you
+      must think of me at my best." David assures him of unchanging love. Next morning, David finds Steerforth
+      sleeping peacefully and leaves. The chapter ends with David''s ominous narration from the future:
+      "Never more, oh God forgive you, Steerforth! to touch that passive hand in love and friendship.
+      Never, never more!" The foreshadowing is unmistakable—something terrible is imminent, and this is
+      David''s last sight of his beloved friend in innocence and peace.'
+    title: 'XXIX: I Visit Steerforth at His Home, Again'
   - href: epub/text/chapter-30.xhtml
-    title: 'XXX: A Loss'
-    start_position: 427
     last_position: 434
+    start_position: 427
+    summary: 'David arrives in Yarmouth and visits Mr. Omer, who reports Mr. Barkis is dying. Omer notes
+      that Em''ly seems "unsettled"—still pretty and hardworking but lacking heart, clinging ever tighter
+      to her uncle. David goes to the Peggotty household, where Em''ly sits trembling by the fire. When
+      her uncle suggests she go home with Ham, she begs to stay, revealing deep distress despite Ham''s
+      gentle presence. Upstairs, Mr. Barkis lies dying, clutching his treasure box, muttering "Old clothes!"
+      Mr. Peggotty explains the local belief: "People can''t die, along the coast, except when the tide''s
+      pretty nigh out." As the tide ebbs, Barkis briefly revives, recognizes David, and speaks his final
+      words: "Barkis is willin''!" With the outgoing tide, he dies. This chapter, though titled "A Loss,"
+      centers on Barkis''s death, but the real loss is foreshadowed through Em''ly''s strange behavior.
+      Her trembling, her desperate clinging to her uncle, her tearful self-reproach about not being good
+      enough—all signal her inner turmoil. The chapter''s famous line "Barkis is willin''" echoes his
+      marriage proposal to Peggotty, creating a poignant full-circle moment. The symbolism of dying with
+      the tide reflects the natural rhythms of the coastal community. Em''ly''s extreme distress, though
+      attributed to death''s presence, suggests a deeper crisis approaching. The chapter balances tenderness
+      (Barkis''s gentle death) with foreboding (Em''ly''s inexplicable anguish).'
+    title: 'XXX: A Loss'
   - href: epub/text/chapter-31.xhtml
-    title: 'XXXI: A Greater Loss'
-    start_position: 435
     last_position: 443
+    start_position: 435
+    summary: 'David helps Peggotty with Barkis''s affairs, discovering nearly £3,000 in his treasure box.
+      Barkis left income to Mr. Peggotty for life, remainder to Peggotty, Em''ly, and David; the rest
+      to Peggotty. After the quiet Blunderstone funeral, David joins the family at the boathouse. Mr.
+      Peggotty cheerfully lights Em''ly''s candle in the window. Ham arrives alone, deadly pale, with
+      devastating news: Em''ly has run away. Her letter reveals she''s gone to become "a lady," begging
+      forgiveness and telling them to think of her as dead. Mr. Peggotty demands to know who took her.
+      Ham reveals servants and a gentleman were seen with Em''ly at dawn on the Norwich road—the man is
+      Steerforth. David is paralyzed by horror at his friend''s betrayal. Mr. Peggotty announces he''ll
+      "seek my niece" across the world. Mrs. Gummidge, transformed by crisis, becomes strong and comforting
+      rather than complaining. David''s guilt overwhelms him—he introduced Steerforth to this innocent
+      family, enabling this destruction. The "greater loss" encompasses Em''ly''s ruin, Mr. Peggotty''s
+      shattered happiness, Ham''s destroyed future, the family''s honor, and David''s friendship with
+      Steerforth. The chapter ends with collective weeping as the magnitude of the catastrophe settles
+      over them. David''s trust and love have been weaponized against those he cares for, creating a devastating
+      betrayal on multiple levels that will reverberate throughout the remainder of the novel.'
+    title: 'XXXI: A Greater Loss'
   - href: epub/text/chapter-32.xhtml
-    title: 'XXXII: The Beginning of a Long Journey'
-    start_position: 444
     last_position: 461
+    start_position: 444
+    summary: 'Despite Steerforth''s betrayal, David finds he "never had loved Steerforth better than when
+      the ties that bound me to him were broken," grieving for what his friend might have been. The town
+      sympathizes with Mr. Peggotty and Ham. On the beach, Mr. Peggotty announces he''ll seek Em''ly worldwide.
+      He wants the old boat kept unchanged, candle lit nightly, so if she returns penitent, she''ll find
+      welcome. Ham will work and support the search with his savings. Mrs. Gummidge transforms into a
+      capable, devoted caretaker. In London, David and Mr. Peggotty confront Mrs. Steerforth, who coldly
+      refuses to allow Steerforth to marry Em''ly—such a match would disgrace him. Mr. Peggotty eloquently
+      pleads, but she''s adamant: Steerforth will receive no forgiveness unless he abandons Em''ly. Rosa
+      Dartle viciously attacks them, wishing to see Em''ly "whipped," "branded," hunted "to her grave."
+      Miss Mowcher appears at David''s chambers, revealing she unwittingly helped Steerforth by delivering
+      a letter, having been deceived. She vows to help find Em''ly. Mr. Peggotty departs alone on his
+      quest with only a small sum and his stick, walking into the sunset with the words: "I''m a-going
+      to seek her, fur and wide. If any hurt should come to me, remember that the last words I left for
+      her was, ''My unchanged love is with my darling child, and I forgive her!''" His solitary figure
+      becomes an enduring image of faithful, forgiving love.'
+    title: 'XXXII: The Beginning of a Long Journey'
   - href: epub/text/chapter-33.xhtml
-    title: 'XXXIII: Blissful'
-    start_position: 462
     last_position: 477
+    start_position: 462
+    summary: David is deeply in love with Dora Spenlow and saturated with thoughts of her. He makes night-time
+      pilgrimages to her house at Norwood, declaring his devotion dramatically. David confides his love
+      to Peggotty, who is completely supportive. At the office, David encounters Mr. Murdstone, who has
+      come to obtain a marriage license. Murdstone is remarrying, and a tense exchange occurs between
+      him and Peggotty, who accuses him of destroying David's mother. During a planned picnic for Dora's
+      birthday, David is ecstatic to spend time with her. Miss Mills, Dora's romantic friend, facilitates
+      their courtship. David brings flowers and rides alongside the carriage, completely absorbed in Dora.
+      At the picnic, he becomes jealous of "Red Whisker," another guest who pays attention to Dora. Miss
+      Mills intervenes to reconcile them with melodramatic pronouncements about love. David retrieves
+      Dora's guitar and sits with her, feeling triumphant. The memorable passage occurs when David describes
+      being "steeped in Dora"—not merely over head and ears in love, but completely saturated. Later at
+      Miss Mills's house, David proposes to Dora, overwhelming her with declarations that he would die
+      without her. She accepts, and they become secretly engaged. Their engagement must remain hidden
+      from her father, Mr. Spenlow, creating a delicious conspiracy facilitated by Miss Mills.
+    title: 'XXXIII: Blissful'
   - href: epub/text/chapter-34.xhtml
-    title: 'XXXIV: My Aunt Astonishes Me'
-    start_position: 478
     last_position: 486
+    start_position: 478
+    summary: 'David writes to Agnes about his engagement to Dora, feeling emotional as he composes the
+      letter. Her warm reply comforts him. Traddles visits David''s chambers, having befriended Peggotty.
+      Mrs. Crupp, David''s landlady, resigns her duties in protest of Peggotty''s presence and writes
+      an indignant letter about "spies" and "intruders." Traddles helps David purchase his possessions
+      back from a broker, including his flowerpot for his beloved Sophy. When David returns home, he discovers
+      his Aunt Betsey and Mr. Dick have unexpectedly arrived in London with all their belongings. After
+      initial pleasantries, Aunt Betsey delivers shocking news: she is ruined financially. She has lost
+      everything through bad investments—mining ventures, treasure-hunting schemes, and finally a failed
+      bank abroad. All her money is gone except what fits in her room and the cottage at Dover, which
+      she''s letting to Janet. She handles the crisis with characteristic determination, declaring they
+      must "meet reverses boldly" and "live misfortune down." The memorable line comes when she sits upon
+      her luggage, explaining "I prefer to sit upon my property" because "it''s all I have." Despite her
+      reduced circumstances, she maintains her dignity and immediately begins planning practical arrangements.
+      David is devastated, realizing this changes everything about his prospects with Dora and his future.'
+    title: 'XXXIV: My Aunt Astonishes Me'
   - href: epub/text/chapter-35.xhtml
-    title: 'XXXV: Depression'
-    start_position: 487
     last_position: 505
+    start_position: 487
+    summary: 'David struggles with the implications of his aunt''s ruin, particularly how it affects his
+      engagement to Dora. He must now earn his own living during his articled clerkship, when he receives
+      no income. Mr. Dick is installed in Peggotty''s former chandler''s shop lodging, cheerfully accepting
+      his humble accommodation. David attempts to cancel his articles with Mr. Spenlow and recover the
+      premium, but both Mr. Spenlow and the fearsome Mr. Jorkins refuse, each blaming the other for the
+      impossibility. Despondent, David encounters Agnes, who has come to London. She lifts his spirits
+      immediately—her presence brings him "peace and happiness." Agnes is staying with her father and
+      Uriah Heep, who have become business partners. She reveals that the Heeps now live in David''s old
+      room at the Wickfields'' house, casting a shadow over her home. At David''s chambers, Aunt Betsey
+      reveals the full story of her financial ruin: bad advice led her to invest in foreign mining, diving
+      for treasure, and ultimately a failed bank that paid nothing. She absolves Mr. Wickfield of blame,
+      much to Agnes''s relief. Agnes suggests David seek work as secretary to Dr. Strong, who has retired
+      to Highgate. David writes immediately to the Doctor, and Agnes helps arrange his aunt''s belongings
+      in the chambers. The chapter memorably ends with a beggar crying "Blind! Blind! Blind!" after David
+      parts from Agnes.'
+    title: 'XXXV: Depression'
   - href: epub/text/chapter-36.xhtml
-    title: 'XXXVI: Enthusiasm'
-    start_position: 506
     last_position: 521
+    start_position: 506
+    summary: David awakens with renewed determination to support his aunt through hard work. He walks
+      to Highgate to meet with Dr. Strong, thinking enthusiastically about supporting Dora. The Doctor
+      warmly receives him and offers seventy pounds annually to help with the Dictionary. This would double
+      David's income. David is delighted, though disturbed to find Mr. Jack Maldon has returned from India
+      due to "health reasons" and obtained a comfortable sinecure through the Doctor's generosity. Mrs.
+      Strong seems troubled by Maldon's presence. David begins working mornings and evenings on the Dictionary,
+      finding Mr. Maldon's previous amateur contributions more hindrance than help. Meanwhile, David determines
+      to learn parliamentary shorthand reporting to earn additional income. Traddles warns this is extremely
+      difficult—"equal to mastering six languages"—but David resolves to do it anyway for Dora's sake.
+      To help Mr. Dick feel useful after the financial crisis, Traddles suggests he copy legal documents.
+      They devise a system where Mr. Dick can insert passages about King Charles I into his Memorial when
+      the urge strikes, while copying legal work for pay. This succeeds brilliantly, and Mr. Dick proudly
+      earns ten shillings ninepence his first week. The Micawbers are leaving for Canterbury, where Mr.
+      Micawber will work as Uriah Heep's confidential clerk—news that troubles David, though he cannot
+      say why.
+    title: 'XXXVI: Enthusiasm'
   - href: epub/text/chapter-37.xhtml
-    title: 'XXXVII: A Little Cold Water'
-    start_position: 522
     last_position: 529
+    start_position: 522
+    summary: 'David maintains his rigorous work schedule and visits Dora at Miss Mills''s house. When
+      he tries to discuss their future and domestic economy, mentioning that she should learn about housekeeping
+      and accounts, Dora becomes hysterical with fear. She cannot bear him being "practical" or "dreadful."
+      David''s attempts to give her a cookery book and teach her household management fail completely—the
+      book gives her headaches, and she uses the tablets for drawing pictures of him and Jip instead.
+      Miss Mills intervenes, explaining that Dora is "a thing of light, and airiness, and joy" unsuited
+      to such practical matters. The memorable scene occurs when David tries to discuss their poverty:
+      Dora, associating "beggar" only with grotesque street figures, cannot comprehend that he is poor.
+      When he persists about crusts and hard work, she cries "Oh, don''t, don''t!" and worries only that
+      "Jip must have a mutton-chop every day at twelve, or he''ll die." David buys the cookery book anyway,
+      but its principal use becomes serving as a stand for Jip to perform tricks. David realizes Dora
+      is fundamentally impractical but loves her even more for her childish, winning ways. He becomes
+      increasingly concerned that he cannot share his serious thoughts and anxieties with her, but he
+      keeps these worries to himself.'
+    title: 'XXXVII: A Little Cold Water'
   - href: epub/text/chapter-38.xhtml
-    title: 'XXXVIII: A Dissolution of Partnership'
-    start_position: 530
     last_position: 546
+    start_position: 530
+    summary: 'Mr. Spenlow unexpectedly summons David to a coffee-house, where Miss Murdstone has intercepted
+      all of David''s love letters to Dora. The letters, tied with blue ribbon, are presented as evidence
+      of their secret engagement. Mr. Spenlow is outraged at this "stealthy and unbecoming action" and
+      David''s abuse of his hospitality. David defends his love for Dora but cannot deny the concealment.
+      Mr. Spenlow offers to end the matter if David will burn the letters and forget Dora, but David refuses,
+      declaring his love is above all earthly considerations. Mr. Spenlow warns that his will provisions
+      for Dora could change if this "folly" continues, hinting at disinheritance. He demands David take
+      a week to reconsider. The very next morning, shocking news arrives: Mr. Spenlow has died suddenly.
+      He was found a mile from home after falling from his phaeton, either from a fit or after getting
+      out while ill. The office is in chaos. David feels guilty and strange about their conflict ending
+      this way. Weeks pass with Dora in mourning at Putney with her maiden aunts. Miss Mills keeps a melodramatic
+      journal chronicling Dora''s grief. When Mr. Jorkins and Tiffey search for Mr. Spenlow''s will, they
+      find nothing—despite his assurances, he died intestate. His affairs are in complete disorder, and
+      his estate, after debts, is worth almost nothing. Dora is left penniless except for her two aunts''
+      care.'
+    title: 'XXXVIII: A Dissolution of Partnership'
   - href: epub/text/chapter-39.xhtml
-    title: 'XXXIX: Wickfield and Heep'
-    start_position: 547
     last_position: 564
+    start_position: 547
+    summary: 'David visits Canterbury to see Agnes and deliver a letter to Dora''s aunts proposing formal
+      courtship. At the Wickfield house, he finds Mr. Micawber installed in Uriah''s old office, pompously
+      working as Uriah''s clerk. Micawber drops hints about being in Heep''s power financially. David
+      finds Agnes in her old room, and she provides wise counsel about approaching Dora''s aunts honestly.
+      Visiting Mr. Wickfield''s study, David sees the dramatic reversal: Uriah in power, Mr. Wickfield
+      dependent and broken. Uriah has taken over the best rooms and reduced Mr. Wickfield to a shadow.
+      Uriah''s mother now lives in the house, constantly watching Agnes. Uriah takes David for a walk
+      and reveals his jealousy over Mrs. Strong and Mr. Maldon, threatening to interfere in their friendship.
+      The memorable confrontation occurs when Uriah confesses his "umble" origins—how he was taught at
+      a foundation school to be subservient, but learned to use humility as a weapon to gain power. At
+      dinner, Uriah gets Mr. Wickfield drunk and proposes a toast to Agnes, declaring his intention to
+      marry her. Mr. Wickfield erupts in anguish, revealing Uriah''s systematic destruction of him. David
+      intervenes to calm Mr. Wickfield. Later, Agnes bids David goodnight, making him promise not to sacrifice
+      himself to misguided duty. The next morning, Uriah smugly tells David that he and Mr. Wickfield
+      have reconciled.'
+    title: 'XXXIX: Wickfield and Heep'
   - href: epub/text/chapter-40.xhtml
-    title: 'XL: The Wanderer'
-    start_position: 565
     last_position: 573
+    start_position: 565
+    summary: 'David''s aunt is deeply troubled by the news from Canterbury and paces through the night.
+      David writes to Dora''s aunts and receives his aunt''s approval. One snowy evening, David encounters
+      Mr. Peggotty in London, searching for Emily. They meet by chance outside a church, and David recognizes
+      Martha nearby. Mr. Peggotty explains his extensive search across Europe—through France, Switzerland,
+      and Italy—always on foot or in poor coaches, asking after Emily everywhere. The memorable passage
+      describes how foreign villagers, especially mothers who had lost daughters, sheltered him and helped
+      him. He followed Steerforth to Switzerland but arrived too late; they had already gone. He returned
+      home after months abroad, still determined to find Emily. Mr. Peggotty shows David the money Emily
+      has sent in remorse—first fifty pounds, then letters with more money, heartbreakingly begging for
+      news of her uncle and Ham. The letters reveal her anguish and shame. A third package contains ten
+      pounds from a "true friend," postmarked from the Upper Rhine, giving Mr. Peggotty a new direction
+      to search. He describes Ham''s condition: working tirelessly, well-loved in Yarmouth, but with a
+      deep wound and a reckless disregard for his own safety in dangerous situations. Before parting,
+      David sees Martha''s face at the door—she had been listening to the entire conversation, though
+      Mr. Peggotty doesn''t see her. David carefully leads Mr. Peggotty away without revealing her presence.'
+    title: 'XL: The Wanderer'
   - href: epub/text/chapter-41.xhtml
-    title: 'XLI: Dora’s Aunts'
-    start_position: 574
     last_position: 588
+    start_position: 574
+    summary: Dora's aunts, Miss Lavinia and Miss Clarissa, respond to David's letter, inviting him to
+      call with a confidential friend. David brings Traddles, whose upright hair causes some concern.
+      The two elderly sisters, like birds, receive them formally. Miss Lavinia, the authority on romance
+      due to a supposed admirer named Pidger, leads the discussion. Miss Clarissa constantly interrupts
+      with grievances about Dora's mother excluding them from family dinners. The aunts acknowledge that
+      David and Dora's "light inclinations" might be genuine and grant permission for visits, but only
+      to themselves initially, not recognizing any engagement. David must promise no secret communication
+      with Dora. After deliberation, the sisters permit David to visit for Sunday dinner and twice-weekly
+      for tea. David is ecstatic. Miss Lavinia then brings him to see Dora, who is hiding behind a door
+      with Jip muffled in the plate-warmer. Their reunion is joyful. Dora is terrified of Traddles and
+      begs David not to bring "that naughty, mischief-making old thing" Aunt Betsey. The memorable scene
+      occurs when Dora appears in her wedding dress for David to preview. Regular visits begin, and eventually
+      Aunt Betsey and the aunts establish cordial relations, though Jip never accepts Aunt Betsey and
+      must be muffled during her visits. David worries that everyone treats Dora like "a pretty toy or
+      plaything" rather than a responsible adult, but his attempts to discuss this with her fail.
+    title: 'XLI: Dora’s Aunts'
   - href: epub/text/chapter-42.xhtml
-    title: 'XLII: Mischief'
-    start_position: 589
     last_position: 607
+    start_position: 589
+    summary: David reflects on his hard work and dedication to succeeding for Dora's sake—the foundation
+      of his later success. Agnes comes to visit Dr. Strong for a fortnight, and suspiciously, Mrs. Heep
+      soon follows, supposedly for her rheumatism, with Uriah attending her. Uriah confronts David in
+      the Doctor's garden, revealing his jealousy of Mrs. Strong and making sinister insinuations about
+      her relationship with Mr. Maldon. He threatens to "put a stop" to Mrs. Strong's friendship with
+      Agnes. David arranges for Agnes to meet Dora, a momentous occasion. Dora is initially afraid Agnes
+      is "too clever" but is immediately won over by Agnes's gentle warmth. The tea is delightful, and
+      later Agnes speaks lovingly to David about Dora. The memorable passage occurs when Dora wonders
+      if having Agnes as a friend earlier might have made her "more clever," touching David deeply. That
+      evening, David accidentally discovers Uriah, Mr. Wickfield, and the Doctor in the study. Uriah has
+      told Dr. Strong about supposed impropriety between Mrs. Strong and Mr. Maldon, based on Mr. Wickfield's
+      old suspicions and David's own observations. The Doctor is devastated but responds with characteristic
+      nobility, declaring his complete faith in his wife's honor while acknowledging he may have "unwittingly
+      ensnared" her into an unhappy marriage. David, enraged, strikes Uriah across the face, though Uriah
+      maddeningly refuses to quarrel and "forgives" him, making David feel worse than if he had retaliated.
+    title: 'XLII: Mischief'
   - href: epub/text/chapter-43.xhtml
-    title: 'XLIII: Another Retrospect'
-    start_position: 608
     last_position: 616
+    start_position: 608
+    summary: 'In a brief, dreamlike chapter, David reflects on time passing as seasons blur together.
+      He has reached twenty-one and achieved professional success. He has mastered shorthand and reports
+      parliamentary debates for a newspaper, becoming disillusioned with politics: "I wallow in words.
+      Britannia, that unfortunate female, is always before me, like a trussed fowl." Traddles has also
+      tried reporting but isn''t suited for it; he''s been called to the bar instead. David has begun
+      writing fiction secretly, publishing pieces in magazines and earning regular payment. He and Aunt
+      Betsey move to a cottage near Highgate. The memorable passage occurs when David announces: "My marriage?
+      Yes!" Dora''s aunts flutter about wedding preparations, constantly summoning Dora for fittings while
+      David and Agnes select furniture. Peggotty comes to help, and David sometimes sees Mr. Peggotty
+      searching London''s dark streets for Emily. David obtains the marriage license with Traddles as
+      witness. Sophy arrives to be bridesmaid alongside Agnes. The wedding day arrives in a beautiful
+      blur: David remembers fragments—the church, Miss Lavinia crying in memory of Pidger, Dora trembling,
+      Peggotty signing the register after witnessing David''s mother''s wedding long ago. The dreamlike
+      ceremony concludes with David and his "dear, dear, little wife" driving away together. David finally
+      "awakens from the dream" and believes in his marriage''s reality.'
+    title: 'XLIII: Another Retrospect'
   - href: epub/text/chapter-44.xhtml
-    title: 'XLIV: Our Housekeeping'
-    start_position: 617
     last_position: 630
+    start_position: 617
+    summary: 'David discovers married life is strange after courtship''s end—having Dora always present
+      removes the delicious occupation of making love. They prove utterly incompetent at housekeeping.
+      Their first servant, Paragon, with a Lifeguards cousin who growls constantly, turns out to be a
+      disaster, found drunk under the boiler. A succession of servants follows, each worse than the last.
+      The page boy they employ becomes a source of continual trouble—quarreling with cooks, growing alarmingly,
+      and eventually stealing Dora''s watch, confessing to numerous household thefts before being transported.
+      David tries discussing household management with Dora, but she weeps, saying he''s being "cruel"
+      and "cross." Aunt Betsey intervenes, advising David never to criticize Dora, explaining "Little
+      Blossom is a very tender little blossom" and sharing her own marriage regrets. The memorable scene
+      occurs during their first quarrel when Dora accuses David of comparing her to the transported page.
+      They reconcile, but domestic chaos continues. When Traddles visits for dinner, the oysters can''t
+      be opened, and Jip disrupts everything. Dora touchingly asks David to call her his "child-wife,"
+      explaining: "When you are going to be angry with me, say to yourself, ''it''s only my child-wife!''"
+      David accepts this, trying to bear all their household cares himself while keeping Dora happy, though
+      he sometimes feels "the old unhappy loss or want of something" and wishes his wife were his counselor.'
+    title: 'XLIV: Our Housekeeping'
   - href: epub/text/chapter-45.xhtml
-    title: 'XLV: Mr. Dick Fulfils My Aunt’s Predictions'
-    start_position: 631
     last_position: 645
+    start_position: 631
+    summary: 'Mrs. Markleham, the "Old Soldier," constantly takes Mrs. Strong to amusements supposedly
+      for her benefit but really for her own pleasure, while Dr. Strong grows sadder. Aunt Betsey believes
+      Mr. Dick has a plan to help. One evening, Mr. Dick confides to David that he understands the Doctor
+      and Mrs. Strong''s problem: there''s an "unhappy cause of separation" but the Doctor loves his wife
+      devotedly. As someone "simple" whom no one minds, Mr. Dick can intervene where others cannot. Later,
+      David and his aunt visit the Doctor''s cottage, where Mrs. Markleham announces she caught the Doctor
+      making his will, leaving everything "unconditionally" to Mrs. Strong. She praises this effusively.
+      Mr. Dick suddenly leads Mrs. Strong into the study, where she falls to her knees before the Doctor
+      with that "memorable look" David has seen before. In a long, emotional speech, Mrs. Strong reveals
+      her whole heart: she married the Doctor out of gratitude and deep respect, seeing him as father
+      and guide. Her mother first suggested mercenary motives, which poisoned her happiness. She had been
+      fond of her cousin Maldon in childhood, but realized marriage to him would have been miserable—"There
+      can be no disparity in marriage like unsuitability of mind and purpose." She knew Maldon''s false
+      heart when he made improper advances, which she never revealed out of shame. Her love for the Doctor
+      was "founded on a rock" and endures. The reconciliation is complete, with Mr. Dick receiving credit
+      for his wisdom, while the Old Soldier is defeated.'
+    title: 'XLV: Mr. Dick Fulfils My Aunt’s Predictions'
   - href: epub/text/chapter-46.xhtml
-    title: 'XLVI: Intelligence'
-    start_position: 646
     last_position: 658
+    start_position: 646
+    summary: 'Walking past Mrs. Steerforth''s gloomy house, David is summoned by Miss Dartle. In the garden,
+      she coldly informs him that Emily has run away from Steerforth. Littimer, Steerforth''s servant,
+      appears and condescendingly narrates events: Steerforth took Emily across Europe, where she was
+      much admired. Eventually Steerforth tired of her moods, and she tired of his restlessness. He abandoned
+      her near Naples, leaving Littimer to inform her and offer marriage to Littimer himself as "a very
+      respectable person" who would overlook her past. Emily violently refused, escaped through a window,
+      and vanished—possibly drowned. The memorable scene shows David''s barely-controlled rage at Littimer''s
+      smug respectability. Mrs. Steerforth appears, greatly aged, explaining she paid Littimer for this
+      information to warn Mr. Peggotty and prevent Emily from ensnaring Steerforth again. She acknowledges
+      David''s success as a writer and dismisses him coldly. David observes the two women gazing at the
+      darkening prospect, with mist rising "like a sea" that seems to encompass them—a foreboding image.
+      David finds Mr. Peggotty in his Hungerford Market lodging, kept ready for Emily''s return. David
+      shares the news. Mr. Peggotty is devastated but insists Emily lives: "I am told as she''s alive!"
+      David suggests enlisting Martha''s help, knowing Emily had been charitable to her and that Martha
+      would search London''s streets effectively. They find Martha by the river, contemplating suicide,
+      crying "Oh, the river!" Martha says the river haunts her—it''s "the only thing in all the world
+      that I am fit for." Mr. Peggotty asks her to search for Emily, offering complete trust. Martha solemnly
+      vows to dedicate herself to this task, seeing it as potential redemption.'
+    title: 'XLVI: Intelligence'
   - href: epub/text/chapter-47.xhtml
-    title: 'XLVII: Martha'
-    start_position: 659
     last_position: 669
+    start_position: 659
+    summary: 'David and Mr. Peggotty follow Martha through Westminster to the Thames riverside near Millbank
+      Prison. The setting is memorably bleak: a "dreary" wasteland with rotting unfinished houses, rusty
+      industrial refuse, slimy gaps, and "the rags of last year''s handbills offering rewards for drowned
+      men." Martha stands at the river''s edge in despair. They approach carefully, and David calls her
+      name. She screams and struggles but recognizes Mr. Peggotty. Sitting among stones, she repeatedly
+      cries "Oh, the river!"—seeing it as her destiny: "It comes from country places, where there was
+      once no harm in it—and it creeps through the dismal streets, defiled and miserable—and it goes away,
+      like my life, to a great sea, that is always troubled." She insists she never harmed Emily and would
+      have died to save her reputation. Mr. Peggotty gently explains they believe in her innocence and
+      need her help finding Emily in London. Martha, astonished at being trusted, vows to search faithfully,
+      declaring this task as her salvation from the river. She refuses money, saying it would "take away
+      the only certain thing that saves me from the river." They part, and Martha walks away along the
+      desolate road. David and Mr. Peggotty follow at a distance until reaching populated streets. Arriving
+      home, David finds a strange man in Aunt Betsey''s garden—her supposedly dead husband, demanding
+      money. Aunt Betsey gives him what she can. After he leaves, she reveals the truth to David: she
+      married unwisely, he ruined her, she left him generously, and now periodically pays him to stay
+      away from England.'
+    title: 'XLVII: Martha'
   - href: epub/text/chapter-48.xhtml
-    title: 'XLVIII: Domestic'
-    start_position: 670
     last_position: 680
+    start_position: 670
+    summary: 'David''s first novel succeeds, and he leaves parliamentary reporting forever. Their housekeeping
+      remains chaotic. They employ a page boy who constantly quarrels with the cook and eventually steals
+      Dora''s watch, making endless penitent confessions about household thefts before being transported
+      to Australia. David tries discussing their "want of system" with Dora, but she thinks he''s comparing
+      her to the transported page and dissolves in tears. David then attempts to "form her mind" by reading
+      Shakespeare and discussing serious subjects, but this only depresses and frightens Dora, who thinks
+      "Shakespeare a terrible fellow." Traddles becomes an unwitting accomplice when David "explodes mines
+      upon him for the edification of Dora at second hand." After months of failure, David realizes "Dora''s
+      mind was already formed" and abandons the effort. He buys her earrings and tells her he''s been
+      wrong to try making her wise. Dora lovingly accepts, asking if he won''t mind "things going a tiny
+      morsel wrong, sometimes." David resolves to accept his child-wife as she is. The memorable reflection
+      comes when David examines his heart: he loves Dora dearly and is happy, but "the happiness I had
+      vaguely anticipated, once, was not the happiness I enjoyed, and there was always something wanting."
+      Mrs. Strong''s words haunt him: "the first mistaken impulse of an undisciplined heart" and "there
+      can be no disparity in marriage like unsuitability of mind and purpose." The chapter ends ominously:
+      Dora grows weak, unable to walk, though remaining cheerful. David begins carrying her up and down
+      stairs daily, noticing she grows lighter in his arms.'
+    title: 'XLVIII: Domestic'
   - href: epub/text/chapter-49.xhtml
-    title: 'XLIX: I Am Involved in Mystery'
-    start_position: 681
     last_position: 693
+    start_position: 681
+    summary: 'David receives a mysterious letter from Mr. Micawber requesting a secret meeting outside
+      the King''s Bench Prison. The letter is written in Micawber''s characteristically verbose style,
+      hinting at hidden troubles. Traddles also receives a distressed letter from Mrs. Micawber describing
+      her husband''s strange behavior, violent outbursts, and references to having "sold himself to the
+      D." David and Traddles meet Micawber, who appears agitated and broken, speaking cryptically about
+      Uriah Heep. The chapter builds suspense as Micawber struggles with whether to reveal his secrets.
+      After being brought to Miss Trotwood''s house, Micawber finally explodes with rage, denouncing Heep
+      as a villain and promising to expose his crimes. The dramatic outburst includes Micawber''s famous
+      declaration: "Villainy is the matter; baseness is the matter; deception, fraud, conspiracy, are
+      the matter; and the name of the whole atrocious mass is—HEEP!" He vows to "blow to fragments" this
+      "detestable serpent" and schedules a formal revelation for the following week at Canterbury. After
+      his emotional explosion, Micawber rushes from the house but later sends an apologetic letter promising
+      to expose Heep''s crimes. The chapter masterfully builds tension through Micawber''s mysterious
+      communications and creates anticipation for the coming confrontation with the villain who has corrupted
+      Mr. Wickfield and threatened Agnes.'
+    title: 'XLIX: I Am Involved in Mystery'
   - href: epub/text/chapter-50.xhtml
-    title: 'L: Mr. Peggotty’s Dream Comes True'
-    start_position: 694
     last_position: 703
+    start_position: 694
+    summary: 'After months of searching, Mr. Peggotty remains unwavering in his belief that he will find
+      Emily. Martha summons David urgently one evening, leading him through London''s poorer districts
+      to a lodging house where Emily has been located. In a dramatic confrontation, Rosa Dartle, consumed
+      with hatred for Emily, arrives first and viciously berates the fallen woman with cruel accusations
+      and threats. Rosa''s rage stems from her unrequited love for Steerforth and jealousy of Emily. She
+      tells Emily to hide herself or face public exposure, showing no mercy despite Emily''s tears and
+      pleas. The chapter''s emotional climax occurs when Mr. Peggotty finally arrives and finds Emily
+      unconscious. The memorable scene shows the tenderhearted uncle supporting his niece, covering her
+      face with a handkerchief, and thanking Heaven: "I thank my Heav''nly Father as my dream''s come
+      true!" He carries Emily from the house, fulfilling his long quest. The chapter powerfully contrasts
+      Rosa''s vindictive cruelty with Mr. Peggotty''s unconditional love and forgiveness. David witnesses
+      both the depths of human malice and the heights of compassionate devotion. The famous passage describing
+      Rosa Dartle''s fury—her scar throbbing, her face contorted with rage—is one of Dickens''s most vivid
+      portraits of destructive passion. Emily''s redemption through her uncle''s love sets the stage for
+      their emigration to Australia and a new beginning.'
+    title: 'L: Mr. Peggotty’s Dream Comes True'
   - href: epub/text/chapter-51.xhtml
-    title: 'LI: The Beginning of a Longer Journey'
-    start_position: 704
     last_position: 719
+    start_position: 704
+    summary: 'Mr. Peggotty describes Emily''s journey after fleeing from Steerforth. She wandered along
+      the seashore in a delirium, was found by a kind foreign woman who sheltered and nursed her through
+      fever, then made her way to England via France. In London, Martha saved Emily from falling into
+      prostitution, rescuing her from a brothel in a heroic intervention. Mr. Peggotty announces his decision
+      to emigrate to Australia with Emily for a fresh start where she won''t face social judgment. He
+      has thoughtfully arranged for everyone: his sister Peggotty will stay to care for the grieving Ham;
+      Mrs. Gummidge will receive an allowance to live independently. David and Mr. Peggotty visit Ham,
+      who bears no grudge and asks David to tell Emily he forgives her and begs her forgiveness for pressing
+      his suit. Ham''s noble message reveals his enduring love tempered with selfless concern for Emily''s
+      peace of mind. The chapter includes the poignant scene where David visits Mr. Omer, now wheelchair-bound
+      but cheerful, and learns of Ham''s broken heart. At the old boat-house, in a touching reversal,
+      Mrs. Gummidge begs to emigrate with them, promising to work hard and never complain again. Her transformation
+      from "lone and lorn" widow to devoted helper demonstrates redemption through love. Mr. Peggotty
+      agrees, and they prepare to depart. David plans to return money to Steerforth''s family representing
+      what Emily took. The chapter emphasizes themes of forgiveness, new beginnings, and the emigration
+      option that allowed Victorian society''s outcasts to start fresh in the colonies.'
+    title: 'LI: The Beginning of a Longer Journey'
   - href: epub/text/chapter-52.xhtml
-    title: 'LII: I Assist at an Explosion'
-    start_position: 720
     last_position: 741
+    start_position: 720
+    summary: 'The long-awaited confrontation with Uriah Heep takes place in Canterbury. Despite Dora''s
+      fragile health, she insists David''s aunt attend the revelation. Mr. Micawber orchestrates a formal
+      exposure of Heep''s villainy, reading from an elaborate letter detailing years of fraud, forgery,
+      and conspiracy. The charges include: manipulating Mr. Wickfield''s weakness and confusion to obtain
+      false signatures; stealing trust funds and making it appear Wickfield was responsible; forging documents
+      including a fraudulent bond; and systematically defrauding Wickfield of his property and partnership.
+      Micawber dramatically reveals he has preserved evidence including Heep''s burned pocketbook, found
+      by Mrs. Micawber, containing proof of the crimes. When Heep tries to retrieve documents from his
+      safe, he discovers Micawber has already taken everything and given it to Traddles. The confrontation
+      becomes physical when Heep lunges at Micawber, who strikes him with a ruler. Miss Trotwood discovers
+      that her lost fortune was actually stolen by Heep, not lost by Wickfield, and demands its return.
+      Heep''s mask of humility completely drops, revealing his true malevolent nature. Traddles, with
+      his legal expertise and power of attorney from Wickfield, forces Heep to surrender all documents
+      and confine himself to his room. The chapter culminates with Micawber being reunited with his wife
+      after the "veil" of secrecy is lifted. Miss Trotwood offers to finance the Micawbers'' emigration
+      to Australia, which they enthusiastically accept, seeing it as their path to prosperity.'
+    title: 'LII: I Assist at an Explosion'
   - href: epub/text/chapter-53.xhtml
-    title: 'LIII: Another Retrospect'
-    start_position: 742
     last_position: 746
+    start_position: 742
+    summary: 'In this deeply moving chapter, David chronicles Dora''s decline and death. The chapter''s
+      structure features three distinct scenes marking stages of her illness. In the first, Dora shows
+      David her beautiful hair and reminisces about their courtship, still hoping to recover and revisit
+      places from their early romance. In the second scene, she urgently requests to see Agnes, sensing
+      the end approaching. She tells David how much she''s missed, asking "Even poor, giddy, stupid me?"
+      In their final scene together, Dora speaks with heartbreaking wisdom about their marriage, saying
+      "I am afraid I was too young." She expresses the poignant belief that "as years went on, my dear
+      boy would have wearied of his child-wife." Dora insists it''s "better as it is," though David protests
+      every word seems a reproach. She asks to speak privately with Agnes, sending David downstairs. While
+      waiting, David''s dog Jip dies at his feet, symbolizing the end of his youthful marriage. Agnes
+      emerges with the solemn news, and David sees her raise her hand toward Heaven. The chapter ends
+      with David''s simple, devastating words: "It is over. Darkness comes before my eyes; and, for a
+      time, all things are blotted out of my remembrance." The chapter is famous for its tender treatment
+      of death and its psychological insight into a marriage between incompatible partners, treated with
+      compassion rather than judgment.'
+    title: 'LIII: Another Retrospect'
   - href: epub/text/chapter-54.xhtml
-    title: 'LIV: Mr. Micawber’s Transactions'
-    start_position: 747
     last_position: 761
+    start_position: 747
+    summary: 'Following Dora''s death, David and his companions return to Canterbury to settle the aftermath
+      of Heep''s exposure. Traddles reports on his investigation, praising both Mr. Micawber''s tireless
+      work gathering evidence and Mr. Dick''s unexpected usefulness in copying documents and guarding
+      Uriah. The chapter reveals Mr. Wickfield has considerably improved once freed from Heep''s control,
+      though his faculties remain impaired. Traddles announces the good news: Wickfield can wind up his
+      business without deficiency, and Miss Trotwood''s entire fortune has been recovered—all five thousand
+      pounds that Heep had stolen and falsely blamed on Wickfield. Agnes resolves that her father should
+      not continue as estate receiver, instead planning to open a school to support them independently.
+      The financial settlements are arranged, with the Micawbers receiving money for emigration and passage
+      on the same ship as Mr. Peggotty. Mr. Micawber is immediately arrested again for debt, but is quickly
+      freed by Miss Trotwood''s payment. The Micawbers prepare enthusiastically for Australia, with the
+      children learning farming skills and Mr. Micawber adopting an absurdly nautical air. In a revelatory
+      subplot, Miss Trotwood discloses that her estranged husband has died in the hospital, explaining
+      her recent mysterious absences and distress. David accompanies her to the funeral, learning the
+      man was "a fine-looking man when I married him" but became "sadly changed." The chapter balances
+      resolution of plot threads with emotional depth, showing both justice achieved and private sorrows
+      acknowledged.'
+    title: 'LIV: Mr. Micawber’s Transactions'
   - href: epub/text/chapter-55.xhtml
-    title: 'LV: Tempest'
-    start_position: 762
     last_position: 773
+    start_position: 762
+    summary: 'David rides to Yarmouth to deliver Emily''s farewell letter to Ham, traveling through an
+      unprecedented storm. The chapter''s description of the tempest is one of Dickens''s most powerful
+      pieces of nature writing. The wind reaches such violence that the mail coach can barely proceed,
+      with horses unable to face it. At Ipswich, people report sheets of lead torn from church towers
+      and trees ripped from the earth. When David reaches Yarmouth, he finds the sea transformed into
+      chaos, with waves like "glimpses of another shore with towers and buildings." The townspeople gather
+      anxiously, as boats are certainly lost. David cannot find Ham, who is in Lowestoft. That night,
+      David is haunted by anxiety about Ham, though the boat-builder assures him no one would sail in
+      such conditions. The next morning brings news of a wreck—a Spanish or Portuguese vessel laden with
+      fruit and wine, breaking apart close to shore with men clinging to the rigging. As David watches
+      the disaster, Ham suddenly appears and, despite David''s desperate protests, volunteers to attempt
+      a rescue with a rope. The dramatic climax shows Ham battling through mountainous waves toward the
+      wreck. Just as he nearly reaches it, a massive wave engulfs both ship and man. Ham is pulled from
+      the water dead, "beaten to death by the great wave." Then David is led to another body on the beach:
+      Steerforth, lying with "his head upon his arm, as I had often seen him lie at school." The chapter''s
+      tragic irony—Ham dying trying to save the man who ruined his life—creates one of literature''s most
+      powerful coincidences.'
+    title: 'LV: Tempest'
   - href: epub/text/chapter-56.xhtml
-    title: 'LVI: The New Wound, and the Old'
-    start_position: 774
     last_position: 780
+    start_position: 774
+    summary: 'David must convey Steerforth''s body to his mother at Highgate, a duty he accepts despite
+      his grief. The townspeople instinctively know not to lay Ham and Steerforth together, sensing the
+      impropriety. David arranges transport through the night, arriving at the Steerforth estate where
+      nothing appears changed. Inside, he finds Mrs. Steerforth in her son''s room, surrounded by his
+      boyhood possessions. Rosa Dartle watches with her scarred face and penetrating gaze. When David
+      reveals Steerforth is dead, Mrs. Steerforth sits rigid and immobile, uttering only an inarticulate
+      moan. Rosa Dartle explodes with long-suppressed fury, crying "Now has he made atonement to you—with
+      his life!" She reveals her complex feelings: that she loved Steerforth better than his mother ever
+      did, that he once returned her love before tiring of her, that Mrs. Steerforth''s pride and pampering
+      corrupted him. Rosa strikes at the frozen Mrs. Steerforth verbally with vicious accusations, then
+      physically attempts to strike her. David tries to intervene, but Rosa continues her tirade until
+      finally, overcome, she kneels and loosens Mrs. Steerforth''s dress. David leaves to alert the household.
+      Later, he returns to find Mrs. Steerforth unchanged, "like a statue," with Rosa never leaving her
+      side and doctors unable to help. The chapter''s famous scene of Rosa''s passionate denunciation
+      contrasts with Mrs. Steerforth''s catatonic grief. David darkens the house''s windows and holds
+      Steerforth''s "leaden hand," contemplating death and his own losses. The chapter explores how differently
+      people process grief—some freezing, some exploding—and questions whether Steerforth''s death is
+      judgment or tragedy.'
+    title: 'LVI: The New Wound, and the Old'
   - href: epub/text/chapter-57.xhtml
-    title: 'LVII: The Emigrants'
-    start_position: 781
     last_position: 791
+    start_position: 781
+    summary: 'David conceals news of Steerforth and Ham''s deaths from the departing emigrants, enlisting
+      Mr. Micawber''s help as a buffer. The Micawber family appears transformed, dressed in nautical gear:
+      Mr. Micawber in oilskins with a telescope, Mrs. Micawber in a securing bonnet tied like a bundle,
+      and the children "done up, like preserved meats, in impervious cases." They gather at Hungerford
+      Stairs for departure. Mr. Micawber delivers a farewell toast with his customary elaborate rhetoric
+      about their "frail canoe on the ocean of enterprise." Mrs. Micawber expresses hope that her family
+      will reconcile and appear to see them off, though they never do. Mr. Micawber is arrested one final
+      time before departing, quickly released by David''s payment. The group proceeds to Gravesend where
+      the emigrant ship waits. Below deck, David encounters a chaotic scene of emigrants preparing for
+      the voyage—families with children, elderly people, workers bringing English soil on their boots.
+      In the confusion, David glimpses Emily briefly with a Micawber child, and sees Agnes''s figure moving
+      through the crowd (revealed later as Martha). Mr. Peggotty reveals his greatest kindness: Martha
+      will emigrate with them, having been given a new chance at life. As the ship departs at sunset,
+      Emily finally appears on deck beside her uncle, waving farewell. The chapter''s closing image shows
+      Emily "beautiful and drooping, cling[ing] to him with the utmost trust of thy bruised heart" as
+      they sail away, bathed in rosy light, while "the night had fallen darkly upon me." The scene beautifully
+      captures both hope for the emigrants and David''s personal darkness following his losses.'
+    title: 'LVII: The Emigrants'
   - href: epub/text/chapter-58.xhtml
-    title: 'LVIII: Absence'
-    start_position: 792
     last_position: 798
+    start_position: 792
+    summary: 'David leaves England for three years of wandering, initially unaware of the depth of his
+      grief. The wound''s true severity emerges gradually: "The knowledge came upon me, not quickly, but
+      little by little, and grain by grain." He travels aimlessly through Europe, carrying his burden
+      everywhere, mourning his "child-wife" Dora, Steerforth''s wasted potential, Ham''s broken heart,
+      and Emily''s shattered life. David falls into deep despondency, sometimes believing he will die,
+      once turning back toward England. He cannot recall his journey clearly, seeing foreign cities "as
+      a dreamer might." Eventually in Switzerland, descending into a valley at sunset, he experiences
+      a spiritual awakening. Surrounded by mountains, forests, and distant singing, "great Nature spoke
+      to me; and soothed me to lay down my weary head upon the grass, and weep as I had not wept yet,
+      since Dora died!" He receives letters, including one from Agnes that transforms him. She writes
+      of her faith in him, how sorrow will strengthen rather than weaken him, how his childhood trials
+      shaped him to help others. Agnes''s words inspire David to resume writing. He completes a novel
+      and begins another, gradually healing through work and nature. The chapter reveals David''s secret:
+      he has fallen in love with Agnes but believes it too late. He thinks she may love him but feels
+      unworthy after "frivolously" choosing Dora over her. He resolves to maintain their sisterly relationship
+      rather than burden her. After three years abroad, David returns home, convinced Agnes "was never
+      to be mine. She might have been, but that was past!" The chapter''s structure parallels David''s
+      earlier retrospects but covers years rather than moments, showing grief''s long work.'
+    title: 'LVIII: Absence'
   - href: epub/text/chapter-59.xhtml
-    title: 'LIX: Return'
-    start_position: 799
     last_position: 813
+    start_position: 799
+    summary: 'David returns to London on a rainy autumn evening, finding the city dingy after years abroad.
+      He surprises Traddles at Gray''s Inn, discovering his old friend is now married to Sophy. When David
+      arrives, Traddles and Sophy''s sisters are playing "Puss in the Corner" in the chambers. The five
+      sisters are staying with the newlyweds in their modest three-room chambers, sleeping three and two
+      to rooms while Traddles and Sophy occupy "a capital little gipsy sort of place" in the roof. Despite
+      their poverty—possessing only Britannia metal teaspoons, not silver—they are blissfully happy. Traddles
+      describes their simple pleasures: window-shopping for jewelry and watches they cannot afford, speculating
+      about houses they might occupy if he becomes a judge, attending the theatre at half-price, and making
+      "splendid suppers" from cook-shop purchases. Sophy has learned to copy legal documents in a "stiff
+      hand" to serve as Traddles''s clerk. The household''s cheerful chaos, with sisters constantly needing
+      Sophy''s help, contrasts with David''s solitary grief. Traddles explains how he negotiated with
+      Sophy''s father, the Reverend Horace, promising to support the family if he earned £250 yearly.
+      The wedding caused Mrs. Crewler''s "feelings" to mount "from her legs into her chest, and then into
+      her head" but she has since reconciled. Later, alone at the coffeehouse, David encounters Dr. Chillip,
+      who attended his birth. Chillip gossips about the Murdstones, revealing they have destroyed another
+      wife through their "firmness," reducing her "nearly to a state of imbecility." David visits his
+      aunt at Dover, reuniting joyfully with her, Mr. Dick, and Peggotty.'
+    title: 'LIX: Return'
   - href: epub/text/chapter-60.xhtml
-    title: 'LX: Agnes'
-    start_position: 814
     last_position: 822
+    start_position: 814
+    summary: 'David stays at his aunt''s Dover house, visiting Agnes weekly in Canterbury despite the
+      "old unhappy sense always hovering about me now." He has resigned himself to losing her, believing
+      she loves someone else, yet he loves her more than ever. Christmas approaches, and David learns
+      from his aunt that she suspects Agnes has an attachment and may marry soon. Determined to be a true
+      brother and not stand in Agnes''s way, David rides to Canterbury on a cold winter day to encourage
+      her to confide in him. At the old house, now restored to its former order with Uriah Heep''s changes
+      removed, Agnes welcomes him warmly. David urges her to share her secret, saying he wants to be her
+      "friend, your brother, in this matter." Agnes bursts into tears—but these tears give David hope.
+      When she protests he is mistaken about her having a new attachment, David realizes her secret is
+      old, not new, and suddenly understands the truth. He confesses: "When I came here today, I thought
+      that nothing could have wrested this confession from me...But, Agnes, if I have indeed any newborn
+      hope that I may ever call you something more than sister...!" Agnes reveals: "I have loved you all
+      my life!" The chapter builds to this climactic moment through David''s internal struggle between
+      duty and hope. They walk together in the winter evening, thanking God for their reunion. That night,
+      visiting her father, David hears about Agnes''s mother who died of a broken heart after her father
+      disowned her for marrying Wickfield. The revelation deepens David''s understanding of Agnes''s patient,
+      suffering love. The chapter ends with David riding home through the lonely night, uncertain whether
+      Agnes is truly happy but having "faithfully set the seal upon the past."'
+    title: 'LX: Agnes'
   - href: epub/text/chapter-61.xhtml
-    title: 'LXI: I Am Shown Two Interesting Penitents'
-    start_position: 823
     last_position: 834
+    start_position: 823
+    summary: David works at his aunt's Dover house on his book, occasionally visiting London to consult
+      Traddles on business matters. At Traddles's chambers, David learns Sophy has mastered legal copying
+      with an "extraordinarily legal and formal" hand. David receives a letter from Mr. Creakle, his former
+      cruel schoolmaster, now a Middlesex Magistrate promoting a new prison system based on solitary confinement.
+      Traddles and David accept Creakle's invitation to tour the prison. They find an expensive, luxurious
+      facility where prisoners receive better food than soldiers, sailors, or laborers—justified by "the
+      system." The favorite prisoner, Number Twenty-Seven, turns out to be Uriah Heep, who has adopted
+      an exaggerated religious penitence, constantly talking about his "follies" and his mother's spiritual
+      danger. Number Twenty-Eight is Littimer, Steerforth's former valet, equally sanctimonious, who piously
+      forgives David for his "wickedness." Both prisoners are praised as model penitents by Creakle and
+      visiting magistrates, who are completely deceived by their performances. David learns from a prison
+      warder that Twenty-Seven (Heep) was transported for life for fraud, forgery, and conspiracy against
+      the Bank of England, "the knowingest bird of the lot." Twenty-Eight (Littimer) was caught by Miss
+      Mowcher trying to flee to America after robbing his employer of £250. Mowcher "ran betwixt his legs
+      to upset him" and "held on to him like grim Death" despite being brutally beaten. The chapter satirizes
+      the Victorian prison reform movement's naive belief that criminals could be reformed through comfortable
+      imprisonment, showing how manipulative villains exploit the system while maintaining their fundamental
+      dishonesty. Dickens's critique targets "the system" that prioritizes prisoner comfort over victim
+      justice.
+    title: 'LXI: I Am Shown Two Interesting Penitents'
   - href: epub/text/chapter-62.xhtml
-    title: 'LXII: A Light Shines on My Way'
-    start_position: 835
     last_position: 842
+    start_position: 835
+    summary: 'For two months after returning home, David visits Agnes weekly, reading his work to her
+      while maintaining the painful pretense of brotherly affection. His aunt confirms her suspicion that
+      Agnes will marry, prompting David to act. He rides to Canterbury on a harsh winter day, finding
+      Agnes alone reading by the fire. David asks if she doubts his truth to her, then gently probes about
+      her secret. Agnes rises, crosses the room, and bursts into tears—but David notices these tears bring
+      "promise to my heart." When Agnes protests she is "not herself," David persists: "If you are unhappy,
+      let me share your unhappiness...For whom do I live now, Agnes, if it is not for you!" Agnes attempts
+      to dismiss his concerns, saying if she ever had a burden "it has been lightened for me. If I have
+      any secret, it is—no new one." This phrase "not a new one" sparks David''s realization. He clasps
+      her waist and confesses: "Agnes, if I have indeed any newborn hope that I may ever call you something
+      more than sister...!" Agnes weeps joyfully as David declares: "I went away, dear Agnes, loving you.
+      I stayed away, loving you. I returned home, loving you!" Agnes finally reveals: "I have loved you
+      all my life!" They walk together in winter fields, thanking God. The next day they appear before
+      David''s aunt, who initially doesn''t notice anything different. When David reveals the truth, she
+      goes into hysterics "for the first and only time," then joyfully embraces everyone. They marry within
+      a fortnight. On their wedding journey, Agnes reveals Dora''s final gift: she asked Agnes to "occupy
+      this vacant place," blessing their future union. The chapter''s title references light breaking
+      through David''s darkness.'
+    title: 'LXII: A Light Shines on My Way'
   - href: epub/text/chapter-63.xhtml
-    title: 'LXIII: A Visitor'
-    start_position: 843
     last_position: 850
+    start_position: 843
+    summary: 'Ten years after marrying Agnes, David is a successful author with three children when Mr.
+      Peggotty visits from Australia. Now an old man but still robust, he brings news of the emigrants''
+      success. Mr. Peggotty and Emily prospered through sheep-farming and other ventures: "We''ve allus
+      thrived." Emily remained low-spirited initially, but caring for sick fellow-passengers and colony
+      children helped her heal. She learned of Ham and Steerforth''s deaths from an old English newspaper
+      brought by a traveler, which devastated her. Now she is described as "a slight figure, kiender worn;
+      soft, sorrowful, blue eyes; a delicate face; a pritty head, leaning a little down; a quiet voice
+      and way—timid a''most." Emily never married, saying "that''s gone forever," but spends her time
+      teaching children, tending the sick, and helping young brides, though she has "never seen one" wedding
+      herself. Martha married a farm laborer and lives 400 miles away. Mrs. Gummidge thrived and was even
+      proposed to by a ship''s cook, whom she repelled with a bucket. She transformed from "lone and lorn"
+      to the "willingest, the trewest, the honestest-helping woman" who never once complained about "the
+      old ''un." Most remarkably, Mr. Micawber has become a Magistrate in Port Middlebay! Mr. Peggotty
+      shows David a newspaper describing a public dinner honoring "Wilkins Micawber, Esquire," where the
+      guest speaker was Dr. Mell (David''s old schoolmaster from Salem House). The paper includes Micawber''s
+      characteristically verbose letter to David, thanking him for literary "gratification." Micawber
+      has also become a regular newspaper correspondent. Mr. Peggotty stays a month, then returns to Australia.
+      Before leaving, he visits Yarmouth with David to see Ham''s memorial tablet, gathering grass and
+      earth from the grave "For Em''ly...I promised, Mas''r Davy."'
+    title: 'LXIII: A Visitor'
   - href: epub/text/chapter-64.xhtml
-    title: 'LXIV: A Last Retrospect'
-    start_position: 851
     last_position: 855
+    start_position: 851
+    summary: 'In this final chapter, David closes his autobiographical narrative by surveying the fates
+      of his story''s characters. His aunt, now over eighty, still walks six miles in winter. Peggotty,
+      his old nurse, remains with her, doing needlework with her ancient work-box containing St. Paul''s
+      picture. David''s aunt is godmother to "a real living Betsey Trotwood" (David''s daughter), while
+      Dora (his second daughter) says she spoils her. Mr. Dick makes kites with the boys and remains devoted
+      to his Memorial, assuring David he''ll finish it when he has nothing else to do. In a haunting vision,
+      David sees Mrs. Steerforth, now a "bent lady" with "imbecile, fretful wandering of the mind," attended
+      by Rosa Dartle. Mrs. Steerforth repeatedly fails to recognize visitors, sometimes crying "He is
+      dead!" while Rosa alternates between caressing and scolding her, declaring "I loved him better than
+      you ever did!" Julia Mills returned from India married to a wealthy Scot, "steeped in money to the
+      throat" but living in what David calls a "Desert of Sahara" of shallow society. Dr. Strong continues
+      happily working on his Dictionary (still around letter D). Traddles is succeeding as a lawyer, on
+      his way to becoming a judge. He has supported all of Sophy''s sisters: three married, three living
+      with them, three keeping house for the Reverend Horace. The Beauty married unwisely but now lives
+      with them. Their house is crowded but happy, with Traddles sitting "like a patriarch." The final
+      paragraph celebrates Agnes: "But one face, shining on me like a heavenly light...is above them and
+      beyond them all." David, writing late into the night, sees Agnes beside him, ending with his prayer:
+      "O Agnes, O my soul, so may thy face be by me when I close my life indeed...still find thee near
+      me, pointing upward!"'
+    title: 'LXIV: A Last Retrospect'
+  href: epub/text/halftitlepage.xhtml
   last_position: 9
+  start_position: 9
+  summary: 'The halftitlepage file is an extremely concise XHTML document that serves a specific traditional
+    publishing function within the book''s structure. It contains only the novel''s title "David Copperfield"
+    presented as a level-2 heading with the semantic markup designation of "fulltitle." In traditional
+    book publishing, a half-title page (also called a bastard title) typically appears before the main
+    title page and contains only the book''s title without author information, publisher details, or other
+    bibliographic data. This minimalist page serves several purposes: it acts as a protective initial
+    page when books are bound, provides a visual pause or transition in the reading experience, and follows
+    conventional book design practices that have been maintained for centuries. The file includes the
+    standard XHTML structure with proper namespacing for EPUB compatibility and links to CSS stylesheets
+    for formatting control. It is marked as frontmatter content, appropriately categorizing its position
+    within the book''s organizational structure. The language setting is British English (en-GB), consistent
+    with the other frontmatter files in this edition. While seemingly simple and perhaps unnecessary in
+    purely digital contexts, the inclusion of a half-title page demonstrates Standard Ebooks'' commitment
+    to replicating traditional book design elements in their digital editions, maintaining the familiar
+    rhythm and structure that readers expect from professionally published books. This attention to detail
+    enhances the reading experience by providing a sense of authenticity and quality.'
+  title: David Copperfield
 - href: epub/text/colophon.xhtml
-  title: Colophon
-  start_position: 856
   last_position: 857
+  start_position: 856
+  summary: 'This file contains publication and production information for the Standard Ebooks edition
+    of "David Copperfield." It documents that the original novel was published in 1850 by Charles Dickens.
+    The ebook was produced by Alex Cabal for Standard Ebooks, based on a 2009 transcription by Jo Churcher
+    and David Widger for Project Gutenberg, with additional reference to digital scans from the Internet
+    Archive. The colophon details the visual design elements: the cover is adapted from Carl Spitzweg''s
+    painting "The Writer" (circa 1850), and the typography uses League Spartan and Sorts Mill Goudy typefaces
+    created by The League of Moveable Type in 2014 and 2009 respectively. This specific edition was released
+    on September 9, 2025, at 9:40 p.m., based on revision bf32aa8, with the first edition having been
+    released on May 19, 2015. The file provides a link where readers can check for updates, view revision
+    history, or download the ebook in different formats. It concludes with an invitation for readers to
+    contribute improvements, corrections, and typo reports to the volunteer-driven Standard Ebooks project,
+    emphasizing the collaborative nature of the organization.'
+  title: Colophon
 - href: epub/text/uncopyright.xhtml
-  title: Uncopyright
-  start_position: 858
   last_position: 859
+  start_position: 858
+  summary: 'This file serves as a public domain dedication statement for the ebook, explaining the copyright
+    status and usage rights. It begins with a poetic blessing about doing good, forgiveness, and sharing
+    freely. The document explains that unlike traditional copyright pages that restrict usage, this "Uncopyright"
+    page clarifies that the writing and artwork are believed to be in the United States public domain,
+    making them free of copyright restrictions for U.S. users. The file provides important caveats: copyright
+    laws vary internationally, so users outside the United States must verify their local laws before
+    using the ebook. It emphasizes that "sweat of the brow" work—such as digitization, markup, or typography—doesn''t
+    create new copyright on public domain items. The contributors release their work under the CC0 1.0
+    Universal Public Domain Dedication, dedicating all contributions (metadata, formatting, markup, and
+    enhancements) to the worldwide public domain. This dedication aims to enrich global cultural heritage
+    and promote free culture, while clarifying that it doesn''t alter the copyright status of the original
+    source text or artwork. The page embodies Standard Ebooks'' philosophy of giving back to the unrestricted
+    culture that benefits everyone.'
+  title: Uncopyright
