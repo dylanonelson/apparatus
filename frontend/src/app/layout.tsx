@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import { ThStoreProvider } from "@/lib/ThStoreProvider";
 import { ThPreferencesProvider } from "@/preferences/ThPreferencesProvider";
 import { ThI18nProvider } from "@/i18n/ThI18nProvider";
 
+import "./app.css";
+
 export const runtime = "edge";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Thorium Web",
-  description: "Play with the capabilities of the Readium Web Toolkit",
+  title: "Apparatus Ebooks",
+  description: "An open-source ebook/audiobook/comics Web Reader",
 };
 
 export default function RootLayout({
@@ -21,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <ThStoreProvider>
           <ThPreferencesProvider>
             <ThI18nProvider>{children}</ThI18nProvider>
