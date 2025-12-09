@@ -19,6 +19,7 @@ from pydantic import AnyUrl
 
 from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
+from app.config import Config
 from app.db import get_session_factory as _get_session_factory
 from app.prompts import prompt_v1
 from app.publication_reader import fetch_publication_files
@@ -40,13 +41,17 @@ def create_mcp_server() -> tuple[
     FunctionTool,
     FunctionTool,
 ]:
+    config = Config.get_instance()
+    auth0_config = config.auth0
+    auth0_mcp_config = auth0_config.mcp
+    networking_config = config.networking
     auth = Auth0Provider(
-        config_url="https://dev-usf5eu2woue2lk2d.us.auth0.com/.well-known/openid-configuration",
-        client_id="tD9VSQQwq8bdiNrllCsKFgpU8kUps001",
-        client_secret="9_iDZ64ye5hRf_AapjdpIFiQXY2l10UACQ196862dL2XT8u6IBuO_DX7raFSDaHR",
-        audience="https://api.apparatus-ebooks.com",
-        base_url="https://ff07e236f922.ngrok-free.app",
-        issuer_url="https://ff07e236f922.ngrok-free.app",
+        config_url=f"https://{auth0_config.issuer_domain}/.well-known/openid-configuration",
+        client_id=auth0_mcp_config.fast_mcp_client_id,
+        client_secret=auth0_mcp_config.fast_mcp_client_secret,
+        audience=auth0_config.api_audience,
+        base_url=networking_config.reader_api_url,
+        issuer_url=networking_config.reader_api_url,
     )
     mcp_server = FastMCP(
         name="Apparatus MCP",

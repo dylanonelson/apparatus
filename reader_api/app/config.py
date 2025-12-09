@@ -1,11 +1,16 @@
 import logging
 import os
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional, Tuple
-from urllib.parse import urlparse
 
 from dotenv import load_dotenv
+
+
+@dataclass(frozen=True)
+class Auth0MCPConfig:
+    fast_mcp_client_id: str
+    fast_mcp_client_secret: str
 
 
 @dataclass(frozen=True)
@@ -13,6 +18,7 @@ class Auth0Config:
     api_audience: str
     issuer_domain: str
     algorithms: Tuple[str, ...]
+    mcp: Auth0MCPConfig
 
 
 @dataclass(frozen=True)
@@ -27,6 +33,12 @@ class DatabaseConfig:
     echo: bool
 
 
+@dataclass(frozen=True)
+class NetworkingConfig:
+    reader_api_url: str
+    content_service_url: str
+
+
 class Config:
     instance: Optional["Config"] = None
 
@@ -38,8 +50,17 @@ class Config:
         self.auth0 = self._load_auth0_config()
         self.logging = self._load_logging_config()
         self.database = self._load_database_config()
+        self.networking = self._load_networking_config()
 
         logging.basicConfig(level=self.logging.level)
+
+    def _load_networking_config(self) -> NetworkingConfig:
+        reader_api_url = self._require_env("READER_API_PUBLIC_URL")
+        content_service_url = self._require_env("CONTENT_SERVICE_URL")
+        return NetworkingConfig(
+            reader_api_url=reader_api_url,
+            content_service_url=content_service_url,
+        )
 
     def _load_auth0_config(self) -> Auth0Config:
         api_audience = self._require_env("AUTH0_API_AUDIENCE")
@@ -53,11 +74,22 @@ class Config:
             if algorithm.strip()
         )
         if not algorithms:
-            raise ValueError("AUTH0_ALGORITHMS must specify at least one algorithm")
+            raise ValueError(
+                "AUTH0_ALGORITHMS must specify at least one algorithm"
+            )
+        fast_mcp_client_id = self._require_env("AUTH0_FAST_MCP_CLIENT_ID")
+        fast_mcp_client_secret = self._require_env(
+            "AUTH0_FAST_MCP_CLIENT_SECRET"
+        )
+
         return Auth0Config(
             api_audience=api_audience,
             issuer_domain=issuer_domain,
             algorithms=algorithms,
+            mcp=Auth0MCPConfig(
+                fast_mcp_client_id=fast_mcp_client_id,
+                fast_mcp_client_secret=fast_mcp_client_secret,
+            ),
         )
 
     def _load_database_config(self) -> DatabaseConfig:

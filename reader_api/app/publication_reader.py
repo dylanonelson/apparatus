@@ -1,9 +1,8 @@
-import os
 from typing import Any
 
 import httpx
 
-CONTENT_SERVICE_URL = os.getenv("CONTENT_SERVICE_URL", "http://127.0.0.1:8091")
+from app.config import Config
 
 
 async def search_publication(
@@ -12,7 +11,8 @@ async def search_publication(
     max_results: int = 20,
     context_chars: int = 120,
 ) -> list[dict[str, Any]]:
-    url = f"{CONTENT_SERVICE_URL}/search"
+    networking_config = Config.get_instance().networking
+    url = f"{networking_config.content_service_url}/search"
     payload = {
         "publication_id": publication_id,
         "query": query,
@@ -36,7 +36,8 @@ async def fetch_publication_files(
     if len(hrefs) > 2:
         raise ValueError("hrefs cannot exceed 2 items")
 
-    url = f"{CONTENT_SERVICE_URL}/content/fetch"
+    networking_config = Config.get_instance().networking
+    url = f"{networking_config.content_service_url}/content/fetch"
     payload = {
         "publication_id": publication_id,
         "hrefs": hrefs,
@@ -48,5 +49,3 @@ async def fetch_publication_files(
         if not isinstance(data, dict):
             raise ValueError("invalid response shape from content service")
         return data
-
-
