@@ -6,6 +6,7 @@ from typing import List, cast
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastmcp import Context
+from fastmcp.exceptions import NotFoundError
 from fastmcp.prompts import PromptMessage
 from fastmcp.resources.resource import FunctionResource
 from fastmcp.server import FastMCP
@@ -81,20 +82,42 @@ def create_mcp_server() -> tuple[
     @mcp_server.resource(
         "resource://current-publication/position-index",
         name="Current publication context",
+        description=(
+            "Context file containing position index, summaries, and metadata for "
+            "the user's currently open publication. Includes href mappings, position "
+            "ranges, and content summaries. Returns YAML format. Requires bearer token. "
+            "Returns 404/NotFound when no context file exists for the publication."
+        ),
+        mime_type="application/x-yaml",
     )
     async def get_current_publication_context_resource() -> str:
         """
-        A json object describing the publication the user has open right now,
-        including the positions in the publication, the readable assets contained in
-        the publication, and their titles
+        Returns the context YAML file for the user's currently open publication.
+        Contains position index, summaries, and metadata for the publication.
         """
         access_token = get_access_token()
         if access_token is None:
             raise PermissionError(
                 "Authentication is required to access publication context."
             )
-        current_publication = _get_current_publication()
-        return ""
+        current_publication = await _get_current_publication()
+
+        # Get the base directory and resolve the context file path
+        base_directory = publications_catalog.get_publications_base_directory()
+        context_path = current_publication.resolve_context_path(base_directory)
+
+        if context_path is None:
+            raise NotFoundError(
+                f"No context file configured for publication '{current_publication.identifier}'"
+            )
+
+        if not context_path.exists():
+            raise NotFoundError(
+                f"Context file not found at {context_path} for publication '{current_publication.identifier}'"
+            )
+
+        # Read and return the context file contents
+        return context_path.read_text(encoding="utf-8")
 
     async def _get_current_publication() -> (
         publications_catalog.PublicationMetadata
