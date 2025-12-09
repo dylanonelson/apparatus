@@ -13,6 +13,8 @@ from sqlalchemy.sql.elements import ColumnElement
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app import publication_reader
+from app import publications_catalog
 from app.api_models import (
     LocatorModel,
     ReadingLocationResponseModel,
@@ -20,8 +22,9 @@ from app.api_models import (
     ViewportResponseModel,
 )
 from app.data import get_latest_reading_location
-from app.data.users import Auth0UserInfoError, get_or_create_user
+from app.data.users import Auth0UserInfoError, get_or_create_user, get_user_from_jwt
 from app.db import ReadingLocation, Viewport
+from app.publications_catalog import PublicationMetadata
 
 
 def ensure_timezone(timestamp: datetime | None) -> datetime | None:
@@ -116,3 +119,12 @@ async def build_reading_state_payload(
         ),
         viewport=build_viewport_response(viewport) if viewport else None,
     )
+
+async def get_current_publication(access_token: AccessToken,
+    session_factory: async_sessionmaker[AsyncSession],
+) -> PublicationMetadata:
+    current_user = await get_user_from_jwt(access_token, session_factory)
+    reading_location = await get_latest_reading_location(session_factory(), user_id=current_user.id)
+    if reading_location is None:
+        raise NotFoundError("No reading location found for the authenticated user")
+    return publications_catalog.get_publication(reading_location.publication_id)

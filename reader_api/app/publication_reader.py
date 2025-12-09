@@ -48,3 +48,5 @@ async def fetch_publication_files(
         if not isinstance(data, dict):
             raise ValueError("invalid response shape from content service")
         return data
+
+

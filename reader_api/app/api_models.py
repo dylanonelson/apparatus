@@ -218,20 +218,6 @@ class ReadingStatePayload(BaseModel):
     )
 
 
-class TocItem(BaseModel):
-    href: str
-    title: str
-    totalPositions: int
-
-
-class PublicationContextPayload(BaseModel):
-    toc: list[TocItem] = Field(default_factory=list)
-
-
-class PublicationContextResponseModel(PublicationContextPayload):
-    pass
-
-
 class AskRequestModel(BaseModel):
     question: str
     locator: LocatorModel

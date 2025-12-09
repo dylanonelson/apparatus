@@ -4,8 +4,10 @@ import logging
 from collections.abc import Mapping
 from typing import Final
 
+from fastmcp.server.auth import AccessToken
 import httpx
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -78,6 +80,29 @@ async def get_or_create_user(
 
     await session.refresh(user)
     return user
+
+async def get_user_from_jwt(
+    access_token: AccessToken,
+    session_factory: async_sessionmaker[AsyncSession],
+) -> User:
+    claims = access_token.claims or {}
+    auth0_subject = claims.get("sub")
+    if not isinstance(auth0_subject, str) or not auth0_subject:
+        raise PermissionError("Missing subject claim in access token.")
+
+    token_value = access_token.token
+    if not isinstance(token_value, str) or not token_value:
+        raise PermissionError("Missing access token value.")
+
+    async with session_factory() as session:
+        try:
+            return await get_or_create_user(
+                session,
+                auth0_id=auth0_subject,
+                access_token=token_value,
+            )
+        except Auth0UserInfoError as exc:
+            raise PermissionError(str(exc)) from exc
 
 
 async def _lookup_user(session: AsyncSession, auth0_id: str) -> User | None:

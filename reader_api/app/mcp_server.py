@@ -11,7 +11,6 @@ from fastmcp.resources.resource import FunctionResource
 from fastmcp.server import FastMCP
 from fastmcp.server.auth import AccessToken
 from fastmcp.server.auth.providers.auth0 import Auth0Provider
-from fastmcp.server.auth.providers.jwt import JWTVerifier
 from fastmcp.server.dependencies import get_access_token as _get_access_token
 from fastmcp.server.http import StarletteWithLifespan
 from fastmcp.tools.tool import FunctionTool
@@ -20,33 +19,17 @@ from pydantic import AnyUrl
 
 from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
-from app.config import Config
 from app.db import get_session_factory as _get_session_factory
 from app.prompts import prompt_v1
 from app.publication_reader import fetch_publication_files
-from app.reading_state import build_reading_state_payload
+from app.reading_state import (
+    build_reading_state_payload,
+    get_current_publication,
+)
 
 # Globals allow test overrides
 get_access_token = _get_access_token
 get_session_factory = _get_session_factory
-
-
-def _normalize_auth0_base_url(domain: str) -> str:
-    base = domain.rstrip("/")
-    if not base.startswith("http"):
-        base = f"https://{base}"
-    return base.rstrip("/")
-
-
-def _build_jwt_auth_provider() -> JWTVerifier:
-    auth_config = Config.get_instance().auth0
-    issuer_base = _normalize_auth0_base_url(auth_config.issuer_domain)
-    return JWTVerifier(
-        jwks_uri=f"{issuer_base}/.well-known/jwks.json",
-        issuer=f"{issuer_base}/",
-        audience=auth_config.api_audience,
-        algorithm=auth_config.algorithms[0],
-    )
 
 
 def create_mcp_server() -> tuple[
@@ -95,27 +78,35 @@ def create_mcp_server() -> tuple[
         session_factory = get_session_factory()
         return await build_reading_state_payload(access_token, session_factory)
 
-    # @mcp_server.resource(
-    #     "resource://current-publication/position-index",
-    #     name="Current publication context",
-    # )
-    # async def get_current_publication_context_resource() -> (
-    #     PublicationContextResponseModel
-    # ):
-    #     """
-    #     A json object describing the publication the user has open right now,
-    #     including the positions in the publication, the readable assets contained in
-    #     the publication, and their titles
-    #     """
-    #     access_token = get_access_token()
-    #     if access_token is None:
-    #         raise PermissionError(
-    #             "Authentication is required to access publication context."
-    #         )
-    #     session_factory = get_session_factory()
-    #     return await build_publication_context_payload(
-    #         access_token, session_factory
-    #     )
+    @mcp_server.resource(
+        "resource://current-publication/position-index",
+        name="Current publication context",
+    )
+    async def get_current_publication_context_resource() -> str:
+        """
+        A json object describing the publication the user has open right now,
+        including the positions in the publication, the readable assets contained in
+        the publication, and their titles
+        """
+        access_token = get_access_token()
+        if access_token is None:
+            raise PermissionError(
+                "Authentication is required to access publication context."
+            )
+        current_publication = _get_current_publication()
+        return ""
+
+    async def _get_current_publication() -> (
+        publications_catalog.PublicationMetadata
+    ):
+        access_token = get_access_token()
+        if access_token is None:
+            raise PermissionError(
+                "Authentication is required to access reading state."
+            )
+        return await get_current_publication(
+            access_token, get_session_factory()
+        )
 
     async def _get_current_reading_state() -> ReadingStatePayload:
         access_token = get_access_token()
