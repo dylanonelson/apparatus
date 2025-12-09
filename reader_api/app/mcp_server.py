@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from typing import List, cast
 
 from fastapi import Request
@@ -181,13 +180,9 @@ def create_mcp_server() -> tuple[
             viewport_payload.text = reading_state.viewport.text
             viewport_payload.positions = reading_state.viewport.positions
 
-        logging.getLogger(__name__).info(
-            "reading resource resource://reading-state"
-        )
         reading_state_contents = await ctx.read_resource(
             "resource://reading-state"
         )
-        logging.getLogger(__name__).info(reading_state_contents)
         text = ""
         if reading_state_contents:
             result = reading_state_contents[0].content

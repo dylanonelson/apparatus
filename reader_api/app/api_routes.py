@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import time
 
 from fastapi import APIRouter, Depends, HTTPException, Security, status
@@ -85,16 +84,12 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
 
     @router.get("/protected")
     async def protected_route(claims: dict = Depends(auth0.require_auth())):
-        logging.getLogger(__name__).info(
-            f"Protected route accessed with claims: {claims}"
-        )
         return {"message": "This is a protected route"}
 
     @router.get("/users/me", response_model=UserResponseModel)
     async def get_current_user(
         user: User = Depends(get_authenticated_user),
     ) -> UserResponseModel:
-        logging.getLogger(__name__).info(f"User: {user}")
         return UserResponseModel.model_validate(user, extra="ignore")
 
     @router.post(
