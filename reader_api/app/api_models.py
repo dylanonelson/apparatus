@@ -46,7 +46,7 @@ class TextModel(BaseModel):
     before: str | None = Field(
         None,
         description="Text immediately preceding the locator.",
-        examples=["He opened the door and"],
+        examples=["He opened the door and "],
     )
     highlight: str | None = Field(
         None,
@@ -56,7 +56,7 @@ class TextModel(BaseModel):
     after: str | None = Field(
         None,
         description="Text immediately after the locator.",
-        examples=["not knowing what he'd find next."],
+        examples=[" not knowing what he'd find next."],
     )
 
 

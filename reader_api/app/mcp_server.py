@@ -14,7 +14,12 @@ from fastmcp.server.auth.providers.auth0 import Auth0Provider
 from fastmcp.server.dependencies import get_access_token as _get_access_token
 from fastmcp.server.http import StarletteWithLifespan
 from fastmcp.tools.tool import FunctionTool
-from mcp.types import EmbeddedResource, TextContent, TextResourceContents
+from mcp.types import (
+    EmbeddedResource,
+    TextContent,
+    TextResourceContents,
+    ToolAnnotations,
+)
 from pydantic import AnyUrl
 
 from app import publications_catalog
@@ -146,6 +151,7 @@ def create_mcp_server() -> tuple[
 
     @mcp_server.tool(
         "get_reading_state",
+        annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Return the latest reading location and viewport for the authenticated "
             "user. Requires bearer token. Raises NotFoundError when the user has no "
@@ -219,6 +225,7 @@ def create_mcp_server() -> tuple[
 
     @mcp_server.tool(
         "download_publication_files",
+        annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Download up to two files from a publication by manifest href. "
             "Requires bearer token. Input: publication_id and 1-2 hrefs. "
