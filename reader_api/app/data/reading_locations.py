@@ -5,8 +5,8 @@ from typing import cast
 from uuid import UUID
 
 from sqlalchemy import case, desc
-from sqlmodel import select
 from sqlalchemy.sql.elements import ColumnElement
+from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.models import ReadingLocation
@@ -62,9 +62,13 @@ async def get_latest_reading_location(
     """
     Retrieve the most recent reading location for the user.
     """
-    statement = select(ReadingLocation).where(ReadingLocation.user_id == user_id)
+    statement = select(ReadingLocation).where(
+        ReadingLocation.user_id == user_id
+    )
     if publication_id:
-        statement = statement.where(ReadingLocation.publication_id == publication_id)
+        statement = statement.where(
+            ReadingLocation.publication_id == publication_id
+        )
 
     recorded_column = cast(
         ColumnElement[datetime | None],
@@ -84,6 +88,5 @@ async def get_latest_reading_location(
         desc(recorded_column),
         desc(created_column),
     ).limit(1)
-    result = await session.execute(statement)
-    return result.scalar_one_or_none()
-
+    result = await session.exec(statement)
+    return result.one_or_none()

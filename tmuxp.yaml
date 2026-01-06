@@ -1,24 +1,28 @@
 session_name: aie
+start_directory: ./
 windows:
   - window_name: app
-    layout: even-vertical
+    start_directory: ./
+    layout: even-horizontal
     panes:
-      - workdir: frontend
+      - start_directory: ./frontend
         shell_command:
           - pnpm run dev
-      - workdir: reader_api
+      - start_directory: ./reader_api
         shell_command:
           - uvicorn app.main:app --reload --log-level info
   - window_name: publications
-    layout: even-vertical
+    start_directory: ./
+    layout: even-horizontal
     panes:
-      - workdir: publication_api
+      - start_directory: ./publication_api
         shell_command:
           - make dev
       - shell_command:
           - ./bin/readium_darwin_arm64/readium serve --file-directory static
   - window_name: infra
-    layout: even-vertical
+    start_directory: ./
+    layout: even-horizontal
     panes:
       - shell_command:
           - |

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Sequence
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db.models import Viewport
@@ -36,10 +36,10 @@ async def upsert_viewport(
         else:
             timestamp = timestamp.astimezone(timezone.utc)
 
-    result = await session.execute(
+    result = await session.exec(
         select(Viewport).where(Viewport.user_id == user_id)
     )
-    viewport = result.scalar_one_or_none()
+    viewport = result.one_or_none()
     if viewport is None:
         viewport = Viewport(
             user_id=user_id,

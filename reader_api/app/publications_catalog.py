@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+
 import yaml
 
 
@@ -19,10 +20,24 @@ class PublicationMetadata:
     title: str
     author: str
     filename: str
+    context_filename: str | None = None
 
     def resolve_path(self, base_directory: Path) -> Path:
         """Return the absolute path to the publication file within the base directory."""
         return base_directory / self.filename
+
+    def resolve_context_path(self, base_directory: Path) -> Path | None:
+        """Return the absolute path to the context file, or None if no context file is configured."""
+        if self.context_filename is None:
+            return None
+        return base_directory / self.context_filename
+
+
+@dataclass
+class Catalog:
+    metadata_map: dict[str, PublicationMetadata]
+    catalog_path: Path
+    catalog_base_path: Path
 
 
 def _default_catalog_path() -> Path:
@@ -51,17 +66,17 @@ def _default_catalog_path() -> Path:
     )
 
 
-def _load_catalog_from_file(path: Path) -> dict[str, PublicationMetadata]:
+def _load_catalog_from_file(path: Path) -> Catalog:
     if not path.exists():
         raise CatalogError(f"Catalog file does not exist: {path}")
 
     raw_data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if raw_data is None:
-        return {}
+        raise CatalogError("Catalog file is empty")
     if not isinstance(raw_data, list):
         raise CatalogError("Catalog must be a list of publication entries")
 
-    catalog: dict[str, PublicationMetadata] = {}
+    metadata_map: dict[str, PublicationMetadata] = {}
     for entry in raw_data:
         if not isinstance(entry, dict):
             raise CatalogError("Catalog entries must be dictionaries")
@@ -69,28 +84,43 @@ def _load_catalog_from_file(path: Path) -> dict[str, PublicationMetadata]:
         required_keys = {"id", "title", "author", "filename"}
         missing = required_keys - set(entry.keys())
         if missing:
-            raise CatalogError(f"Catalog entry missing keys: {', '.join(sorted(missing))}")
+            raise CatalogError(
+                f"Catalog entry missing keys: {', '.join(sorted(missing))}"
+            )
 
         identifier = str(entry["id"]).strip()
         title = str(entry["title"]).strip()
         author = str(entry["author"]).strip()
         filename = str(entry["filename"]).strip()
+        context_filename = entry.get("contextFilename")
+        if context_filename is not None:
+            context_filename = str(context_filename).strip() or None
 
         if not identifier:
             raise CatalogError("Catalog entry has empty id")
         if not filename:
-            raise CatalogError(f"Catalog entry '{identifier}' has empty filename")
+            raise CatalogError(
+                f"Catalog entry '{identifier}' has empty filename"
+            )
 
         metadata = PublicationMetadata(
-            identifier=identifier, title=title, author=author, filename=filename
+            identifier=identifier,
+            title=title,
+            author=author,
+            filename=filename,
+            context_filename=context_filename,
         )
-        catalog[identifier] = metadata
+        metadata_map[identifier] = metadata
 
-    return catalog
+    return Catalog(
+        metadata_map=metadata_map,
+        catalog_path=path,
+        catalog_base_path=path.parent,
+    )
 
 
 @lru_cache(maxsize=1)
-def get_catalog() -> dict[str, PublicationMetadata]:
+def get_catalog() -> Catalog:
     """Return the publications catalog keyed by identifier."""
     catalog_path = _default_catalog_path()
     return _load_catalog_from_file(catalog_path)
@@ -99,12 +129,22 @@ def get_catalog() -> dict[str, PublicationMetadata]:
 def get_publication(publication_id: str) -> PublicationMetadata:
     """Retrieve metadata for a specific publication identifier."""
     catalog = get_catalog()
-    if publication_id not in catalog:
-        raise UnknownPublicationError(f"Publication not found for id '{publication_id}'")
-    return catalog[publication_id]
+    metadata_map = catalog.metadata_map
+    if publication_id not in metadata_map:
+        raise UnknownPublicationError(
+            f"Publication not found for id '{publication_id}'"
+        )
+    return metadata_map[publication_id]
+
+
+def get_publications_base_directory() -> Path:
+    """
+    Return the base directory where publication files and context files are located.
+    This is the parent directory of the catalog file.
+    """
+    return get_catalog().catalog_base_path
 
 
 def reload_catalog() -> None:
     """Clear the cached catalog to force a reload (useful in tests)."""
     get_catalog.cache_clear()
-

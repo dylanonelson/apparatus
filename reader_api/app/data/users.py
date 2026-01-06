@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from enum import Enum
 import logging
 from collections.abc import Mapping
 from typing import Final
 
+from fastmcp.server.auth import AccessToken
 import httpx
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -22,6 +23,7 @@ _USERINFO_PATH: Final[str] = "/userinfo"
 
 class Auth0UserInfoError(RuntimeError):
     """Raised when the Auth0 userinfo endpoint cannot be queried successfully."""
+
 
 def get_auth_type_from_auth0_sub(sub: str) -> AuthType:
     if sub.startswith("google-oauth2"):
@@ -66,7 +68,10 @@ async def get_or_create_user(
     except IntegrityError as exc:
         await session.rollback()
         logger.warning(
-            "Integrity error when creating user %s: %s", auth0_id, exc, exc_info=exc
+            "Integrity error when creating user %s: %s",
+            auth0_id,
+            exc,
+            exc_info=exc,
         )
         recovered_user = await _lookup_user(session, auth0_id)
         if recovered_user is not None:
@@ -76,16 +81,41 @@ async def get_or_create_user(
     await session.refresh(user)
     return user
 
+async def get_user_from_jwt(
+    access_token: AccessToken,
+    session_factory: async_sessionmaker[AsyncSession],
+) -> User:
+    claims = access_token.claims or {}
+    auth0_subject = claims.get("sub")
+    if not isinstance(auth0_subject, str) or not auth0_subject:
+        raise PermissionError("Missing subject claim in access token.")
+
+    token_value = access_token.token
+    if not isinstance(token_value, str) or not token_value:
+        raise PermissionError("Missing access token value.")
+
+    async with session_factory() as session:
+        try:
+            return await get_or_create_user(
+                session,
+                auth0_id=auth0_subject,
+                access_token=token_value,
+            )
+        except Auth0UserInfoError as exc:
+            raise PermissionError(str(exc)) from exc
+
 
 async def _lookup_user(session: AsyncSession, auth0_id: str) -> User | None:
     statement = select(User).where(User.auth0_id == auth0_id)
-    result = await session.execute(statement)
-    return result.scalar_one_or_none()
+    result = await session.exec(statement)
+    return result.one_or_none()
 
 
 async def fetch_auth0_userinfo(access_token: str) -> dict[str, object]:
     if not access_token:
-        raise Auth0UserInfoError("An access token is required to fetch Auth0 user info")
+        raise Auth0UserInfoError(
+            "An access token is required to fetch Auth0 user info"
+        )
 
     config = Config.get_instance()
     url = _build_userinfo_url(config.auth0.issuer_domain)
@@ -101,7 +131,9 @@ async def fetch_auth0_userinfo(access_token: str) -> dict[str, object]:
             f"Auth0 userinfo request returned status {status_code}"
         ) from exc
     except httpx.RequestError as exc:
-        raise Auth0UserInfoError("Could not reach Auth0 userinfo endpoint") from exc
+        raise Auth0UserInfoError(
+            "Could not reach Auth0 userinfo endpoint"
+        ) from exc
 
     payload = response.json()
     if not isinstance(payload, Mapping):

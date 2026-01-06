@@ -15,19 +15,29 @@ from app.tracing import setup_tracing
 Config.initialize()
 setup_tracing()
 
-app = FastAPI(title="Apparatus API", version="0.1.0")
-FastAPIInstrumentor().instrument_app(app)
-
 # API setup
 api_router, auth0, bearer_scheme, get_authenticated_user = create_api_router()
-app.include_router(api_router, prefix="/api")
 
 # MCP setup
-mcp_server, mcp_asgi_app, reading_state_resource, reading_state_tool = (
-    create_mcp_server()
+(
+    mcp_server,
+    mcp_asgi_app,
+    auth_provider,
+    reading_state_resource,
+    reading_state_tool,
+    download_publication_files_tool,
+) = create_mcp_server()
+
+auth_routes = auth_provider.get_routes(mcp_path="/mcp")
+app = FastAPI(
+    title="Apparatus API",
+    version="0.1.0",
+    routes=[*auth_routes],
+    lifespan=mcp_asgi_app.router.lifespan_context,
 )
-app.router.lifespan_context = mcp_asgi_app.router.lifespan_context
+app.include_router(api_router, prefix="/api")
 app.mount("/mcp", cast(ASGIApp, mcp_asgi_app))
+FastAPIInstrumentor().instrument_app(app)
 
 # Re-export for tests/overrides
 require_auth = auth0.require_auth
@@ -41,6 +51,7 @@ __all__ = [
     "get_access_token",
     "reading_state_resource",
     "reading_state_tool",
+    "download_publication_files_tool",
 ]
 
 logging.getLogger(__name__).info("Application startup complete.")

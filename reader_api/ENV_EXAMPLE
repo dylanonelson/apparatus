@@ -43,3 +43,10 @@ AZURE_API_VERSION=2024-02-15-preview
 AUTH0_API_AUDIENCE=https://api.apparatus-ebooks.com
 AUTH0_ISSUER_DOMAIN=dev-usf5eu2woue2lk2d.us.auth0.com
 AUTH0_ALGORITHMS=RS256
+
+AUTH0_FAST_MCP_CLIENT_ID=...
+AUTH0_FAST_MCP_CLIENT_SECRET=...
+
+# Catalog
+
+PUBLICATIONS_CATALOG_PATH="publications/publications.yaml"
