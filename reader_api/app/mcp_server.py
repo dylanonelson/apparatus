@@ -26,7 +26,7 @@ from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
-from app.model_connector import SEARCH_PUBLICATION_TOOL_NAME
+from app.model_connector import ASK_ABOUT_BOOK_PROMPT_NAME, SEARCH_PUBLICATION_TOOL_NAME
 from app.prompts import prompt_v1
 from app.publication_reader import fetch_publication_files, search_publication
 from app.reading_state import (
@@ -164,7 +164,7 @@ def create_mcp_server() -> tuple[
         return await _get_current_reading_state()
 
     @mcp_server.prompt(
-        name="Ask about a book",
+        name=ASK_ABOUT_BOOK_PROMPT_NAME,
         description=(
             "Answer questions about the book the user currently has open by injecting "
             "the current publication metadata and reading state."

@@ -50,6 +50,7 @@ tracer = trace.get_tracer(__name__)
 
 
 SEARCH_PUBLICATION_TOOL_NAME = "search_publication"
+ASK_ABOUT_BOOK_PROMPT_NAME = "ask_about_book"
 MAX_TOOL_CALL_ITERATIONS = 15
 
 
@@ -62,7 +63,7 @@ JsonValue = Union[
 
 
 @asynccontextmanager
-async def forwarded_auth_context(
+async def call_mcp_server_with_api_auth(
     token: str, claims: Mapping[str, object]
 ) -> AsyncGenerator[None, None]:
     """
@@ -309,7 +310,7 @@ class ModelConnector:
             return []
 
         # Use the MCP client to list available tools with forwarded auth context
-        async with forwarded_auth_context(
+        async with call_mcp_server_with_api_auth(
             request_context.auth_token, request_context.auth_claims
         ):
             async with McpClient(self._mcp_server) as client:
@@ -547,7 +548,7 @@ class ModelConnector:
                 arguments["publication_id"] = request_context.publication_id
 
         # Execute the tool via MCP client with forwarded auth context
-        async with forwarded_auth_context(
+        async with call_mcp_server_with_api_auth(
             request_context.auth_token, request_context.auth_claims
         ):
             async with McpClient(self._mcp_server) as client:
