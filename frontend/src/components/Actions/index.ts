@@ -2,6 +2,7 @@
 
 export * from "./models";
 
+export * from "./Answers";
 export * from "./Fullscreen";
 export * from "./JumpToPosition";
 export * from "./Settings";

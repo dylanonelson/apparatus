@@ -43,6 +43,7 @@ export enum ThActionsKeys {
   jumpToPosition = "jumpToPosition",
   settings = "settings",
   toc = "toc",
+  answers = "answers",
 }
 
 export enum ThBreakpoints {

@@ -311,12 +311,14 @@ export const defaultPreferences: ThPreferences<DefaultKeys> =
       reflowOrder: [
         ThActionsKeys.settings,
         ThActionsKeys.toc,
+        ThActionsKeys.answers,
         ThActionsKeys.fullscreen,
         ThActionsKeys.jumpToPosition,
       ],
       fxlOrder: [
         ThActionsKeys.settings,
         ThActionsKeys.toc,
+        ThActionsKeys.answers,
         ThActionsKeys.fullscreen,
         ThActionsKeys.jumpToPosition,
       ],
@@ -381,6 +383,29 @@ export const defaultPreferences: ThPreferences<DefaultKeys> =
           },
           docked: {
             dockable: ThDockingTypes.none,
+          },
+          snapped: {
+            scrim: true,
+            minHeight: "content-height",
+          },
+        },
+        [ThActionsKeys.answers]: {
+          visibility: ThCollapsibilityVisibility.overflow,
+          shortcut: null,
+          sheet: {
+            defaultSheet: ThSheetTypes.popover,
+            breakpoints: {
+              [ThBreakpoints.compact]: ThSheetTypes.bottomSheet,
+              [ThBreakpoints.large]: ThSheetTypes.dockedEnd,
+              [ThBreakpoints.xLarge]: ThSheetTypes.dockedEnd,
+            },
+          },
+          docked: {
+            dockable: ThDockingTypes.both,
+            dragIndicator: false,
+            width: 360,
+            minWidth: 320,
+            maxWidth: 450,
           },
           snapped: {
             scrim: true,

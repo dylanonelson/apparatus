@@ -1,0 +1,21 @@
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--th-ui-spacing, 20px);
+  height: 100%;
+}
+
+.answersContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--th-ui-spacing, 20px);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--th-ui-subdue);
+  font-style: italic;
+}
