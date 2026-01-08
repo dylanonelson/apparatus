@@ -27,7 +27,7 @@ from app.api_models import ReadingStatePayload, ViewportPayloadModel
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
 from app.model_connector import ASK_ABOUT_BOOK_PROMPT_NAME, SEARCH_PUBLICATION_TOOL_NAME
-from app.prompts import prompt_v1
+from app.prompt_manager import get_prompt_manager
 from app.publication_reader import fetch_publication_files, search_publication
 from app.reading_state import (
     build_reading_state_payload,
@@ -202,15 +202,20 @@ def create_mcp_server() -> tuple[
             if isinstance(result, str):
                 text = result
 
+        prompt_manager = get_prompt_manager()
+        system_prompt = prompt_manager.get_system_prompt(
+            "freeform",
+            "v0",
+            title=publication.title,
+            author=publication.author,
+        )
+
         return [
             PromptMessage(
                 role="user",
                 content=TextContent(
                     type="text",
-                    text=prompt_v1.get_system_prompt(
-                        publication.title,
-                        publication.author,
-                    ),
+                    text=system_prompt,
                 ),
             ),
             PromptMessage(

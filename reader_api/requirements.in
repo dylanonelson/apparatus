@@ -12,6 +12,7 @@ opentelemetry-instrumentation-fastapi
 opentelemetry-instrumentation-httpx
 opentelemetry-instrumentation-logging
 PyYAML
+Jinja2
 auth0-fastapi-api
 sqlmodel
 alembic

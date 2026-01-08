@@ -104,23 +104,6 @@ def test_app() -> Generator[TestApp, None, None]:
         setattr(stub_models, "LocatorModel", LocatorModel)
         sys.modules["app.models"] = stub_models
 
-    if "app.prompts" not in sys.modules:
-        stub_prompts = types.ModuleType("app.prompts")
-
-        def _get_messages(*args, **kwargs) -> list[dict[str, str]]:
-            return []
-
-        setattr(stub_prompts, "get_messages", _get_messages)
-        setattr(
-            stub_prompts,
-            "prompt_v0",
-            types.SimpleNamespace(
-            get_system_prompt=lambda *args, **kwargs: "",
-            get_user_prompt=lambda *args, **kwargs: "",
-        )
-        )
-        sys.modules["app.prompts"] = stub_prompts
-
     if "app.model_connector" not in sys.modules:
         stub_connector = types.ModuleType("app.model_connector")
         setattr(stub_connector, "SEARCH_PUBLICATION_TOOL_NAME", "search_publication")

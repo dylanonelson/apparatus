@@ -30,7 +30,7 @@ from app.db import (
     get_db_session,
 )
 from app.model_connector import SEARCH_PUBLICATION_TOOL_NAME, get_connector
-from app.prompts import get_messages
+from app.prompt_manager import get_prompt_manager
 from app.publications_catalog import (
     CatalogError,
     UnknownPublicationError,
@@ -183,12 +183,14 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
 
         model_connector = get_connector()
 
-        messages = get_messages(
-            request.question,
-            request.locator,
+        prompt_manager = get_prompt_manager()
+        messages = prompt_manager.get_messages(
+            "passage_finder",
+            "v0",
             title=publication.title,
             author=publication.author,
-            prompt_version="v0",
+            question=request.question,
+            location_json=request.locator.model_dump_json(),
         )
         answer = await model_connector.chat_sync(
             messages,
