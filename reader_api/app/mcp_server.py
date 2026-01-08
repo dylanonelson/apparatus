@@ -26,8 +26,9 @@ from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
+from app.model_connector import SEARCH_PUBLICATION_TOOL_NAME
 from app.prompts import prompt_v1
-from app.publication_reader import fetch_publication_files
+from app.publication_reader import fetch_publication_files, search_publication
 from app.reading_state import (
     build_reading_state_payload,
     get_current_publication,
@@ -43,6 +44,7 @@ def create_mcp_server() -> tuple[
     StarletteWithLifespan,
     Auth0Provider,
     FunctionResource,
+    FunctionTool,
     FunctionTool,
     FunctionTool,
 ]:
@@ -256,6 +258,57 @@ def create_mcp_server() -> tuple[
             publication_id=publication_id, hrefs=cleaned_hrefs
         )
 
+    @mcp_server.tool(
+        SEARCH_PUBLICATION_TOOL_NAME,
+        annotations=ToolAnnotations(readOnlyHint=True),
+        description=(
+            "Search the current publication for passages matching a keyword or phrase. "
+            "This search is very simple and will only search literally for the phrase "
+            "you provide, so it must appear exactly as you provide it in the book to "
+            "return results. Requires bearer token."
+        ),
+    )
+    async def search_publication_tool(
+        query: str,
+        publication_id: str | None = None,
+        max_results: int = 20,
+        context_chars: int = 120,
+    ) -> dict[str, object]:
+        """
+        Search for passages in a publication matching a keyword or phrase.
+
+        Args:
+            query: Keyword or phrase to search for. The search is case-insensitive
+                   and returns exact matches only.
+            publication_id: ID of the publication to search. If not provided,
+                           uses the user's currently open publication.
+            max_results: Maximum number of search results to return. Defaults to 20.
+            context_chars: Number of surrounding characters to include for each hit.
+                          Defaults to 120.
+
+        Returns:
+            A dict containing "hits" - a list of matching passages with context.
+        """
+        access_token = get_access_token()
+        if access_token is None:
+            raise PermissionError(
+                "Authentication is required to search publications."
+            )
+
+        # If publication_id not provided, look it up from reading state
+        resolved_publication_id = publication_id
+        if resolved_publication_id is None:
+            current_pub = await _get_current_publication()
+            resolved_publication_id = current_pub.identifier
+
+        hits = await search_publication(
+            publication_id=resolved_publication_id,
+            query=query,
+            max_results=max_results,
+            context_chars=context_chars,
+        )
+        return {"hits": hits}
+
     @mcp_server.custom_route("/auth/diagnostic", methods=["GET"])
     async def mcp_auth_diagnostic(request: Request) -> JSONResponse:
         """
@@ -291,4 +344,5 @@ def create_mcp_server() -> tuple[
         cast(FunctionResource, get_current_reading_state_resource),
         cast(FunctionTool, get_current_reading_state_tool),
         cast(FunctionTool, download_publication_files_tool),
+        cast(FunctionTool, search_publication_tool),
     )

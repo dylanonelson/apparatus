@@ -132,10 +132,16 @@ def test_app() -> Generator[TestApp, None, None]:
             async def chat_sync(self, *args, **kwargs):
                 raise RuntimeError("Model connector stubbed in tests.")
 
+        _stub_instance = _StubModelConnector()
+
         def _get_stub_connector() -> _StubModelConnector:
-            return _StubModelConnector()
+            return _stub_instance
+
+        def _initialize_stub_connector(*args, **kwargs) -> _StubModelConnector:
+            return _stub_instance
 
         setattr(stub_connector, "get_connector", _get_stub_connector)
+        setattr(stub_connector, "initialize_connector", _initialize_stub_connector)
         sys.modules["app.model_connector"] = stub_connector
 
     main_module = import_module("app.main")

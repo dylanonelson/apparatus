@@ -10,6 +10,7 @@ from app.api_routes import create_api_router
 from app.config import Config
 from app.db import get_db_session, get_session_factory
 from app.mcp_server import create_mcp_server
+from app.model_connector import initialize_connector
 from app.tracing import setup_tracing
 
 Config.initialize()
@@ -26,7 +27,11 @@ api_router, auth0, bearer_scheme, get_authenticated_user = create_api_router()
     reading_state_resource,
     reading_state_tool,
     download_publication_files_tool,
+    search_publication_tool,
 ) = create_mcp_server()
+
+# Initialize model connector with MCP server for in-memory tool calls
+model_connector = initialize_connector(mcp_server=mcp_server)
 
 auth_routes = auth_provider.get_routes(mcp_path="/mcp")
 app = FastAPI(
@@ -52,6 +57,8 @@ __all__ = [
     "reading_state_resource",
     "reading_state_tool",
     "download_publication_files_tool",
+    "search_publication_tool",
+    "model_connector",
 ]
 
 logging.getLogger(__name__).info("Application startup complete.")

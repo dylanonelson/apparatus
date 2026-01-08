@@ -156,9 +156,14 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         return build_reading_location_response(location)
 
     @router.post("/ask", response_model=AskResponseModel)
-    async def ask(request: AskRequestModel) -> AskResponseModel:
+    async def ask(
+        request: AskRequestModel,
+        claims: dict[str, object] = Depends(require_auth()),
+        token: HTTPAuthorizationCredentials = Security(bearer_scheme),
+    ) -> AskResponseModel:
         """
         Ask a question about the current reading position.
+        Requires authentication to forward auth context to MCP tools.
         """
         try:
             publication = get_publication(request.publication_id)
@@ -172,6 +177,8 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         request_context = RequestContext(
             publication_id=request.publication_id,
             otel_context=context_api.get_current(),
+            auth_token=token.credentials,
+            auth_claims=claims,
         )
 
         model_connector = get_connector()
