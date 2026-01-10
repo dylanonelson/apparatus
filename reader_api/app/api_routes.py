@@ -11,6 +11,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.api_models import (
     AskRequestModel,
     AskResponseModel,
+    AutomaticAnswersRequestModel,
     HealthResponseModel,
     ReadingLocationResponseModel,
     ReadingStateResponseModel,
@@ -195,6 +196,50 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         answer = await model_connector.chat_sync(
             messages,
             enabled_tools=[SEARCH_PUBLICATION_TOOL_NAME],
+            request_context=request_context,
+        )
+        return AskResponseModel(answer=answer)
+
+    @router.post("/automatic-answers", response_model=AskResponseModel)
+    async def automatic_answers(
+        request: AutomaticAnswersRequestModel,
+        claims: dict[str, object] = Depends(require_auth()),
+        token: HTTPAuthorizationCredentials = Security(bearer_scheme),
+    ) -> AskResponseModel:
+        """
+        Get an automatic answer based on the user's current viewport and selection.
+        Infers what the user might be confused about and provides an explanation.
+        """
+        try:
+            publication = get_publication(request.publication_id)
+        except UnknownPublicationError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except CatalogError as exc:
+            raise HTTPException(
+                status_code=500, detail="Publications catalog is not available"
+            ) from exc
+
+        request_context = RequestContext(
+            publication_id=request.publication_id,
+            otel_context=context_api.get_current(),
+            auth_token=token.credentials,
+            auth_claims=claims,
+        )
+
+        model_connector = get_connector()
+
+        prompt_manager = get_prompt_manager()
+        messages = prompt_manager.get_messages(
+            "automatic_answers",
+            "v0",
+            title=publication.title,
+            author=publication.author,
+            viewport_json=request.viewport.model_dump_json(),
+            location_json=request.locator.model_dump_json(),
+        )
+        answer = await model_connector.chat_sync(
+            messages,
+            enabled_tools=[],
             request_context=request_context,
         )
         return AskResponseModel(answer=answer)

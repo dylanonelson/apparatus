@@ -204,10 +204,11 @@ def create_mcp_server() -> tuple[
 
         prompt_manager = get_prompt_manager()
         system_prompt = prompt_manager.get_system_prompt(
-            "freeform",
+            "freeform_answers",
             "v0",
             title=publication.title,
             author=publication.author,
+            question="",
         )
 
         return [

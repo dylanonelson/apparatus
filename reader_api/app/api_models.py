@@ -228,6 +228,21 @@ class AskResponseModel(BaseModel):
     answer: str
 
 
+class AutomaticAnswersRequestModel(BaseModel):
+    publication_id: str = Field(
+        ...,
+        description="Publication identifier for the book being read.",
+    )
+    locator: LocatorModel = Field(
+        ...,
+        description="Locator describing the user's current position.",
+    )
+    viewport: ViewportPayloadModel = Field(
+        ...,
+        description="Current viewport with text and selection.",
+    )
+
+
 class UserResponseModel(BaseModel):
     email: str | None = None
     display_name: str | None = None
