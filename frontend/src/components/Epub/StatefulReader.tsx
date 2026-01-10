@@ -91,6 +91,7 @@ import {
   setScrollAffordance,
 } from "@/lib/readerReducer";
 import {
+  setPublicationId,
   setFXL,
   setRTL,
   setPositionsList,
@@ -1102,6 +1103,7 @@ const StatefulReaderInner = ({
   useEffect(() => {
     if (!publication) return;
 
+    dispatch(setPublicationId(publicationId));
     dispatch(
       setRTL(
         publication.metadata.effectiveReadingProgression ===

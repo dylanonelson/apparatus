@@ -396,8 +396,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> =
             defaultSheet: ThSheetTypes.popover,
             breakpoints: {
               [ThBreakpoints.compact]: ThSheetTypes.bottomSheet,
-              [ThBreakpoints.large]: ThSheetTypes.dockedEnd,
-              [ThBreakpoints.xLarge]: ThSheetTypes.dockedEnd,
             },
           },
           docked: {

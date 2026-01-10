@@ -19,3 +19,42 @@
   color: var(--th-ui-subdue);
   font-style: italic;
 }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--th-ui-subdue);
+}
+
+.loadingSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--th-ui-subdue);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--th-ui-error, #c00);
+  text-align: center;
+  padding: var(--th-ui-spacing, 20px);
+}
+
+.answer {
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
