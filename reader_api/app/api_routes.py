@@ -30,7 +30,8 @@ from app.db import (
     Viewport,
     get_db_session,
 )
-from app.model_connector import SEARCH_PUBLICATION_TOOL_NAME, get_connector
+from app.mcp.wrapper import MCPToolName
+from app.model_connector import get_connector
 from app.prompt_manager import get_prompt_manager
 from app.publications_catalog import (
     CatalogError,
@@ -156,8 +157,8 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             )
         return build_reading_location_response(location)
 
-    @router.post("/ask", response_model=AskResponseModel)
-    async def ask(
+    @router.post("/ask-freeform", response_model=AskResponseModel)
+    async def ask_freeform(
         request: AskRequestModel,
         claims: dict[str, object] = Depends(require_auth()),
         token: HTTPAuthorizationCredentials = Security(bearer_scheme),
@@ -195,13 +196,13 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         )
         answer = await model_connector.chat_sync(
             messages,
-            enabled_tools=[SEARCH_PUBLICATION_TOOL_NAME],
+            enabled_tools=list(MCPToolName),
             request_context=request_context,
         )
         return AskResponseModel(answer=answer)
 
-    @router.post("/automatic-answers", response_model=AskResponseModel)
-    async def automatic_answers(
+    @router.post("/ask-automatic", response_model=AskResponseModel)
+    async def ask_automatic(
         request: AutomaticAnswersRequestModel,
         claims: dict[str, object] = Depends(require_auth()),
         token: HTTPAuthorizationCredentials = Security(bearer_scheme),
@@ -239,7 +240,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         )
         answer = await model_connector.chat_sync(
             messages,
-            enabled_tools=[],
+            enabled_tools=list(MCPToolName),
             request_context=request_context,
         )
         return AskResponseModel(answer=answer)

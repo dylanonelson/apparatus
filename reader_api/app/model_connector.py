@@ -6,28 +6,20 @@ import asyncio
 import json
 import logging
 import os
-from collections.abc import Mapping, Sequence
-from contextlib import asynccontextmanager
 from typing import (
     Any,
-    AsyncGenerator,
     AsyncIterator,
     Coroutine,
     Dict,
     List,
     Optional,
     Tuple,
-    Union,
 )
 
 import litellm
 from fastmcp import Client as McpClient
 from fastmcp import FastMCP
-from fastmcp.server.auth import AccessToken
 from litellm import ChatCompletionToolParam, acompletion
-from mcp.server.auth.middleware.auth_context import auth_context_var
-from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
-from mcp.types import TextContent, Tool as McpTool
 from litellm.cost_calculator import completion_cost
 from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
 from litellm.types.utils import (
@@ -37,76 +29,27 @@ from litellm.types.utils import (
     ModelResponse,
     StreamingChoices,
 )
+from mcp.types import TextContent
+from mcp.types import Tool as McpTool
 from opentelemetry import context as context_api
 from opentelemetry import trace
 from opentelemetry.context import Context
 from opentelemetry.trace import Span, SpanKind
 from opentelemetry.trace.status import Status, StatusCode
+from pydantic import JsonValue
 
+from app.mcp.wrapper import (
+    MCPToolName,
+    call_mcp_server_with_api_auth,
+    call_mcp_tool,
+)
 from app.request_context import RequestContext
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
 
 
-SEARCH_PUBLICATION_TOOL_NAME = "search_publication"
-ASK_ABOUT_BOOK_PROMPT_NAME = "ask_about_book"
 MAX_TOOL_CALL_ITERATIONS = 15
-
-
-JsonPrimitive = Union[str, int, float, bool, None]
-JsonValue = Union[
-    JsonPrimitive,
-    Sequence["JsonValue"],
-    Mapping[str, "JsonValue"],
-]
-
-
-@asynccontextmanager
-async def call_mcp_server_with_api_auth(
-    token: str, claims: Mapping[str, object]
-) -> AsyncGenerator[None, None]:
-    """
-    Forward validated FastAPI auth to MCP ContextVar for in-memory calls.
-
-    This context manager sets the MCP SDK's auth_context_var with an AccessToken
-    constructed from a pre-validated FastAPI bearer token and its claims. This
-    allows MCP tools to call get_access_token() and receive the forwarded auth
-    even when invoked via in-memory transport (where FastMCP's HTTP middleware
-    doesn't run).
-
-    Args:
-        token: The bearer token string from the authenticated request.
-        claims: The validated JWT claims from the access token.
-
-    Yields:
-        Nothing; the auth context is set for the duration of the context.
-    """
-    # Extract client_id from Auth0's "azp" (authorized party) claim
-    client_id = claims.get("azp")
-    if not isinstance(client_id, str):
-        client_id = ""
-
-    # Parse scopes from the "scope" claim (space-separated string)
-    scope_claim = claims.get("scope")
-    scopes: list[str] = []
-    if scope_claim and isinstance(scope_claim, str):
-        scopes = scope_claim.split()
-
-    access_token = AccessToken(
-        token=token,
-        client_id=client_id,
-        scopes=scopes,
-        claims=dict(claims),
-    )
-
-    # AuthenticatedUser wraps the AccessToken for the ContextVar
-    authenticated_user = AuthenticatedUser(auth_info=access_token)
-    ctx_token = auth_context_var.set(authenticated_user)
-    try:
-        yield
-    finally:
-        auth_context_var.reset(ctx_token)
 
 
 def mcp_tool_to_litellm(tool: McpTool) -> ChatCompletionToolParam:
@@ -124,7 +67,8 @@ def mcp_tool_to_litellm(tool: McpTool) -> ChatCompletionToolParam:
         "function": {
             "name": tool.name,
             "description": tool.description or "",
-            "parameters": tool.inputSchema or {"type": "object", "properties": {}},
+            "parameters": tool.inputSchema
+            or {"type": "object", "properties": {}},
         },
     }
 
@@ -138,7 +82,9 @@ class ModelConfig:
         temperature: float = 0.7,
         max_tokens: int = 10000,
     ):
-        self.default_model = default_model or os.getenv("DEFAULT_MODEL", "gpt-4")
+        self.default_model = default_model or os.getenv(
+            "DEFAULT_MODEL", "gpt-4"
+        )
         self.temperature = temperature
         self.max_tokens = max_tokens
 
@@ -150,9 +96,13 @@ class ModelConfig:
         # - AZURE_API_KEY, AZURE_API_BASE, AZURE_API_VERSION
 
         # Optional: Set LiteLLM options
-        litellm.drop_params = True  # Drop unsupported params instead of erroring
+        litellm.drop_params = (
+            True  # Drop unsupported params instead of erroring
+        )
 
-        litellm_verbose = os.getenv("LITELLM_VERBOSE", "false").lower() == "true"
+        litellm_verbose = (
+            os.getenv("LITELLM_VERBOSE", "false").lower() == "true"
+        )
         # set_verbose is present at runtime but missing from type hints; setattr avoids lint issues
         setattr(litellm, "set_verbose", litellm_verbose)
 
@@ -201,7 +151,9 @@ class ModelConnector:
         temperature = (
             temperature if temperature is not None else self.config.temperature
         )
-        max_tokens = max_tokens if max_tokens is not None else self.config.max_tokens
+        max_tokens = (
+            max_tokens if max_tokens is not None else self.config.max_tokens
+        )
 
         parent_context = request_context.otel_context
         span = tracer.start_span(
@@ -250,7 +202,7 @@ class ModelConnector:
         model: Optional[str] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        enabled_tools: Optional[List[str]] = None,
+        enabled_tools: Optional[List[MCPToolName]] = None,
     ) -> str:
         """
         Send chat messages to LLM and get response. Wrapper around chat() to get a synchronous response.
@@ -259,7 +211,9 @@ class ModelConnector:
         temperature = (
             temperature if temperature is not None else self.config.temperature
         )
-        max_tokens = max_tokens if max_tokens is not None else self.config.max_tokens
+        max_tokens = (
+            max_tokens if max_tokens is not None else self.config.max_tokens
+        )
         tools = await self._resolve_tools(enabled_tools, request_context)
 
         if not tools:
@@ -287,7 +241,7 @@ class ModelConnector:
 
     async def _resolve_tools(
         self,
-        enabled_tools: Optional[List[str]],
+        enabled_tools: Optional[List[MCPToolName]],
         request_context: RequestContext,
     ) -> List[ChatCompletionToolParam]:
         """
@@ -305,7 +259,8 @@ class ModelConnector:
 
         if self._mcp_server is None:
             logger.warning(
-                "MCP server not configured; cannot resolve tools: %s", enabled_tools
+                "MCP server not configured; cannot resolve tools: %s",
+                enabled_tools,
             )
             return []
 
@@ -317,7 +272,7 @@ class ModelConnector:
                 all_tools = await client.list_tools()
 
         # Filter to only the enabled tools and convert to LiteLLM format
-        enabled_tools_set = set(enabled_tools)
+        enabled_tools_set = set([tool.value for tool in enabled_tools])
         resolved_tools: List[ChatCompletionToolParam] = []
         for tool in all_tools:
             if tool.name in enabled_tools_set:
@@ -330,7 +285,9 @@ class ModelConnector:
         found_tools = {tool.name for tool in all_tools}
         for tool_name in enabled_tools:
             if tool_name not in found_tools:
-                logger.warning("Requested tool not found in MCP server: %s", tool_name)
+                logger.warning(
+                    "Requested tool not found in MCP server: %s", tool_name
+                )
 
         return resolved_tools
 
@@ -398,13 +355,17 @@ class ModelConnector:
             conversation.append(choice.message)
 
             tool_calls = self._get_tool_calls(choice)
-            span.set_attribute("gen_ai.response.tool_call_count", len(tool_calls))
+            span.set_attribute(
+                "gen_ai.response.tool_call_count", len(tool_calls)
+            )
             span.end()
             logger.info("Number of tool calls: %s", len(tool_calls))
             if tool_calls:
                 tool_iterations += len(tool_calls)
                 if tool_iterations > MAX_TOOL_CALL_ITERATIONS:
-                    raise RuntimeError("Tool call loop exceeded iteration limit")
+                    raise RuntimeError(
+                        "Tool call loop exceeded iteration limit"
+                    )
                 parent_context = request_context.otel_context
                 batch_token = context_api.attach(parent_context)
                 try:
@@ -417,7 +378,9 @@ class ModelConnector:
                         tool_parent_context = trace.set_span_in_context(
                             tool_batch_span, parent_context
                         )
-                        tool_tasks: List[Coroutine[object, object, JsonValue]] = []
+                        tool_tasks: List[
+                            Coroutine[object, object, JsonValue]
+                        ] = []
                         task_metadata: List[Tuple[str, str]] = []
                         for tool_call_id, function in tool_calls:
                             logger.info("Function: %s", function)
@@ -543,16 +506,20 @@ class ModelConnector:
 
         # For search_publication, inject publication_id if not provided
         # This allows the tool to work without requiring the caller to specify it
-        if tool_name == SEARCH_PUBLICATION_TOOL_NAME:
-            if "publication_id" not in arguments or arguments["publication_id"] is None:
+        if tool_name == MCPToolName.SEARCH_PUBLICATION_TOOL.value:
+            if (
+                "publication_id" not in arguments
+                or arguments["publication_id"] is None
+            ):
                 arguments["publication_id"] = request_context.publication_id
 
         # Execute the tool via MCP client with forwarded auth context
-        async with call_mcp_server_with_api_auth(
-            request_context.auth_token, request_context.auth_claims
-        ):
-            async with McpClient(self._mcp_server) as client:
-                result = await client.call_tool(tool_name, arguments)
+        result = await call_mcp_tool(
+            request_context,
+            self._mcp_server,
+            MCPToolName(tool_name),
+            arguments,
+        )
 
         # Extract the result data from the MCP response
         # The result contains content blocks; we return the structured data

@@ -27,6 +27,9 @@
       "**/__pycache__": true,
       "**/*.pyc": true,
       "**/.DS_Store": true,
-    }
+    },
+    // We have to set this globally because the Python extension doesn't support
+    // workspace-specific interpreters
+    "ruff.interpreter": ["${workspaceFolder}/reader_api/.venv/bin/python"]
   }
 }

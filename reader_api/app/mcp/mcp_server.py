@@ -26,13 +26,13 @@ from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
-from app.model_connector import ASK_ABOUT_BOOK_PROMPT_NAME, SEARCH_PUBLICATION_TOOL_NAME
 from app.prompt_manager import get_prompt_manager
 from app.publication_reader import fetch_publication_files, search_publication
 from app.reading_state import (
     build_reading_state_payload,
     get_current_publication,
 )
+from app.mcp.wrapper import MCPToolName, MCPResourceURI, MCPPromptName
 
 # Globals allow test overrides
 get_access_token = _get_access_token
@@ -71,7 +71,7 @@ def create_mcp_server() -> tuple[
     )
 
     @mcp_server.resource(
-        "resource://reading-state",
+        MCPResourceURI.READING_STATE_RESOURCE.value,
         name="Current Reading State",
         description=(
             "Latest reading location for the authenticated user, including "
@@ -91,8 +91,7 @@ def create_mcp_server() -> tuple[
         return await build_reading_state_payload(access_token, session_factory)
 
     @mcp_server.resource(
-        "resource://current-publication/position-index",
-        name="Current publication context",
+        MCPResourceURI.CURRENT_PUBLICATION_CONTEXT_RESOURCE.value,
         description=(
             "Context file containing position index, summaries, and metadata for "
             "the user's currently open publication. Includes href mappings, position "
@@ -152,7 +151,7 @@ def create_mcp_server() -> tuple[
         return await build_reading_state_payload(access_token, session_factory)
 
     @mcp_server.tool(
-        "get_reading_state",
+        MCPToolName.READING_STATE_TOOL.value,
         annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Return the latest reading location and viewport for the authenticated "
@@ -164,7 +163,7 @@ def create_mcp_server() -> tuple[
         return await _get_current_reading_state()
 
     @mcp_server.prompt(
-        name=ASK_ABOUT_BOOK_PROMPT_NAME,
+        MCPPromptName.FREEFORM_ANSWERS_PROMPT.value,
         description=(
             "Answer questions about the book the user currently has open by injecting "
             "the current publication metadata and reading state."
@@ -232,7 +231,7 @@ def create_mcp_server() -> tuple[
         ]
 
     @mcp_server.tool(
-        "download_publication_files",
+        MCPToolName.DOWNLOAD_PUBLICATION_FILES_TOOL.value,
         annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Download up to two files from a publication by manifest href. "
@@ -265,7 +264,7 @@ def create_mcp_server() -> tuple[
         )
 
     @mcp_server.tool(
-        SEARCH_PUBLICATION_TOOL_NAME,
+        MCPToolName.SEARCH_PUBLICATION_TOOL.value,
         annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Search the current publication for passages matching a keyword or phrase. "
