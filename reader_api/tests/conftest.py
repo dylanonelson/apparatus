@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
 from collections.abc import Generator
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator, Mapping
 
 import pytest
 from fastapi import FastAPI
@@ -73,7 +73,7 @@ class TestApp:
             headers = {"Authorization": f"Bearer {self.access_token}"}
             return await client.get(path, headers=headers)
 
-    async def post(self, path: str, json: dict[str, object]) -> Response:
+    async def post(self, path: str, json: Mapping[str, Any]) -> Response:
         transport = ASGITransport(app=self.app)
         async with AsyncClient(transport=transport, base_url="http://testserver") as client:
             headers = {"Authorization": f"Bearer {self.access_token}"}
@@ -109,10 +109,10 @@ def test_app() -> Generator[TestApp, None, None]:
         setattr(stub_connector, "SEARCH_PUBLICATION_TOOL_NAME", "search_publication")
 
         class _StubModelConnector:
-            async def chat(self, *args, **kwargs):
+            async def chat(self, *args: Any, **kwargs: Any) -> None:
                 raise RuntimeError("Model connector stubbed in tests.")
 
-            async def chat_sync(self, *args, **kwargs):
+            async def chat_sync(self, *args: Any, **kwargs: Any) -> None:
                 raise RuntimeError("Model connector stubbed in tests.")
 
         _stub_instance = _StubModelConnector()
@@ -120,7 +120,7 @@ def test_app() -> Generator[TestApp, None, None]:
         def _get_stub_connector() -> _StubModelConnector:
             return _stub_instance
 
-        def _initialize_stub_connector(*args, **kwargs) -> _StubModelConnector:
+        def _initialize_stub_connector(*args: Any, **kwargs: Any) -> _StubModelConnector:
             return _stub_instance
 
         setattr(stub_connector, "get_connector", _get_stub_connector)

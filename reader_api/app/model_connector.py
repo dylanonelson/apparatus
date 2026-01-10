@@ -38,7 +38,7 @@ from opentelemetry.trace import Span, SpanKind
 from opentelemetry.trace.status import Status, StatusCode
 from pydantic import JsonValue
 
-from app.mcp.wrapper import (
+from app.mcp import (
     MCPToolName,
     call_mcp_server_with_api_auth,
     call_mcp_tool,

@@ -9,7 +9,7 @@ from starlette.types import ASGIApp
 from app.api_routes import create_api_router
 from app.config import Config
 from app.db import get_db_session, get_session_factory
-from app.mcp.mcp_server import create_mcp_server
+from app.mcp import create_mcp_server
 from app.model_connector import initialize_connector
 from app.tracing import setup_tracing
 

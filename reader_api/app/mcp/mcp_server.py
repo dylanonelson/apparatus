@@ -32,7 +32,7 @@ from app.reading_state import (
     build_reading_state_payload,
     get_current_publication,
 )
-from app.mcp.wrapper import MCPToolName, MCPResourceURI, MCPPromptName
+from .wrapper import MCPPromptName, MCPResourceURI, MCPToolName
 
 # Globals allow test overrides
 get_access_token = _get_access_token
