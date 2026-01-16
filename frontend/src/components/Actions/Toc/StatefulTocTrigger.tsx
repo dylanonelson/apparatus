@@ -47,7 +47,7 @@ export const StatefulTocTrigger = ({ variant }: StatefulActionTriggerProps) => {
         <StatefulActionIcon
           visibility={preferences.actions.keys[ThActionsKeys.toc].visibility}
           aria-label={t("reader.toc.trigger")}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={t("reader.toc.tooltip")}
           onPress={() => setOpen(!actionState?.isOpen)}
         >

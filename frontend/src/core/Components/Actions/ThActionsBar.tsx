@@ -6,6 +6,7 @@ import { Toolbar, ToolbarProps } from "react-aria-components";
 export enum ThActionsTriggerVariant {
   button = "iconButton",
   menu = "menuItem",
+  selectionButton = "selectionButton",
 }
 
 export interface ThActionEntry<T> {

@@ -311,17 +311,16 @@ export const defaultPreferences: ThPreferences<DefaultKeys> =
       reflowOrder: [
         ThActionsKeys.settings,
         ThActionsKeys.toc,
-        ThActionsKeys.answers,
         ThActionsKeys.fullscreen,
         ThActionsKeys.jumpToPosition,
       ],
       fxlOrder: [
         ThActionsKeys.settings,
         ThActionsKeys.toc,
-        ThActionsKeys.answers,
         ThActionsKeys.fullscreen,
         ThActionsKeys.jumpToPosition,
       ],
+      selectionToolbarOrder: [ThActionsKeys.answers],
       collapse: {
         // Number of partially icons to display
         // value "all" a keyword for the length of displayOrder above

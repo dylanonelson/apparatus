@@ -59,7 +59,7 @@ export const StatefulJumpToPositionTrigger = ({
             preferences.actions.keys[ThActionsKeys.jumpToPosition].visibility
           }
           aria-label={t("reader.jumpToPosition.trigger")}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={t("reader.jumpToPosition.tooltip")}
           onPress={() => setOpen(!actionState?.isOpen)}
         >

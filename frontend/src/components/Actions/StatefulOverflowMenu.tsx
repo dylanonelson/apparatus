@@ -67,7 +67,7 @@ export const StatefulOverflowMenu = ({
                   className ? className : overflowMenuStyles.activeButton
                 }
                 aria-label={t("reader.overflowMenu.active.trigger")}
-                placement="bottom"
+                tooltipPlacement="bottom"
                 tooltipLabel={t("reader.overflowMenu.active.tooltip")}
                 visibility={ThCollapsibilityVisibility.always}
               >

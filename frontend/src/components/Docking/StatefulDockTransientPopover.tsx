@@ -60,7 +60,7 @@ export const StatefulDockTransientPopover = ({
         <StatefulActionIcon
           className={readerSharedUI.dockerButton}
           aria-label={t("reader.app.docker.popover.trigger")}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={t("reader.app.docker.popover.tooltip")}
           onPress={handlePress}
           isDisabled={isDisabled}

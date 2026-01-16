@@ -301,6 +301,62 @@ export const useEpubNavigator = () => {
     return selectedText || null;
   }, []);
 
+  interface SelectionRectResult {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  }
+
+  const getSelectionRect = useCallback((): SelectionRectResult | null => {
+    const frames = navigatorInstance?._cframes ?? [];
+
+    for (const frame of frames ?? []) {
+      const frameWindow = extractFrameWindow(frame);
+      const selection = frameWindow?.getSelection();
+      if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+        const range = selection.getRangeAt(0);
+        const rangeRect = range.getBoundingClientRect();
+
+        // Transform coordinates from iframe to main window
+        // Find the iframe element to get its position
+        const frameElement = (frame as { iframe?: HTMLIFrameElement })?.iframe;
+        if (frameElement) {
+          const iframeRect = frameElement.getBoundingClientRect();
+          return {
+            top: rangeRect.top + iframeRect.top,
+            left: rangeRect.left + iframeRect.left,
+            width: rangeRect.width,
+            height: rangeRect.height,
+          };
+        }
+
+        // Fallback: return the rect as-is if we can't find the iframe
+        return {
+          top: rangeRect.top,
+          left: rangeRect.left,
+          width: rangeRect.width,
+          height: rangeRect.height,
+        };
+      }
+    }
+
+    // Check main window selection as fallback
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+      const range = selection.getRangeAt(0);
+      const rangeRect = range.getBoundingClientRect();
+      return {
+        top: rangeRect.top,
+        left: rangeRect.left,
+        width: rangeRect.width,
+        height: rangeRect.height,
+      };
+    }
+
+    return null;
+  }, []);
+
   const canGoBackward = useCallback(() => {
     return navigatorInstance?.canGoBackward;
   }, []);
@@ -343,6 +399,7 @@ export const useEpubNavigator = () => {
     isScrollEnd,
     getVisibleText,
     getSelectionText,
+    getSelectionRect,
     preferencesEditor: navigatorInstance?.preferencesEditor,
     getSetting,
     submitPreferences,

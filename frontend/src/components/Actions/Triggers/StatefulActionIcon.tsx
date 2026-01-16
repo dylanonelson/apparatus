@@ -26,13 +26,13 @@ import classNames from "classnames";
 
 export interface StatefulActionIconProps extends ThActionButtonProps {
   visibility?: ThCollapsibilityVisibility;
-  placement?: TooltipProps["placement"];
+  tooltipPlacement?: TooltipProps["placement"];
   tooltipLabel?: string;
 }
 
 export const StatefulActionIcon = ({
   visibility,
-  placement,
+  tooltipPlacement,
   tooltipLabel,
   children,
   ...props
@@ -104,7 +104,7 @@ export const StatefulActionIcon = ({
               },
               tooltip: {
                 className: readerSharedUI.tooltip,
-                placement: placement,
+                placement: tooltipPlacement,
                 offset: preferences.theming.icon.tooltipOffset || 0,
               },
               label: tooltipLabel,

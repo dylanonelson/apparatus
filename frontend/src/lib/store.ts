@@ -12,6 +12,9 @@ import publicationReducer, {
 import preferencesReducer, {
   PreferencesReducerState,
 } from "./preferencesReducer";
+import selectionReducer, {
+  SelectionReducerState,
+} from "./selectionReducer";
 import { readerApi } from "./api";
 
 import debounce from "debounce";
@@ -29,7 +32,8 @@ export type RootState = {
   actions: ActionsReducerState;
   publication: PublicationReducerState;
   preferences: PreferencesReducerState;
-  [key: string]: any; // For external reducers
+  selection: SelectionReducerState;
+  [key: string]: unknown; // For external reducers
 };
 
 const DEFAULT_STORAGE_KEY = "thorium-web-state";
@@ -144,6 +148,7 @@ export const makeStore = (
     actions: actionsReducer,
     publication: publicationReducer,
     preferences: preferencesReducer,
+    selection: selectionReducer,
     [readerApi.reducerPath]: readerApi.reducer,
     ...Object.entries(externalReducers).reduce(
       (acc, [key, config]) => ({

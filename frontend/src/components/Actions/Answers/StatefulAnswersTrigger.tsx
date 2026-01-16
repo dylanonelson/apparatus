@@ -51,8 +51,8 @@ export const StatefulAnswersTrigger = ({
             preferences.actions.keys[ThActionsKeys.answers].visibility
           }
           aria-label={t("reader.answers.trigger")}
-          placement="bottom"
           tooltipLabel={t("reader.answers.tooltip")}
+          tooltipPlacement={variant === ThActionsTriggerVariant.selectionButton ? "top" : "bottom"}
           onPress={() => setOpen(!actionState?.isOpen)}
         >
           <AnswersIcon aria-hidden="true" focusable="false" />
