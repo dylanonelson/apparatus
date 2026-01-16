@@ -42,7 +42,7 @@ def test_mcp_reading_state_resource_returns_latest(
         response = await helper.post("/api/reading-state", json=payload)
         assert response.status_code == 201, response.json()
 
-        from app import mcp_server as mcp_module
+        from app.mcp import mcp_server as mcp_module
         from app import main as main_module
 
         monkeypatch.setattr(
@@ -59,7 +59,7 @@ def test_mcp_reading_state_resource_returns_latest(
             mcp_module, "get_session_factory", lambda: helper.session_factory
         )
 
-        result = await main_module.reading_state_resource.fn()  # type: ignore
+        result = await main_module.reading_state_resource.fn()
 
         assert result.reading_location is not None
         assert (
@@ -83,7 +83,7 @@ def test_mcp_reading_state_resource_returns_not_found_without_data(
         helper.set_claims({"sub": "auth0|mcp-empty"})
         user = await helper.create_user(auth0_id="auth0|mcp-empty")
 
-        from app import mcp_server as mcp_module
+        from app.mcp import mcp_server as mcp_module
         from app import main as main_module
 
         monkeypatch.setattr(
@@ -101,7 +101,7 @@ def test_mcp_reading_state_resource_returns_not_found_without_data(
         )
 
         with pytest.raises(NotFoundError):
-            await main_module.reading_state_resource.fn()  # type: ignore
+            await main_module.reading_state_resource.fn()
 
     asyncio.run(scenario())
 
@@ -120,7 +120,7 @@ def test_mcp_reading_state_tool_returns_latest(
         response = await helper.post("/api/reading-state", json=payload)
         assert response.status_code == 201, response.json()
 
-        from app import mcp_server as mcp_module
+        from app.mcp import mcp_server as mcp_module
         from app import main as main_module
 
         monkeypatch.setattr(
@@ -161,7 +161,7 @@ def test_mcp_reading_state_tool_returns_not_found_without_data(
         helper.set_claims({"sub": "auth0|mcp-tool-empty"})
         user = await helper.create_user(auth0_id="auth0|mcp-tool-empty")
 
-        from app import mcp_server as mcp_module
+        from app.mcp import mcp_server as mcp_module
         from app import main as main_module
 
         monkeypatch.setattr(

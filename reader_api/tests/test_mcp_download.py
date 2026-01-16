@@ -15,7 +15,7 @@ def test_download_publication_files_tool_returns_files(
         helper = test_app
         helper.set_claims({"sub": "auth0|mcp-download"})
 
-        from app import mcp_server as mcp_module
+        from app.mcp import mcp_server as mcp_module
         from app import main as main_module
 
         monkeypatch.setattr(
@@ -29,7 +29,7 @@ def test_download_publication_files_tool_returns_files(
             ),
         )
 
-        sample_files = {
+        sample_files: dict[str, object] = {
             "files": [
                 {
                     "href": "chapter1.xhtml",
@@ -40,12 +40,14 @@ def test_download_publication_files_tool_returns_files(
             ]
         }
 
-        async def _fetch_files(publication_id: str, hrefs: list[str]):
+        async def _fetch_files(
+            publication_id: str, hrefs: list[str]
+        ) -> dict[str, object]:
             return sample_files
 
         monkeypatch.setattr(mcp_module, "fetch_publication_files", _fetch_files)
 
-        result = await main_module.download_publication_files_tool.fn(  # type: ignore[attr-defined]
+        result = await main_module.download_publication_files_tool.fn(
             publication_id="sample_two_chapters",
             hrefs=["chapter1.xhtml"],
         )
@@ -60,7 +62,7 @@ def test_download_publication_files_tool_validates_hrefs(
     test_app: TestApp, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     async def scenario() -> None:
-        from app import mcp_server as mcp_module
+        from app.mcp import mcp_server as mcp_module
         from app import main as main_module
 
         monkeypatch.setattr(
@@ -75,13 +77,13 @@ def test_download_publication_files_tool_validates_hrefs(
         )
 
         with pytest.raises(ValueError):
-            await main_module.download_publication_files_tool.fn(  # type: ignore[attr-defined]
+            await main_module.download_publication_files_tool.fn(
                 publication_id="pub",
                 hrefs=[],
             )
 
         with pytest.raises(ValueError):
-            await main_module.download_publication_files_tool.fn(  # type: ignore[attr-defined]
+            await main_module.download_publication_files_tool.fn(
                 publication_id="pub",
                 hrefs=["a", "b", "c"],
             )

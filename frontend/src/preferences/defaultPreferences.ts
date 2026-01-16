@@ -320,6 +320,7 @@ export const defaultPreferences: ThPreferences<DefaultKeys> =
         ThActionsKeys.fullscreen,
         ThActionsKeys.jumpToPosition,
       ],
+      selectionToolbarOrder: [ThActionsKeys.answers],
       collapse: {
         // Number of partially icons to display
         // value "all" a keyword for the length of displayOrder above
@@ -381,6 +382,27 @@ export const defaultPreferences: ThPreferences<DefaultKeys> =
           },
           docked: {
             dockable: ThDockingTypes.none,
+          },
+          snapped: {
+            scrim: true,
+            minHeight: "content-height",
+          },
+        },
+        [ThActionsKeys.answers]: {
+          visibility: ThCollapsibilityVisibility.overflow,
+          shortcut: null,
+          sheet: {
+            defaultSheet: ThSheetTypes.popover,
+            breakpoints: {
+              [ThBreakpoints.compact]: ThSheetTypes.bottomSheet,
+            },
+          },
+          docked: {
+            dockable: ThDockingTypes.both,
+            dragIndicator: false,
+            width: 360,
+            minWidth: 320,
+            maxWidth: 450,
           },
           snapped: {
             scrim: true,

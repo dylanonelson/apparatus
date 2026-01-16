@@ -93,6 +93,12 @@
        "close": "Close jump to position",
        "label": "Select a position from {{ positionStart }} to {{ positionEnd }}:"
     },
+    "answers": {
+      "tooltip": "Answers",
+      "trigger": "AI Answers",
+      "heading": "Answers",
+      "close": "Close answers"
+    },
     "overflowMenu": {
       "active": {
         "tooltip": "More actions",

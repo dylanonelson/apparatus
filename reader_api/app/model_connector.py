@@ -6,7 +6,6 @@ import asyncio
 import json
 import logging
 import os
-from collections.abc import Mapping, Sequence
 from typing import (
     Any,
     AsyncIterator,
@@ -15,10 +14,11 @@ from typing import (
     List,
     Optional,
     Tuple,
-    Union,
 )
 
 import litellm
+from fastmcp import Client as McpClient
+from fastmcp import FastMCP
 from litellm import ChatCompletionToolParam, acompletion
 from litellm.cost_calculator import completion_cost
 from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
@@ -29,31 +29,48 @@ from litellm.types.utils import (
     ModelResponse,
     StreamingChoices,
 )
+from mcp.types import TextContent
+from mcp.types import Tool as McpTool
 from opentelemetry import context as context_api
 from opentelemetry import trace
 from opentelemetry.context import Context
 from opentelemetry.trace import Span, SpanKind
 from opentelemetry.trace.status import Status, StatusCode
+from pydantic import JsonValue
 
-from app import publication_reader
+from app.mcp import (
+    MCPToolName,
+    call_mcp_server_with_api_auth,
+    call_mcp_tool,
+)
 from app.request_context import RequestContext
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
 
 
-SEARCH_PUBLICATION_TOOL_NAME = "search_publication"
 MAX_TOOL_CALL_ITERATIONS = 15
-DEFAULT_MAX_RESULTS = 20
-DEFAULT_CONTEXT_CHARS = 120
 
 
-JsonPrimitive = Union[str, int, float, bool, None]
-JsonValue = Union[
-    JsonPrimitive,
-    Sequence["JsonValue"],
-    Mapping[str, "JsonValue"],
-]
+def mcp_tool_to_litellm(tool: McpTool) -> ChatCompletionToolParam:
+    """
+    Convert an MCP tool definition to LiteLLM's ChatCompletionToolParam format.
+
+    Args:
+        tool: An MCP Tool object from the MCP server.
+
+    Returns:
+        A ChatCompletionToolParam dict compatible with LiteLLM's tool calling API.
+    """
+    return {
+        "type": "function",
+        "function": {
+            "name": tool.name,
+            "description": tool.description or "",
+            "parameters": tool.inputSchema
+            or {"type": "object", "properties": {}},
+        },
+    }
 
 
 class ModelConfig:
@@ -65,7 +82,9 @@ class ModelConfig:
         temperature: float = 0.7,
         max_tokens: int = 10000,
     ):
-        self.default_model = default_model or os.getenv("DEFAULT_MODEL", "gpt-4")
+        self.default_model = default_model or os.getenv(
+            "DEFAULT_MODEL", "gpt-4"
+        )
         self.temperature = temperature
         self.max_tokens = max_tokens
 
@@ -77,9 +96,13 @@ class ModelConfig:
         # - AZURE_API_KEY, AZURE_API_BASE, AZURE_API_VERSION
 
         # Optional: Set LiteLLM options
-        litellm.drop_params = True  # Drop unsupported params instead of erroring
+        litellm.drop_params = (
+            True  # Drop unsupported params instead of erroring
+        )
 
-        litellm_verbose = os.getenv("LITELLM_VERBOSE", "false").lower() == "true"
+        litellm_verbose = (
+            os.getenv("LITELLM_VERBOSE", "false").lower() == "true"
+        )
         # set_verbose is present at runtime but missing from type hints; setattr avoids lint issues
         setattr(litellm, "set_verbose", litellm_verbose)
 
@@ -87,8 +110,13 @@ class ModelConfig:
 class ModelConnector:
     """Main interface for LLM interactions."""
 
-    def __init__(self, config: Optional[ModelConfig] = None):
+    def __init__(
+        self,
+        mcp_server: FastMCP,
+        config: Optional[ModelConfig] = None,
+    ):
         self.config = config or ModelConfig()
+        self._mcp_server = mcp_server
 
     async def chat(
         self,
@@ -123,7 +151,9 @@ class ModelConnector:
         temperature = (
             temperature if temperature is not None else self.config.temperature
         )
-        max_tokens = max_tokens if max_tokens is not None else self.config.max_tokens
+        max_tokens = (
+            max_tokens if max_tokens is not None else self.config.max_tokens
+        )
 
         parent_context = request_context.otel_context
         span = tracer.start_span(
@@ -172,7 +202,7 @@ class ModelConnector:
         model: Optional[str] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        enabled_tools: Optional[List[str]] = None,
+        enabled_tools: Optional[List[MCPToolName]] = None,
     ) -> str:
         """
         Send chat messages to LLM and get response. Wrapper around chat() to get a synchronous response.
@@ -181,8 +211,10 @@ class ModelConnector:
         temperature = (
             temperature if temperature is not None else self.config.temperature
         )
-        max_tokens = max_tokens if max_tokens is not None else self.config.max_tokens
-        tools = self._resolve_tools(enabled_tools, request_context)
+        max_tokens = (
+            max_tokens if max_tokens is not None else self.config.max_tokens
+        )
+        tools = await self._resolve_tools(enabled_tools, request_context)
 
         if not tools:
             response_stream = await self.chat(
@@ -207,20 +239,56 @@ class ModelConnector:
             request_context=request_context,
         )
 
-    def _resolve_tools(
+    async def _resolve_tools(
         self,
-        enabled_tools: Optional[List[str]],
+        enabled_tools: Optional[List[MCPToolName]],
         request_context: RequestContext,
     ) -> List[ChatCompletionToolParam]:
+        """
+        Resolve enabled tools by fetching definitions from the MCP server.
+
+        Args:
+            enabled_tools: List of tool names to enable, or None/empty to disable tools.
+            request_context: Request context containing auth info for MCP calls.
+
+        Returns:
+            List of LiteLLM-compatible tool definitions.
+        """
         if not enabled_tools:
             return []
 
+        if self._mcp_server is None:
+            logger.warning(
+                "MCP server not configured; cannot resolve tools: %s",
+                enabled_tools,
+            )
+            return []
+
+        # Use the MCP client to list available tools with forwarded auth context
+        async with call_mcp_server_with_api_auth(
+            request_context.auth_token, request_context.auth_claims
+        ):
+            async with McpClient(self._mcp_server) as client:
+                all_tools = await client.list_tools()
+
+        # Filter to only the enabled tools and convert to LiteLLM format
+        enabled_tools_set = set([tool.value for tool in enabled_tools])
         resolved_tools: List[ChatCompletionToolParam] = []
+        for tool in all_tools:
+            if tool.name in enabled_tools_set:
+                resolved_tools.append(mcp_tool_to_litellm(tool))
+            elif tool.name not in enabled_tools_set:
+                # Tool exists but not requested - skip silently
+                pass
+
+        # Warn about requested tools that weren't found
+        found_tools = {tool.name for tool in all_tools}
         for tool_name in enabled_tools:
-            if tool_name == SEARCH_PUBLICATION_TOOL_NAME:
-                resolved_tools.append(self._search_tool_definition())
-            else:
-                logger.warning("Unknown tool requested: %s", tool_name)
+            if tool_name not in found_tools:
+                logger.warning(
+                    "Requested tool not found in MCP server: %s", tool_name
+                )
+
         return resolved_tools
 
     async def _chat_sync_with_tools(
@@ -287,13 +355,17 @@ class ModelConnector:
             conversation.append(choice.message)
 
             tool_calls = self._get_tool_calls(choice)
-            span.set_attribute("gen_ai.response.tool_call_count", len(tool_calls))
+            span.set_attribute(
+                "gen_ai.response.tool_call_count", len(tool_calls)
+            )
             span.end()
             logger.info("Number of tool calls: %s", len(tool_calls))
             if tool_calls:
                 tool_iterations += len(tool_calls)
                 if tool_iterations > MAX_TOOL_CALL_ITERATIONS:
-                    raise RuntimeError("Tool call loop exceeded iteration limit")
+                    raise RuntimeError(
+                        "Tool call loop exceeded iteration limit"
+                    )
                 parent_context = request_context.otel_context
                 batch_token = context_api.attach(parent_context)
                 try:
@@ -306,7 +378,9 @@ class ModelConnector:
                         tool_parent_context = trace.set_span_in_context(
                             tool_batch_span, parent_context
                         )
-                        tool_tasks: List[Coroutine[object, object, JsonValue]] = []
+                        tool_tasks: List[
+                            Coroutine[object, object, JsonValue]
+                        ] = []
                         task_metadata: List[Tuple[str, str]] = []
                         for tool_call_id, function in tool_calls:
                             logger.info("Function: %s", function)
@@ -390,13 +464,13 @@ class ModelConnector:
         return first_choice
 
     def _get_tool_calls(self, choice: Choices) -> List[Tuple[str, Function]]:
+        """Extract tool calls from the model's response."""
         if not choice.message.tool_calls:
             return []
         return [
             (t.id, t.function)
             for t in choice.message.tool_calls
-            if isinstance(t.function, Function)
-            and t.function.name == SEARCH_PUBLICATION_TOOL_NAME
+            if isinstance(t.function, Function) and t.function.name
         ]
 
     async def _execute_tool(
@@ -405,90 +479,63 @@ class ModelConnector:
         arguments_json: str,
         request_context: RequestContext,
     ) -> JsonValue:
-        if tool_name != SEARCH_PUBLICATION_TOOL_NAME:
-            raise ValueError(f"Unsupported tool: {tool_name}")
+        """
+        Execute a tool via the MCP client with forwarded auth context.
 
-        publication_id = request_context.publication_id
+        Args:
+            tool_name: Name of the tool to execute.
+            arguments_json: JSON string of tool arguments from the LLM.
+            request_context: Request context containing auth info.
 
-        search_args = self._parse_search_arguments(arguments_json)
+        Returns:
+            The tool result as a JSON-serializable value.
+        """
+        if self._mcp_server is None:
+            raise RuntimeError(
+                f"MCP server not configured; cannot execute tool: {tool_name}"
+            )
 
-        hits = await publication_reader.search_publication(
-            publication_id=publication_id,
-            query=search_args["query"],
-            max_results=search_args["max_results"],
-            context_chars=search_args["context_chars"],
-        )
-        return {"hits": hits}
-
-    def _parse_search_arguments(self, arguments_json: str) -> Dict[str, Any]:
+        # Parse the arguments JSON
         try:
-            args = json.loads(arguments_json or "{}")
+            arguments = json.loads(arguments_json or "{}")
         except json.JSONDecodeError as exc:
             raise ValueError(f"Invalid JSON arguments: {exc}") from exc
 
-        if not isinstance(args, dict):
+        if not isinstance(arguments, dict):
             raise ValueError("Tool arguments must be a JSON object")
 
-        query = args.get("query")
-        if not query or not isinstance(query, str):
-            raise ValueError("`query` is required and must be a string")
+        # For search_publication, inject publication_id if not provided
+        # This allows the tool to work without requiring the caller to specify it
+        if tool_name == MCPToolName.SEARCH_PUBLICATION_TOOL.value:
+            if (
+                "publication_id" not in arguments
+                or arguments["publication_id"] is None
+            ):
+                arguments["publication_id"] = request_context.publication_id
 
-        max_results = self._coerce_positive_int(
-            args.get("max_results"), DEFAULT_MAX_RESULTS
+        # Execute the tool via MCP client with forwarded auth context
+        result = await call_mcp_tool(
+            request_context,
+            self._mcp_server,
+            MCPToolName(tool_name),
+            arguments,
         )
-        context_chars = self._coerce_positive_int(
-            args.get("context_chars"), DEFAULT_CONTEXT_CHARS
-        )
 
-        return {
-            "query": query,
-            "max_results": max_results,
-            "context_chars": context_chars,
-        }
-
-    def _coerce_positive_int(self, value: Any, default: int) -> int:
-        if value is None:
-            return default
-        try:
-            int_value = int(value)
-        except (TypeError, ValueError):
-            return default
-        return int_value if int_value > 0 else default
-
-    def _search_tool_definition(self) -> ChatCompletionToolParam:
-        return {
-            "type": "function",
-            "function": {
-                "name": SEARCH_PUBLICATION_TOOL_NAME,
-                "description": (
-                    "Search the current publication for passages matching a keyword or phrase. "
-                    "This search is very simple and will only search literally for the phrase "
-                    "you provide, so it must appear exactly as you provide it in the book to "
-                    "return results."
-                ),
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {
-                            "type": "string",
-                            "description": "Keyword or phrase to search for in the publication. The search is case-insensitive. This search tool is very simple and will only return exact matches for the provided phrase.",
-                        },
-                        "max_results": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "description": "Maximum number of search results to return. Defaults to 20.",
-                        },
-                        "context_chars": {
-                            "type": "integer",
-                            "minimum": 20,
-                            "description": "Number of surrounding characters to include for each hit. Defaults to 120.",
-                        },
-                    },
-                    "required": ["query"],
-                    "additionalProperties": False,
-                },
-            },
-        }
+        # Extract the result data from the MCP response
+        # The result contains content blocks; we return the structured data
+        if hasattr(result, "data") and result.data is not None:
+            # Structured data from FastMCP
+            return result.data
+        elif result.content:
+            # Fall back to text content
+            first_content = result.content[0]
+            if isinstance(first_content, TextContent):
+                # Try to parse as JSON, otherwise return as string
+                try:
+                    return json.loads(first_content.text)
+                except json.JSONDecodeError:
+                    return {"result": first_content.text}
+        return {"result": None}
 
     def _set_llm_span_attributes(
         self,
@@ -562,9 +609,37 @@ class ModelConnector:
 _connector: Optional[ModelConnector] = None
 
 
-def get_connector() -> ModelConnector:
-    """Get or create the global ModelConnector instance."""
+def initialize_connector(
+    mcp_server: FastMCP,
+    config: Optional[ModelConfig] = None,
+) -> ModelConnector:
+    """
+    Initialize the global ModelConnector instance with an MCP server.
+
+    This should be called during application startup, after the MCP server
+    has been created.
+
+    Args:
+        mcp_server: The FastMCP server instance for in-memory tool calls.
+        config: Optional model configuration.
+
+    Returns:
+        The initialized ModelConnector instance.
+    """
     global _connector
+    _connector = ModelConnector(mcp_server, config=config)
+    return _connector
+
+
+def get_connector() -> ModelConnector:
+    """
+    Get the global ModelConnector instance.
+
+    Raises:
+        RuntimeError: If initialize_connector() has not been called.
+    """
     if _connector is None:
-        _connector = ModelConnector()
+        raise RuntimeError(
+            "ModelConnector not initialized. Call initialize_connector() first."
+        )
     return _connector

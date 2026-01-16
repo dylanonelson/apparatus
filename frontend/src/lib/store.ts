@@ -12,6 +12,10 @@ import publicationReducer, {
 import preferencesReducer, {
   PreferencesReducerState,
 } from "./preferencesReducer";
+import selectionReducer, {
+  SelectionReducerState,
+} from "./selectionReducer";
+import { readerApi } from "./api";
 
 import debounce from "debounce";
 
@@ -28,7 +32,8 @@ export type RootState = {
   actions: ActionsReducerState;
   publication: PublicationReducerState;
   preferences: PreferencesReducerState;
-  [key: string]: any; // For external reducers
+  selection: SelectionReducerState;
+  [key: string]: unknown; // For external reducers
 };
 
 const DEFAULT_STORAGE_KEY = "thorium-web-state";
@@ -143,6 +148,8 @@ export const makeStore = (
     actions: actionsReducer,
     publication: publicationReducer,
     preferences: preferencesReducer,
+    selection: selectionReducer,
+    [readerApi.reducerPath]: readerApi.reducer,
     ...Object.entries(externalReducers).reduce(
       (acc, [key, config]) => ({
         ...acc,
@@ -173,6 +180,12 @@ export const makeStore = (
   const store = configureStore({
     reducer: combinedReducers as unknown as Reducer<RootState>,
     preloadedState,
+    // RTK Query middleware is needed for caching, invalidation, and polling
+    // Type assertion needed due to complex RTK Query generics interacting with custom RootState
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(
+        readerApi.middleware,
+      ) as unknown as ReturnType<typeof getDefaultMiddleware>,
   });
 
   const saveStateDebounced = debounce(() => {

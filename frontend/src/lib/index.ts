@@ -10,3 +10,4 @@ export * from "./settingsReducer";
 export * from "./themeReducer";
 export * from "./preferencesReducer";
 export * from "./readerReducer";
+export * from "./selectionReducer";

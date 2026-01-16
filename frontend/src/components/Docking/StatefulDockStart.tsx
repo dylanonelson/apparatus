@@ -69,7 +69,7 @@ export const StatefulDockStart = ({
         <StatefulActionIcon
           className={readerSharedUI.dockerButton}
           aria-label={localeKey.trigger}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={localeKey.tooltip}
           onPress={handlePress}
           isDisabled={isDisabled}

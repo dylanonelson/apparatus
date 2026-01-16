@@ -76,7 +76,7 @@ export const StatefulFullscreenTrigger = ({
             preferences.actions.keys[ThActionsKeys.fullscreen].visibility
           }
           aria-label={label}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={t("reader.fullscreen.tooltip")}
           onPress={handlePress}
         >

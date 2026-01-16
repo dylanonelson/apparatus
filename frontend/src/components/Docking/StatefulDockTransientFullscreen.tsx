@@ -60,7 +60,7 @@ export const StatefulDockTransientFullscreen = ({
         <StatefulActionIcon
           className={readerSharedUI.dockerButton}
           aria-label={t("reader.app.docker.fullscreen.trigger")}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={t("reader.app.docker.fullscreen.tooltip")}
           onPress={handlePress}
           isDisabled={isDisabled}

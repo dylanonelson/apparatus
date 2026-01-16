@@ -11,6 +11,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.api_models import (
     AskRequestModel,
     AskResponseModel,
+    AutomaticAnswersRequestModel,
     HealthResponseModel,
     ReadingLocationResponseModel,
     ReadingStateResponseModel,
@@ -29,8 +30,9 @@ from app.db import (
     Viewport,
     get_db_session,
 )
-from app.model_connector import SEARCH_PUBLICATION_TOOL_NAME, get_connector
-from app.prompts import get_messages
+from app.mcp import MCPToolName
+from app.model_connector import get_connector
+from app.prompt_manager import get_prompt_manager
 from app.publications_catalog import (
     CatalogError,
     UnknownPublicationError,
@@ -155,10 +157,15 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             )
         return build_reading_location_response(location)
 
-    @router.post("/ask", response_model=AskResponseModel)
-    async def ask(request: AskRequestModel) -> AskResponseModel:
+    @router.post("/ask-freeform", response_model=AskResponseModel)
+    async def ask_freeform(
+        request: AskRequestModel,
+        claims: dict[str, object] = Depends(require_auth()),
+        token: HTTPAuthorizationCredentials = Security(bearer_scheme),
+    ) -> AskResponseModel:
         """
         Ask a question about the current reading position.
+        Requires authentication to forward auth context to MCP tools.
         """
         try:
             publication = get_publication(request.publication_id)
@@ -172,20 +179,68 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         request_context = RequestContext(
             publication_id=request.publication_id,
             otel_context=context_api.get_current(),
+            auth_token=token.credentials,
+            auth_claims=claims,
         )
 
         model_connector = get_connector()
 
-        messages = get_messages(
-            request.question,
-            request.locator,
+        prompt_manager = get_prompt_manager()
+        messages = prompt_manager.get_messages(
+            "passage_finder",
+            "v0",
             title=publication.title,
             author=publication.author,
-            prompt_version="v0",
+            question=request.question,
+            location_json=request.locator.model_dump_json(),
         )
         answer = await model_connector.chat_sync(
             messages,
-            enabled_tools=[SEARCH_PUBLICATION_TOOL_NAME],
+            enabled_tools=list(MCPToolName),
+            request_context=request_context,
+        )
+        return AskResponseModel(answer=answer)
+
+    @router.post("/ask-automatic", response_model=AskResponseModel)
+    async def ask_automatic(
+        request: AutomaticAnswersRequestModel,
+        claims: dict[str, object] = Depends(require_auth()),
+        token: HTTPAuthorizationCredentials = Security(bearer_scheme),
+    ) -> AskResponseModel:
+        """
+        Get an automatic answer based on the user's current viewport and selection.
+        Infers what the user might be confused about and provides an explanation.
+        """
+        try:
+            publication = get_publication(request.publication_id)
+        except UnknownPublicationError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except CatalogError as exc:
+            raise HTTPException(
+                status_code=500, detail="Publications catalog is not available"
+            ) from exc
+
+        request_context = RequestContext(
+            publication_id=request.publication_id,
+            otel_context=context_api.get_current(),
+            auth_token=token.credentials,
+            auth_claims=claims,
+        )
+
+        model_connector = get_connector()
+
+        prompt_manager = get_prompt_manager()
+        messages = prompt_manager.get_messages(
+            "automatic_answers",
+            "v0",
+            title=publication.title,
+            author=publication.author,
+            viewport_json=request.viewport.model_dump_json(),
+            location_json=request.locator.model_dump_json(),
+        )
+        answer = await model_connector.chat_sync(
+            messages,
+            enabled_tools=list(MCPToolName),
             request_context=request_context,
         )
         return AskResponseModel(answer=answer)

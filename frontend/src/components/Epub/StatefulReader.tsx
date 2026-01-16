@@ -54,6 +54,7 @@ import { StatefulDockingWrapper } from "../Docking/StatefulDockingWrapper";
 import { StatefulReaderHeader } from "../StatefulReaderHeader";
 import { StatefulReaderArrowButton } from "../StatefulReaderArrowButton";
 import { StatefulReaderFooter } from "../StatefulReaderFooter";
+import { StatefulSelectionToolbar } from "../SelectionToolbar";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
@@ -91,6 +92,7 @@ import {
   setScrollAffordance,
 } from "@/lib/readerReducer";
 import {
+  setPublicationId,
   setFXL,
   setRTL,
   setPositionsList,
@@ -99,6 +101,7 @@ import {
   setPublicationEnd,
 } from "@/lib/publicationReducer";
 import { LineLengthStateObject } from "@/lib/settingsReducer";
+import { setSelection, clearSelection } from "@/lib/selectionReducer";
 
 import classNames from "classnames";
 import debounce from "debounce";
@@ -386,6 +389,7 @@ const StatefulReaderInner = ({
     currentPositions,
     getVisibleText,
     getSelectionText,
+    getSelectionRect,
     canGoBackward,
     canGoForward,
     isScrollStart,
@@ -803,6 +807,9 @@ const StatefulReaderInner = ({
           queueReadingLocationUpdate(locator);
         }
 
+        // Clear selection toolbar when position changes (navigation)
+        dispatch(clearSelection());
+
         // We could use canGoBackward() and canGoForward() directly on arrows
         // but maybe we will need to sync the state for other features in the future
         if (canGoBackward()) {
@@ -819,6 +826,8 @@ const StatefulReaderInner = ({
       },
       tap: function (_e: FrameClickEvent): boolean {
         handleTap(_e);
+        // Clear selection toolbar when user taps away from selection
+        dispatch(clearSelection());
         return true;
       },
       click: function (_e: FrameClickEvent): boolean {
@@ -832,6 +841,8 @@ const StatefulReaderInner = ({
             handleTap(_e);
           }
         }
+        // Clear selection toolbar when user clicks away from selection
+        dispatch(clearSelection());
         return true;
       },
       zoom: function (_scale: number): void {},
@@ -891,6 +902,14 @@ const StatefulReaderInner = ({
         setLocalReadingLocation(locator, timestamp);
         const selectionText = selection.text?.trim() || null;
         syncReadingLocationToServer(nextLocation, selectionText);
+
+        // Dispatch selection state for the selection toolbar
+        const rect = getSelectionRect();
+        if (selectionText && rect) {
+          dispatch(setSelection({ text: selectionText, rect }));
+        } else {
+          dispatch(clearSelection());
+        }
       },
     }),
     [
@@ -909,6 +928,7 @@ const StatefulReaderInner = ({
       setLocalReadingLocation,
       syncReadingLocationToServer,
       publicationId,
+      getSelectionRect,
     ],
   );
 
@@ -1102,6 +1122,7 @@ const StatefulReaderInner = ({
   useEffect(() => {
     if (!publication) return;
 
+    dispatch(setPublicationId(publicationId));
     dispatch(
       setRTL(
         publication.metadata.effectiveReadingProgression ===
@@ -1303,6 +1324,8 @@ const StatefulReaderInner = ({
               )}
 
               <StatefulReaderFooter layout={layoutUI} />
+
+              <StatefulSelectionToolbar />
             </div>
           </StatefulDockingWrapper>
         </main>

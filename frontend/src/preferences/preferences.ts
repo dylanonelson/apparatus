@@ -156,6 +156,7 @@ export type SpacingSettingsKey<K extends CustomizableKeys> = K extends {
 export interface ThActionsPref<K extends CustomizableKeys> {
   reflowOrder: Array<ActionKey<K>>;
   fxlOrder: Array<ActionKey<K>>;
+  selectionToolbarOrder?: Array<ActionKey<K>>;
   collapse: ThCollapsibility;
   keys: Record<ActionKey<K>, ThActionsTokens>;
 }

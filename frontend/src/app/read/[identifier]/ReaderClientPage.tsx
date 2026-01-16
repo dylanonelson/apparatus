@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
+  createAnswersPlugin,
+  createDefaultPlugin,
   StatefulReader,
   type LocalStorageReadingLocation,
 } from "@/components/Epub";
@@ -64,6 +66,10 @@ export default function ReaderClientPage({
     );
   }
 
+  const plugins = useMemo(() => {
+    return [createDefaultPlugin(), createAnswersPlugin()];
+  }, []);
+
   return (
     <StatefulLoader isLoading={isLoading}>
       {manifest && selfLink && (
@@ -71,6 +77,7 @@ export default function ReaderClientPage({
           rawManifest={manifest}
           selfHref={selfLink}
           publicationId={publicationConfig.id}
+          plugins={plugins}
           serverInitialReadingLocation={
             serverInitialReadingLocation ?? undefined
           }

@@ -57,7 +57,7 @@ def test_create_reading_state_persists_location_without_viewport(
         data = response.json()
         reading_location = data["reading_location"]
         assert reading_location["publication_id"] == payload["publication_id"]
-        assert reading_location["locator"]["href"] == payload["locator"]["href"]
+        assert reading_location["locator"]["href"] == payload["locator"]["href"]  # type: ignore[index]
         returned_at = datetime.fromisoformat(reading_location["recorded_at"])
         assert returned_at.replace(tzinfo=None) == recorded_at.replace(tzinfo=None)
         saved_at = datetime.fromisoformat(reading_location["created_at"])
@@ -70,7 +70,7 @@ def test_create_reading_state_persists_location_without_viewport(
             assert len(locations) == 1
             stored = locations[0]
             assert stored.publication_id == payload["publication_id"]
-            assert stored.locator["href"] == payload["locator"]["href"]
+            assert stored.locator["href"] == payload["locator"]["href"]  # type: ignore[index]
             assert stored.recorded_at is not None
             assert stored.recorded_at.replace(tzinfo=None) == recorded_at.replace(
                 tzinfo=None
@@ -110,9 +110,9 @@ def test_create_reading_state_persists_viewport_and_location(
 
         assert reading_location["publication_id"] == payload["publication_id"]
         assert viewport["publication_id"] == payload["publication_id"]
-        assert viewport["positions"] == payload["viewport"]["positions"]
-        assert viewport["text"] == payload["viewport"]["text"]
-        assert viewport["selection_text"] == payload["viewport"]["selection_text"]
+        assert viewport["positions"] == payload["viewport"]["positions"]  # type: ignore[index]
+        assert viewport["text"] == payload["viewport"]["text"]  # type: ignore[index]
+        assert viewport["selection_text"] == payload["viewport"]["selection_text"]  # type: ignore[index]
 
         async with helper.session_factory() as session:
             result_locations = await session.execute(select(ReadingLocation))
@@ -122,8 +122,8 @@ def test_create_reading_state_persists_viewport_and_location(
             result_viewports = await session.execute(select(Viewport))
             viewports = result_viewports.scalars().all()
             assert len(viewports) == 1
-            assert viewports[0].text == payload["viewport"]["text"]
-            assert viewports[0].selection_text == payload["viewport"]["selection_text"]
+            assert viewports[0].text == payload["viewport"]["text"]  # type: ignore[index]
+            assert viewports[0].selection_text == payload["viewport"]["selection_text"]  # type: ignore[index]
 
     asyncio.run(scenario())
 
@@ -224,12 +224,12 @@ def test_reading_state_overwrites_viewport_entry(test_app: TestApp) -> None:
             result_viewports = await session.execute(select(Viewport))
             viewports = result_viewports.scalars().all()
             assert len(viewports) == 1
-            assert viewports[0].text == second_payload["viewport"]["text"]
-            assert viewports[0].positions == second_payload["viewport"]["positions"]
+            assert viewports[0].text == second_payload["viewport"]["text"]  # type: ignore[index]
+            assert viewports[0].positions == second_payload["viewport"]["positions"]  # type: ignore[index]
             assert viewports[0].publication_id == second_payload["publication_id"]
             assert (
                 viewports[0].selection_text
-                == second_payload["viewport"]["selection_text"]
+                == second_payload["viewport"]["selection_text"]  # type: ignore[index]
             )
 
     asyncio.run(scenario())

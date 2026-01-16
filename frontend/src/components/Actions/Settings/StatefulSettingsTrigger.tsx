@@ -54,7 +54,7 @@ export const StatefulSettingsTrigger = ({
             preferences.actions.keys[ThActionsKeys.settings].visibility
           }
           aria-label={t("reader.settings.trigger")}
-          placement="bottom"
+          tooltipPlacement="bottom"
           tooltipLabel={t("reader.settings.tooltip")}
           onPress={() => setOpen(!actionState?.isOpen)}
         >

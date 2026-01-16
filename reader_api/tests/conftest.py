@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
 from collections.abc import Generator
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator, Mapping
 
 import pytest
 from fastapi import FastAPI
@@ -73,7 +73,7 @@ class TestApp:
             headers = {"Authorization": f"Bearer {self.access_token}"}
             return await client.get(path, headers=headers)
 
-    async def post(self, path: str, json: dict[str, object]) -> Response:
+    async def post(self, path: str, json: Mapping[str, Any]) -> Response:
         transport = ASGITransport(app=self.app)
         async with AsyncClient(transport=transport, base_url="http://testserver") as client:
             headers = {"Authorization": f"Bearer {self.access_token}"}
@@ -104,38 +104,27 @@ def test_app() -> Generator[TestApp, None, None]:
         setattr(stub_models, "LocatorModel", LocatorModel)
         sys.modules["app.models"] = stub_models
 
-    if "app.prompts" not in sys.modules:
-        stub_prompts = types.ModuleType("app.prompts")
-
-        def _get_messages(*args, **kwargs) -> list[dict[str, str]]:
-            return []
-
-        setattr(stub_prompts, "get_messages", _get_messages)
-        setattr(
-            stub_prompts,
-            "prompt_v0",
-            types.SimpleNamespace(
-            get_system_prompt=lambda *args, **kwargs: "",
-            get_user_prompt=lambda *args, **kwargs: "",
-        )
-        )
-        sys.modules["app.prompts"] = stub_prompts
-
     if "app.model_connector" not in sys.modules:
         stub_connector = types.ModuleType("app.model_connector")
         setattr(stub_connector, "SEARCH_PUBLICATION_TOOL_NAME", "search_publication")
 
         class _StubModelConnector:
-            async def chat(self, *args, **kwargs):
+            async def chat(self, *args: Any, **kwargs: Any) -> None:
                 raise RuntimeError("Model connector stubbed in tests.")
 
-            async def chat_sync(self, *args, **kwargs):
+            async def chat_sync(self, *args: Any, **kwargs: Any) -> None:
                 raise RuntimeError("Model connector stubbed in tests.")
+
+        _stub_instance = _StubModelConnector()
 
         def _get_stub_connector() -> _StubModelConnector:
-            return _StubModelConnector()
+            return _stub_instance
+
+        def _initialize_stub_connector(*args: Any, **kwargs: Any) -> _StubModelConnector:
+            return _stub_instance
 
         setattr(stub_connector, "get_connector", _get_stub_connector)
+        setattr(stub_connector, "initialize_connector", _initialize_stub_connector)
         sys.modules["app.model_connector"] = stub_connector
 
     main_module = import_module("app.main")

@@ -26,12 +26,13 @@ from app import publications_catalog
 from app.api_models import ReadingStatePayload, ViewportPayloadModel
 from app.config import Config
 from app.db import get_session_factory as _get_session_factory
-from app.prompts import prompt_v1
-from app.publication_reader import fetch_publication_files
+from app.prompt_manager import get_prompt_manager
+from app.publication_reader import fetch_publication_files, search_publication
 from app.reading_state import (
     build_reading_state_payload,
     get_current_publication,
 )
+from .wrapper import MCPPromptName, MCPResourceURI, MCPToolName
 
 # Globals allow test overrides
 get_access_token = _get_access_token
@@ -43,6 +44,7 @@ def create_mcp_server() -> tuple[
     StarletteWithLifespan,
     Auth0Provider,
     FunctionResource,
+    FunctionTool,
     FunctionTool,
     FunctionTool,
 ]:
@@ -69,7 +71,7 @@ def create_mcp_server() -> tuple[
     )
 
     @mcp_server.resource(
-        "resource://reading-state",
+        MCPResourceURI.READING_STATE_RESOURCE.value,
         name="Current Reading State",
         description=(
             "Latest reading location for the authenticated user, including "
@@ -89,8 +91,7 @@ def create_mcp_server() -> tuple[
         return await build_reading_state_payload(access_token, session_factory)
 
     @mcp_server.resource(
-        "resource://current-publication/position-index",
-        name="Current publication context",
+        MCPResourceURI.CURRENT_PUBLICATION_CONTEXT_RESOURCE.value,
         description=(
             "Context file containing position index, summaries, and metadata for "
             "the user's currently open publication. Includes href mappings, position "
@@ -150,7 +151,7 @@ def create_mcp_server() -> tuple[
         return await build_reading_state_payload(access_token, session_factory)
 
     @mcp_server.tool(
-        "get_reading_state",
+        MCPToolName.READING_STATE_TOOL.value,
         annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Return the latest reading location and viewport for the authenticated "
@@ -162,7 +163,7 @@ def create_mcp_server() -> tuple[
         return await _get_current_reading_state()
 
     @mcp_server.prompt(
-        name="Ask about a book",
+        MCPPromptName.FREEFORM_ANSWERS_PROMPT.value,
         description=(
             "Answer questions about the book the user currently has open by injecting "
             "the current publication metadata and reading state."
@@ -200,15 +201,21 @@ def create_mcp_server() -> tuple[
             if isinstance(result, str):
                 text = result
 
+        prompt_manager = get_prompt_manager()
+        system_prompt = prompt_manager.get_system_prompt(
+            "freeform_answers",
+            "v0",
+            title=publication.title,
+            author=publication.author,
+            question="",
+        )
+
         return [
             PromptMessage(
                 role="user",
                 content=TextContent(
                     type="text",
-                    text=prompt_v1.get_system_prompt(
-                        publication.title,
-                        publication.author,
-                    ),
+                    text=system_prompt,
                 ),
             ),
             PromptMessage(
@@ -224,7 +231,7 @@ def create_mcp_server() -> tuple[
         ]
 
     @mcp_server.tool(
-        "download_publication_files",
+        MCPToolName.DOWNLOAD_PUBLICATION_FILES_TOOL.value,
         annotations=ToolAnnotations(readOnlyHint=True),
         description=(
             "Download up to two files from a publication by manifest href. "
@@ -255,6 +262,57 @@ def create_mcp_server() -> tuple[
         return await fetch_publication_files(
             publication_id=publication_id, hrefs=cleaned_hrefs
         )
+
+    @mcp_server.tool(
+        MCPToolName.SEARCH_PUBLICATION_TOOL.value,
+        annotations=ToolAnnotations(readOnlyHint=True),
+        description=(
+            "Search the current publication for passages matching a keyword or phrase. "
+            "This search is very simple and will only search literally for the phrase "
+            "you provide, so it must appear exactly as you provide it in the book to "
+            "return results. Requires bearer token."
+        ),
+    )
+    async def search_publication_tool(
+        query: str,
+        publication_id: str | None = None,
+        max_results: int = 20,
+        context_chars: int = 120,
+    ) -> dict[str, object]:
+        """
+        Search for passages in a publication matching a keyword or phrase.
+
+        Args:
+            query: Keyword or phrase to search for. The search is case-insensitive
+                   and returns exact matches only.
+            publication_id: ID of the publication to search. If not provided,
+                           uses the user's currently open publication.
+            max_results: Maximum number of search results to return. Defaults to 20.
+            context_chars: Number of surrounding characters to include for each hit.
+                          Defaults to 120.
+
+        Returns:
+            A dict containing "hits" - a list of matching passages with context.
+        """
+        access_token = get_access_token()
+        if access_token is None:
+            raise PermissionError(
+                "Authentication is required to search publications."
+            )
+
+        # If publication_id not provided, look it up from reading state
+        resolved_publication_id = publication_id
+        if resolved_publication_id is None:
+            current_pub = await _get_current_publication()
+            resolved_publication_id = current_pub.identifier
+
+        hits = await search_publication(
+            publication_id=resolved_publication_id,
+            query=query,
+            max_results=max_results,
+            context_chars=context_chars,
+        )
+        return {"hits": hits}
 
     @mcp_server.custom_route("/auth/diagnostic", methods=["GET"])
     async def mcp_auth_diagnostic(request: Request) -> JSONResponse:
@@ -291,4 +349,5 @@ def create_mcp_server() -> tuple[
         cast(FunctionResource, get_current_reading_state_resource),
         cast(FunctionTool, get_current_reading_state_tool),
         cast(FunctionTool, download_publication_files_tool),
+        cast(FunctionTool, search_publication_tool),
     )

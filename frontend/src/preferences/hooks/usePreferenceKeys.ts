@@ -16,6 +16,7 @@ export const usePreferenceKeys = () => {
 
   const reflowActionKeys = preferences.actions.reflowOrder;
   const fxlActionKeys = preferences.actions.fxlOrder;
+  const selectionToolbarKeys = preferences.actions.selectionToolbarOrder ?? [];
 
   const reflowThemeKeys = preferences.theming.themes.reflowOrder;
   const fxlThemeKeys = preferences.theming.themes.fxlOrder;
@@ -40,6 +41,7 @@ export const usePreferenceKeys = () => {
   return {
     reflowActionKeys,
     fxlActionKeys,
+    selectionToolbarKeys,
     reflowThemeKeys,
     fxlThemeKeys,
     reflowSettingsKeys,
