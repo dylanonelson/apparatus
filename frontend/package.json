@@ -94,7 +94,8 @@
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^3.0.6",
     "react-stately": "^3.41.0",
-    "run": "^1.5.0"
+    "run": "^1.5.0",
+    "streamdown": "^2.0.1"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

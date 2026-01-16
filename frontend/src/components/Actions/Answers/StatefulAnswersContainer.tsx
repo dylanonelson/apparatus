@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
+import { Streamdown } from "streamdown";
 
 import { ThActionsKeys } from "@/preferences/models/enums";
 import { StatefulActionContainerProps } from "../models/actions";
@@ -129,7 +130,11 @@ export const StatefulAnswersContainer = ({
     }
 
     if (data?.answer) {
-      return <div className={answersStyles.answer}>{data.answer}</div>;
+      return (
+        <div className={answersStyles.answer}>
+          <Streamdown>{data.answer}</Streamdown>
+        </div>
+      );
     }
 
     return (
