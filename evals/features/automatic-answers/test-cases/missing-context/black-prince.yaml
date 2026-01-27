@@ -1,0 +1,29 @@
+- description: "The Black Prince"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-52.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.07142857142857142
+          totalProgression: 0.8393480791618161
+          position: 722
+      viewport:
+        positions: [722]
+        text: "shivering, at that uncomfortable hour, to our respective beds, through various close passages; which smelt as if they had been steeped, for ages, in a solution of soup and stables.\n\t\t\tEarly in the morning, I sauntered through the dear old tranquil streets, and again mingled with the shadows of the venerable gateways and churches. The rooks were sailing about the cathedral towers; and the towers themselves, overlooking many a long unaltered mile of the rich country and its pleasant streams, were cutting the bright morning air, as if there were no such thing as change on earth. Yet the bells, when they sounded, told me sorrowfully of change in everything; told me of their own age, and my pretty Dora's youth; and of the many, never old, who had lived and loved and died, while the reverberations of the bells had hummed through the rusty armour of the Black Prince hanging up within, and, motes upon the deep of Time, had lost themselves in air, as circles do in water.\n\t\t\tI looked at the old house from the corner of the street, but did not go nearer to it, lest, being observed, I might unwittingly do any harm to the design I had come to aid. The early sun was striking edgewise on its gables and lattice-windows, touching them with gold; and some beams of its old peace seemed to touch my heart.\n\t\t\tI strolled into the country for an hour or so, and then returned by the main street, which in the interval had shaken off its last night's sleep. Among those who were stirring in the shops, I saw my ancient enemy the butcher, now advanced to top-boots and a baby, and in business for himself. He was nursing the baby, and appeared to be a benignant member of society.\n\t\t\tWe all became very anxious and impatient, when we sat down to breakfast. As it approached nearer and nearer to half past nine o'clock, our restless expectation of Mr. Micawber increased. At last we made no more pretence of attending to the meal, which, except with Mr. Dick, had been a mere form from the first; but my aunt walked up and down the room, Traddles "
+        selection_text: "Black Prince"
+    reference_answer: |
+      The "Black Prince" refers to Edward of Woodstock (1330–1376), the eldest
+      son of King Edward III and a legendary military figure of the Hundred
+      Years' War. He is buried in Canterbury Cathedral, the "cathedral" David is
+      describing as he wanders the streets of his youth.
+
+      The "rusty armour" David mentions refers to the Prince's funeral
+      achievements—the actual helmet, shield, gauntlets, and surcoat of the
+      Prince—which were traditionally displayed above his tomb. These
+      achievements are among the most famous in the world because they survived
+      for centuries, serving as a physical bridge to the 14th century. By
+      referencing them, David highlights the "deep of Time," contrasting the
+      enduring, centuries-old metal with the transience of human life and his
+      own reflections on the inevitability of change.

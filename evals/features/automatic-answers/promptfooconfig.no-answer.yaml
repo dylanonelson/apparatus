@@ -1,0 +1,22 @@
+x-ask-automatic-config: &askAutomaticConfig
+  method: POST
+  headers:
+    Content-Type: application/json
+    Authorization: "Bearer {{env.AUTH0_TOKEN}}"
+  body: "{{request_body | dump}}"
+  transformResponse: json.answer
+
+providers:
+  - id: "{{env.READER_API_URL}}/ask-automatic?prompt_version=v2"
+    label: ask-automatic-v2
+    config: *askAutomaticConfig
+
+# Only run the deterministic "no-answer" cases.
+tests: file://test-cases/no-answer/*.yaml
+
+defaultTest:
+  # Exact match: v2 specifies the assistant MUST output this exact sentinel
+  # string when the implied question is unclear.
+  assert:
+    - type: equals
+      value: "{{expected_answer}}"

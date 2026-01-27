@@ -1,0 +1,25 @@
+- description: "Prophetic pins"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-1.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.21428571428571427
+          totalProgression: 0.013969732246798603
+          position: 13
+      viewport:
+        positions: [13]
+        text: "he married, and of but a delicate constitution. He died a year afterwards, and, as I have said, six months before I came into the world.\n\t\t\tThis was the state of matters, on the afternoon of, what I may be excused for calling, that eventful and important Friday. I can make no claim therefore to have known, at that time, how matters stood; or to have any remembrance, founded on the evidence of my own senses, of what follows.\n\t\t\tMy mother was sitting by the fire, but poorly in health, and very low in spirits, looking at it through her tears, and desponding heavily about herself and the fatherless little stranger, who was already welcomed by some grosses of prophetic pins, in a drawer upstairs, to a world not at all excited on the subject of his arrival; my mother, I say, was sitting by the fire, that bright, windy March afternoon, very timid and sad, and very doubtful of ever coming alive out of the trial that was before her, when, lifting her eyes as she dried them, to the window opposite, she saw a strange lady coming up the garden.\n\t\t\tMy mother had a sure foreboding at the second glance, that it was Miss Betsey. The setting sun was glowing on the strange lady, over the garden-fence, and she came walking up to the door with a fell rigidity of figure and composure of countenance that could have belonged to nobody else.\n\t\t\tWhen she reached the house, she gave another proof of her identity. My father had often hinted that she seldom conducted herself like any ordinary Christian; and now, instead of ringing the bell, she came and looked in at that identical window, pressing the end of her nose against the glass to that extent, that my poor dear mother used to say it became perfectly flat and white in a moment.\n\t\t\tShe gave my mother such a turn, that I have always been convinced I am indebted to Miss Betsey for having been born on a Friday.\n\t\t\tMy mother had left her chair in her agitation, and gone behind it in the corner. Miss Betsey, looking round the room, "
+        selection_text: "grosses of prophetic pins"
+    reference_answer: |
+      In this passage, "grosses of prophetic pins" refers to a traditional Victorian
+      custom involving the preparation for a new baby. A "gross" is a unit of
+      measurement equal to 144 items; the use of the plural "grosses" emphasizes the
+      overwhelming quantity of pins David's mother has prepared.
+
+      These pins were used to fasten cloth diapers (nappies) and various layers of
+      infant clothing before the invention of modern safety pins or zippers. They are
+      called "prophetic" because their presence in the drawer "prophesies" or signals
+      the imminent arrival of the child.

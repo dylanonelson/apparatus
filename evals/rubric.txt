@@ -4,11 +4,13 @@
 2. Accurate: The response is accurate to the text
 3. Neutral: The response allows the reader to draw their own conclusions
 
-Give the answer a score of -1, 0, or 1 for each criterion.
+Give the answer a score of 1, 2, 3, 4, or 5 for each criterion.
 
--1 = the response fails to meet the criterion
-0 = the response partially meets the criterion or the application of the criterion is unclear
-1 = the response meets the criterion
+1 = Fails: The response entirely fails to meet the criterion.
+2 = Poor: The response largely fails or barely attempts to meet the criterion.
+3 = Fair: The response partially meets the criterion, is unclear, or has minor issues.
+4 = Good: The response largely meets the criterion with only minor imperfections.
+5 = Excellent: The response fully meets the criterion perfectly.
 
 ## Automatic failures
 

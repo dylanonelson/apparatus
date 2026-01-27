@@ -1,0 +1,36 @@
+## Criteria
+
+1. Accurate (grounded): The response is faithful to the provided passage
+(`viewport_text`), selected text (`selection_text`), and reference answer
+(reference_answer). If a `reference_answer` is provided, it is the authoritative
+source for what the response should say.
+
+2. Apposite (answers the likely question): The response explains what the
+selected text means *in this passage* and provides the most relevant context,
+without drifting to unrelated plot summary. If a reference answer is provided,
+the response should contain all of the information included in the reference
+answer.
+
+3. Succinct (footnote tone): The response is compact and
+“footnote-like”: direct, non-florid, and avoids unnecessary digressions,
+spoilers, or moralizing.
+
+### Scoring anchors (1–5)
+
+Use these anchors when choosing each criterion score:
+
+- 5: Fully correct/appropriate; no notable issues.
+- 4: Mostly correct; only small omissions or minor imprecision.
+- 3: Partially correct; misses a key point, is somewhat vague, or includes a small unsupported claim.
+- 2: Largely incorrect; major omissions or significant unsupported claims.
+- 1: Contradicts the passage/reference or is dominated by hallucination.
+
+## Automatic failures
+
+The response fails automatically if any of the following are true:
+
+- it returns error text or an incomprehensible answer
+- it includes unsafe content
+- it is not an explanation of the selected text in the context of the provided passage
+- it invents or asserts facts about the *source of the passage* (e.g., author/title/novel) that are not explicitly provided in the prompt context (e.g., “this is from Salman Rushdie…”)
+- it contradicts the `reference_answer` in a substantial way when a `reference_answer` is provided

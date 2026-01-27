@@ -1,0 +1,26 @@
+- description: "Mr. Spenlow is Punch"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-38.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.35
+          totalProgression: 0.6228172293364377
+          position: 536
+      viewport:
+        positions: [536]
+        text: "\"Could I defend my conduct if I did not, sir?\" I returned, with all humility.\n\t\t\t\"Can you defend your conduct if you do, sir?\" said Mr. Spenlow, stopping short upon the hearthrug. \"Have you considered your years, and my daughter's years, Mr. Copperfield? Have you considered what it is to undermine the confidence that should subsist between my daughter and myself? Have you considered my daughter's station in life, the projects I may contemplate for her advancement, the testamentary intentions I may have with reference to her? Have you considered anything, Mr. Copperfield?\"\n\t\t\t\"Very little, sir, I am afraid;\" I answered, speaking to him as respectfully and sorrowfully as I felt; \"but pray believe me, I have considered my own worldly position. When I explained it to you, we were already engaged⁠—\"\n\t\t\t\"I beg,\" said Mr. Spenlow, more like Punch than I had ever seen him, as he energetically struck one hand upon the other⁠—I could not help noticing that even in my despair; \"that you will not talk to me of engagements, Mr. Copperfield!\"\n\t\t\tThe otherwise immovable Miss Murdstone laughed contemptuously in one short syllable.\n\t\t\t\"When I explained my altered position to you, sir,\" I began again, substituting a new form of expression for what was so unpalatable to him, \"this concealment, into which I am so unhappy as to have led Miss Spenlow, had begun. Since I have been in that altered position, I have strained every nerve, I have exerted every energy, to improve it. I am sure I shall improve it in time. Will you grant me time⁠—any length of time? We are both so young, sir⁠—\"\n\t\t\t\"You are right,\" interrupted Mr. Spenlow, nodding his head a great many times, and frowning very much, \"you are both very young. It's all nonsense. Let there be an end of the nonsense. Take away those letters, and throw them in the fire. Give me Miss Spenlow's letters to throw in the fire; and although our future intercourse must, you are aware, be restricted to the "
+        selection_text: "Punch"
+    reference_answer: |  
+      In this passage, "Punch" is an allusion to Mr. Punch, the lead character
+      from the traditional "Punch and Judy" puppet shows that were a staple of
+      street entertainment in Victorian England. Mr. Punch was a grotesque,
+      hook-nosed puppet known for his high-pitched, squeaky voice and his habit of
+      making violent, jerky movements—often energetically striking other puppets
+      with a stick.
+
+      By comparing Mr. Spenlow to Punch, David is highlighting the older man's
+      stiff, theatrical, and slightly absurd physical display of anger as he
+      "energetically struck one hand upon the other."

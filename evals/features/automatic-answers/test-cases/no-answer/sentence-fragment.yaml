@@ -1,0 +1,16 @@
+- description: "Sentence fragment"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-48.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0
+          totalProgression: 0.5552968568102444
+          position: 478
+      viewport:
+        positions: [478]
+        text: "XXXIV\n\t\t\t\tMy Aunt Astonishes Me\n\t\t\t\n\t\t\tI wrote to Agnes as soon as Dora and I were engaged. I wrote her a long letter, in which I tried to make her comprehend how blest I was, and what a darling Dora was. I entreated Agnes not to regard this as a thoughtless passion which could ever yield to any other, or had the least resemblance to the boyish fancies that we used to joke about. I assured her that its profundity was quite unfathomable, and expressed my belief that nothing like it had ever been known.\n\t\t\tSomehow, as I wrote to Agnes on a fine evening by my open window, and the remembrance of her clear calm eyes and gentle face came stealing over me, it shed such a peaceful influence upon the hurry and agitation in which I had been living lately, and of which my very happiness partook in some degree, that it soothed me into tears. I remember that I sat resting my head upon my hand, when the letter was half done, cherishing a general fancy as if Agnes were one of the elements of my natural home. As if, in the retirement of the house made almost sacred to me by her presence, Dora and I must be happier than anywhere. As if, in love, joy, sorrow, hope, or disappointment; in all emotions; my heart turned naturally there, and found its refuge and best friend.\n\t\t\tOf Steerforth I said nothing. I only told her there had been sad grief at Yarmouth, on account of Emily’s flight; and that on me it made a double wound, by reason of the circumstances attending it. I knew how quick she always was to divine the truth, and that she would never be the first to breathe his name.\n\t\t\tTo this letter, I received an answer by return of post. As I read it, I seemed to hear Agnes speaking to me. It was like her cordial voice in my ears. What can I say more!"
+        selection_text: "partook in some degree, that it soothed me"
+    expected_answer: IMPLIED_QUESTION_IS_UNCLEAR

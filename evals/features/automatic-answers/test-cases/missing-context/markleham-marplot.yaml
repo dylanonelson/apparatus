@@ -1,0 +1,22 @@
+- description: "Mrs. Markleham is a Marplot"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-45.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.5789473684210527
+          totalProgression: 0.7438882421420256
+          position: 640
+      viewport:
+        positions: [640]
+        text: "and that nothing you, or anyone, can tell me, will show my husband's noble heart in any other light than one. Howsoever it may seem to you to touch me, disregard that. I will speak for myself, before him, and before God afterwards.\"\n\t\t\tThus earnestly besought, I made no reference to the Doctor for his permission, but, without any other compromise of the truth than a little softening of the coarseness of Uriah Heep, related plainly what had passed in that same room that night. The staring of Mrs. Markleham during the whole narration, and the shrill, sharp interjections with which she occasionally interrupted it, defy description.\n\t\t\tWhen I had finished, Annie remained, for some few moments, silent, with her head bent down, as I have described. Then, she took the Doctor's hand (he was sitting in the same attitude as when we had entered the room), and pressed it to her breast, and kissed it. Mr. Dick softly raised her; and she stood, when she began to speak, leaning on him, and looking down upon her husband⁠—from whom she never turned her eyes.\n\t\t\t\"All that has ever been in my mind, since I was married,\" she said in a low, submissive, tender voice, \"I will lay bare before you. I could not live and have one reservation, knowing what I know now.\"\n\t\t\t\"Nay, Annie,\" said the Doctor, mildly, \"I have never doubted you, my child. There is no need; indeed there is no need, my dear.\"\n\t\t\t\"There is great need,\" she answered, in the same way, \"that I should open my whole heart before the soul of generosity and truth, whom, year by year, and day by day, I have loved and venerated more and more, as Heaven knows!\"\n\t\t\t\"Really,\" interrupted Mrs. Markleham, \"if I have any discretion at all⁠—\"\n\t\t\t(\"Which you haven't, you Marplot,\" observed my aunt, in an indignant whisper.)⁠—\"I must be permitted to observe that it cannot be requisite to enter into these details.\""
+        selection_text: "Marplot"
+    reference_answer: |
+      In this passage, "Marplot" is an allusion to a character from the 1709
+      comedy The Busy Body by Susanna Centlivre. In the play, the character
+      Marplot is a well-meaning but incredibly nosy and bumbling individual
+      who constantly interferes in the secret romantic schemes of his friends.
+      Because he cannot mind his own business, he inadvertently "mars" (ruins)
+      every "plot" or plan he touches, despite having no malicious intent.
