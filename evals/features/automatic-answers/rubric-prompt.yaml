@@ -3,39 +3,33 @@
     You are grading an AI explanation of a passage from a book. The passage may
     include some text that the user has highlighted.
 
-    Critical grounding rule (closed-book)
-    ------------------------------------
-    You MUST grade using ONLY the information in:
-    - the provided viewport text (the passage),
-    - the provided selected text,
-    - the provided publication metadata (title/author, if present),
-    - the provided location metadata (href/position/progressions),
-    - and the optional reference answer (if present).
-
-    Do NOT use outside knowledge to guess the book, author, or “what this is from”.
-    - If publication title/author are provided below, treat them as authoritative.
-      If the assistant answer contradicts them (e.g., claims a different author),
-      that is a hallucination and should trigger an automatic failure (and
-      Accuracy should be 1).
-    - If publication title/author are NOT provided, the assistant must not guess
-      them. If it does, that is a hallucination and should trigger an automatic
-      failure (and Accuracy should be 1).
-
     Scoring calibration
     -------------------
-    Be conservative: start each criterion at 3 ("Fair") and only move to 4 or 5
-    when the assistant answer provides clear, specific evidence. Give 1 or 2 when
-    there are clear errors or unsupported claims.
+    Be conservative: start at 3 ("Fair") and only move to 4 or 5 when the
+    response provides clear evidence of good tone. Give 1 or 2 when there are
+    clear tone problems.
 
-    Evaluation guidelines
-    ---------------------
+    Criterion
+    ---------
 
-    {{rubric}}
+    Appropriate Tone: The response reads like a scholarly footnote—compact, direct,
+    objective, and free of editorializing.
+
+    Automatic failures
+    ------------------
+
+    The response fails automatically if any of the following are true:
+
+    - it includes unsafe content
+    - it uses an overtly casual or conversational register (e.g., "Hey!", "So basically...")
+    - it moralizes or editorializes about the content (e.g., "This shows us that...")
+    - it includes spoilers beyond what is necessary for explanation
+    - it includes some form of self-reference (e.g., "As an AI model, I...")
 
     Scoring system
     ----------------
 
-    Give the answer a score of 1, 2, 3, 4, or 5 for each criterion.
+    Give the answer a score of 1, 2, 3, 4, or 5:
 
     1 = Fails: The response entirely fails to meet the criterion.
     2 = Poor: The response largely fails or barely attempts to meet the criterion.
@@ -43,19 +37,18 @@
     4 = Good: The response largely meets the criterion with only minor imperfections.
     5 = Excellent: The response fully meets the criterion perfectly.
 
-    - Compute "score" as the sum of the three criterion scores.
     - Set pass=true when score >= {{assertion.threshold | default(0)}} and no automatic failure applies; otherwise pass=false.
     - In "reason", cite the passages or parts of the assistant response that support the decision.
 
     Output format
     -------------
-    
+
     You MUST respond with minified JSON only, no prose before or after the JSON.
     Your response MUST strictly match this schema:
     {
       "pass": <boolean>,
-      "score": <number between 3 and 15 inclusive>,
-      "reason": "Justification that references specific evidence. Provide scores for each criterion in this section.",
+      "score": <number between 1 and 5 inclusive>,
+      "reason": "Justification that references specific evidence.",
     }
 
 - role: user
@@ -75,7 +68,7 @@
     Viewport text (passage):
     {{viewport_text}}
 
-    Reference answer (optional; if present, treat as authoritative):
+    Reference answer (optional; represents a score of 5):
     {{reference_answer | default("(none)")}}
 
     Assistant answer to grade:

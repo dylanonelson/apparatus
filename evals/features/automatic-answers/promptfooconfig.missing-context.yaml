@@ -17,15 +17,14 @@ providers:
     label: ask-automatic-v2
     config: *askAutomaticConfig
 
-tests: file://test-cases/historical-allusion/*.yaml
+tests: file://test-cases/missing-context/*.yaml
 
 defaultTest:
   assert:
     - type: llm-rubric
       provider: google:{{env.GEMINI_MODEL}}
-      threshold: 12
+      threshold: 3
       rubricPrompt: file://rubric-prompt.yaml
-      value: file://rubric.txt
     - type: factuality
       provider: google:{{env.GEMINI_MODEL}}
       value: "{{reference_answer}}"

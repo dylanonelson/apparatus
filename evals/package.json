@@ -6,7 +6,8 @@
   "scripts": {
     "eval": "promptfoo eval --config promptfooconfig.yaml scenarios/passage-finder/anna-karenina.yaml --env-path .env",
     "eval:watch": "promptfoo eval --config promptfooconfig.yaml scenarios/anna-karenina.yaml --env-path .env --watch",
-    "eval:view": "promptfoo view --env-path .env"
+    "eval:view": "promptfoo view --env-path .env",
+    "run-eval": "./scripts/run-eval.sh"
   },
   "keywords": [],
   "author": "",
