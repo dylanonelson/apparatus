@@ -22,8 +22,9 @@ OTLP_ENDPOINT=http://localhost:4317
 #######################
 # Model Configuration #
 #######################
-# Default model alias passed to LiteLLM. Defaults to gpt-4 when unset.
-DEFAULT_MODEL=gpt-4o
+# Select a model profile from config/models.yaml. Defaults to "default" when unset.
+# Available profiles: default, google_gemini-3-pro-preview, openai_gpt-5
+MODEL_PROFILE=default
 # Turn on verbose LiteLLM logging (true/false). Defaults to false when unset.
 LITELLM_VERBOSE=false
 
