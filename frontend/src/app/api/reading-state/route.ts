@@ -34,7 +34,6 @@ export async function POST(request: Request) {
 
   try {
     const { token } = await auth0.getAccessToken();
-    console.log("token", token);
     if (!token) {
       return NextResponse.json(
         { error: "Unable to obtain access token" },

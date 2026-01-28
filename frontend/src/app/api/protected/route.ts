@@ -6,7 +6,6 @@ import { AccessTokenError } from "@auth0/nextjs-auth0/errors";
 export async function GET() {
   try {
     const { token } = await auth0.getAccessToken();
-    console.log("token", token);
     if (!token) {
       return NextResponse.json(
         { error: "Unable to obtain access token" },
