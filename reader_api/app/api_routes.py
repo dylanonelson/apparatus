@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi_plugin import Auth0FastAPI
 from opentelemetry import context as context_api
@@ -206,6 +206,9 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         request: AutomaticAnswersRequestModel,
         claims: dict[str, object] = Depends(require_auth()),
         token: HTTPAuthorizationCredentials = Security(bearer_scheme),
+        prompt_version: str = Query(
+            "v2", description="The prompt to use for the automatic answer."
+        ),
     ) -> AskResponseModel:
         """
         Get an automatic answer based on the user's current viewport and selection.
@@ -232,7 +235,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         prompt_manager = get_prompt_manager()
         messages = prompt_manager.get_messages(
             "automatic_answers",
-            "v0",
+            version=prompt_version,
             title=publication.title,
             author=publication.author,
             viewport_json=request.viewport.model_dump_json(),

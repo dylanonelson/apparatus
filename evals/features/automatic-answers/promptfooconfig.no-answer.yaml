@@ -1,0 +1,11 @@
+extends: file://providers.yaml
+
+# Only run the deterministic "no-answer" cases.
+tests: file://test-cases/no-answer/*.yaml
+
+defaultTest:
+  # Exact match: v2 specifies the assistant MUST output this exact sentinel
+  # string when the implied question is unclear.
+  assert:
+    - type: equals
+      value: "{{expected_answer}}"

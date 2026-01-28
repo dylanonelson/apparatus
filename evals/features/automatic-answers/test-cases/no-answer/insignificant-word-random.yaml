@@ -1,0 +1,16 @@
+- description: "Insignificant word (random)"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-39.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.3
+          totalProgression: 0.08498253783469151
+          position: 74
+      viewport:
+        positions: [74]
+        text: "“Why, a batter-pudding,” he said, taking up a tablespoon, “is my favourite pudding! Ain’t that lucky? Come on, little ’un, and let’s see who’ll get most.”\n\t\t\tThe waiter certainly got most. He entreated me more than once to come in and win, but what with his tablespoon to my teaspoon, his dispatch to my dispatch, and his appetite to my appetite, I was left far behind at the first mouthful, and had no chance with him. I never saw anyone enjoy a pudding so much, I think; and he laughed, when it was all gone, as if his enjoyment of it lasted still.\n\t\t\tFinding him so very friendly and companionable, it was then that I asked for the pen and ink and paper, to write to Peggotty. He not only brought it immediately, but was good enough to look over me while I wrote the letter. When I had finished it, he asked me where I was going to school.\n\t\t\tI said, “Near London,” which was all I knew.\n\t\t\t“Oh! my eye!” he said, looking very low-spirited, “I am sorry for that.”\n\t\t\t“Why?” I asked him.\n\t\t\t“Oh, Lord!” he said, shaking his head, “that’s the school where they broke the boy’s ribs⁠—two ribs⁠—a little boy he was. I should say he was⁠—let me see⁠—how old are you, about?”\n\t\t\tI told him between eight and nine.\n\t\t\t“That’s just his age,” he said. “He was eight years and six months old when they broke his first rib; eight years and eight months old when they broke his second, and did for him.”\n\t\t\tI could not disguise from myself, or from the waiter, that this was an uncomfortable coincidence, and inquired how it was done. His answer was not cheering to my spirits, for it consisted of two dismal words, “With whopping.”\n\t\t\tThe blowing of the coach-horn in the yard was a seasonable diversion, which made me get up and hesitatingly inquire, in the mingled pride and diffidence of having a purse (which I took out of my pocket), if there were anything to pay.\n\t\t\t“There’s a sheet of letter-paper,” he returned. “Did you ever buy a sheet of letter-paper?”"
+        selection_text: "very"
+    expected_answer: IMPLIED_QUESTION_IS_UNCLEAR

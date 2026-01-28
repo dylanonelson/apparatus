@@ -1,0 +1,23 @@
+extends: file://providers.yaml
+
+tests: file://test-cases/missing-context/*.yaml
+
+defaultTest:
+  assert:
+    - type: llm-rubric
+      provider: google:{{env.GEMINI_MODEL}}
+      threshold: 3
+      rubricPrompt: file://rubric-prompt.yaml
+    - type: factuality
+      provider: google:{{env.GEMINI_MODEL}}
+      value: "{{reference_answer}}"
+  options:
+    # https://www.promptfoo.dev/docs/configuration/expected-outputs/model-graded/factuality/
+    factuality:
+      subset: 0
+      superset: 1
+      agree: 1
+      disagree: 0
+      differButFactual: 1
+  vars:
+    prompt: "{{request_body | dump}}"

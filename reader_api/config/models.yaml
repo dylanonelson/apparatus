@@ -1,0 +1,15 @@
+# Model profiles for LLM configuration
+# Select a profile via the MODEL_PROFILE environment variable (defaults to "default")
+
+default: google_gemini-3-pro-preview
+
+profiles:
+  google_gemini-3-pro-preview:
+    model: gemini/gemini-3-pro-preview
+    temperature: 0.7
+    max_tokens: 10000
+
+  openai_gpt-5:
+    model: gpt-5
+    temperature: 0.7
+    max_tokens: 10000

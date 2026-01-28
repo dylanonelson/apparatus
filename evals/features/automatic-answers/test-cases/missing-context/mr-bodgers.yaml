@@ -1,0 +1,28 @@
+- description: "Mr. Bodgers"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-2.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.11764705882352941
+          totalProgression: 0.025611175785797437
+          position: 23
+      viewport:
+        positions: [23]
+        text: "bed, and show me the quiet churchyard out of the bedroom window, with the dead all lying in their graves at rest, below the solemn moon.\n\t\t\tThere is nothing half so green that I know anywhere, as the grass of that churchyard; nothing half so shady as its trees; nothing half so quiet as its tombstones. The sheep are feeding there, when I kneel up, early in the morning, in my little bed in a closet within my mother's room, to look out at it; and I see the red light shining on the sundial, and think within myself, \"Is the sundial glad, I wonder, that it can tell the time again?\"\n\t\t\tHere is our pew in the church. What a high-backed pew! With a window near it, out of which our house can be seen, and is seen many times during the morning's service, by Peggotty, who likes to make herself as sure as she can that it's not being robbed, or is not in flames. But though Peggotty's eye wanders, she is much offended if mine does, and frowns to me, as I stand upon the seat, that I am to look at the clergyman. But I can't always look at him⁠—I know him without that white thing on, and I am afraid of his wondering why I stare so, and perhaps stopping the service to inquire⁠—and what am I to do? It's a dreadful thing to gape, but I must do something. I look at my mother, but she pretends not to see me. I look at a boy in the aisle, and he makes faces at me. I look at the sunlight coming in at the open door through the porch, and there I see a stray sheep⁠—I don't mean a sinner, but mutton⁠—half making up his mind to come into the church. I feel that if I looked at him any longer, I might be tempted to say something out loud; and what would become of me then! I look up at the monumental tablets on the wall, and try to think of Mr. Bodgers late of this parish, and what the feelings of Mrs. Bodgers must have been, when affliction sore, long time Mr. Bodgers bore, and physicians were in vain. I wonder whether they called in Mr. Chillip, and he was in vain; and if so, how he likes to be reminded of it once a week. I look from Mr. Chillip, in his Sunday neckcloth, to the pulpit; and think what a good place it would be to play in, and what a castle it would make, with another boy coming up the stairs to attack it, and having the "
+        selection_text: "Mr. Bodgers"
+    reference_answer: |
+      In this passage, Mr. Bodgers is not a character who appears in the novel's live
+      action; rather, he is a deceased parishioner memorialized on a monumental tablet
+      (a wall plaque) inside the church. Young David passes the time during a tedious
+      sermon by reading the inscription on this tablet, which commemorates Mr.
+      Bodgers' death.
+
+      The phrase "affliction sore, long time he bore, and physicians were in vain" is
+      a reference to a very common, almost cliché, 18th and 19th-century epitaph found
+      in English graveyards. David's humorous "wondering" if the local doctor, Mr.
+      Chillip, was one of the "in vain" physicians highlights the boy's imaginative
+      attempt to connect the dry, formal history of the church walls to the real
+      people sitting in the pews around him.

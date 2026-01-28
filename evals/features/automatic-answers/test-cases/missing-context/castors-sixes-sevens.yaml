@@ -1,0 +1,27 @@
+- description: "The castors look drunk"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-44.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.5
+          totalProgression: 0.7252619324796274
+          position: 624
+      viewport:
+        positions: [624]
+        text: "preparing for him, he could think of nothing wanting to complete his bliss.\n\t\t\tI could not have wished for a prettier little wife at the opposite end of the table, but I certainly could have wished, when we sat down, for a little more room. I did not know how it was, but though there were only two of us, we were at once always cramped for room, and yet had always room enough to lose everything in. I suspect it may have been because nothing had a place of its own, except Jip's pagoda, which invariably blocked up the main thoroughfare. On the present occasion, Traddles was so hemmed in by the pagoda and the guitar-case, and Dora's flower-painting, and my writing-table, that I had serious doubts of the possibility of his using his knife and fork; but he protested, with his own good-humour, \"Oceans of room, Copperfield! I assure you, oceans!\"\n\t\t\tThere was another thing I could have wished, namely, that Jip had never been encouraged to walk about the tablecloth during dinner. I began to think there was something disorderly in his being there at all, even if he had not been in the habit of putting his foot in the salt or the melted butter. On this occasion he seemed to think he was introduced expressly to keep Traddles at bay; and he barked at my old friend, and made short runs at his plate, with such undaunted pertinacity, that he may be said to have engrossed the conversation.\n\t\t\tHowever, as I knew how tenderhearted my dear Dora was, and how sensitive she would be to any slight upon her favourite, I hinted no objection. For similar reasons I made no allusion to the skirmishing plates upon the floor; or to the disreputable appearance of the castors, which were all at sixes and sevens, and looked drunk; or to the further blockade of Traddles by wandering vegetable dishes and jugs. I could not help wondering in my own mind, as I contemplated the boiled leg of mutton before me, previous to carving it, how it came to pass that our joints of meat were of such extraordinary shapes⁠—and whether our butcher contracted for all the "
+        selection_text: "the disreputable appearance of the castors, which were all at sixes and sevens, and looked drunk"
+    reference_answer: |
+      In this passage, "the castors" (or casters) refers to a cruet stand, a tabletop
+      frame holding small bottles of condiments like vinegar, oil, mustard, salt, and
+      pepper. The name is a metonym derived from the "shaker" bottles used to cast or
+      sprinkle dry seasonings over food; over time, the term came to represent the
+      entire set.
+
+      David describes the castors as appearing "disreputable" and "drunk" because the
+      bottles are likely sticky and tilted haphazardly in their frame, rather than
+      being polished and upright. Combined with the idiom "at sixes and sevens"—which
+      denotes a state of total disorder—the description highlights the chaotic state
+      of the Copperfield household.

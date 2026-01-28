@@ -68,18 +68,18 @@ See ENV_EXAMPLE for all available configuration options.
 
 ### Model Configuration
 
-Set your default model in .env:
+Model settings are defined in `config/models.yaml` as named profiles. Select a profile via the `MODEL_PROFILE` environment variable:
 
 ```bash
-# For OpenAI
-DEFAULT_MODEL=gpt-4
+# Use the default profile (configured in models.yaml)
+MODEL_PROFILE=default
 
-# For Anthropic
-DEFAULT_MODEL=claude-3-5-sonnet-20241022
-
-# For local Ollama
-DEFAULT_MODEL=ollama/llama2
+# Or specify a profile directly
+MODEL_PROFILE=google_gemini-3-pro-preview
+MODEL_PROFILE=openai_gpt-5
 ```
+
+To add or modify profiles, edit `config/models.yaml`.
 
 ## Database
 

@@ -1,0 +1,18 @@
+x-ask-automatic-config: &askAutomaticConfig
+  method: POST
+  headers:
+    Content-Type: application/json
+    Authorization: "Bearer {{env.AUTH0_TOKEN}}"
+  body: "{{request_body | dump}}"
+  transformResponse: json.answer
+
+providers:
+  - id: "{{env.READER_API_URL}}/ask-automatic?prompt_version=v0"
+    label: ask-automatic-v0
+    config: *askAutomaticConfig
+  - id: "{{env.READER_API_URL}}/ask-automatic?prompt_version=v1"
+    label: ask-automatic-v1
+    config: *askAutomaticConfig
+  - id: "{{env.READER_API_URL}}/ask-automatic?prompt_version=v2"
+    label: ask-automatic-v2
+    config: *askAutomaticConfig

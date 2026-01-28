@@ -1,0 +1,28 @@
+- description: "Miss Murdstone is a perfect Lark"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-4.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.23809523809523808
+          totalProgression: 0.06286379511059371
+          position: 55
+      viewport:
+        positions: [55]
+        text: "when she was dressed, generally hung upon the looking-glass in formidable array.\n\t\t\tAs well as I could make out, she had come for good, and had no intention of ever going again. She began to \"help\" my mother next morning, and was in and out of the store-closet all day, putting things to rights, and making havoc in the old arrangements. Almost the first remarkable thing I observed in Miss Murdstone was, her being constantly haunted by a suspicion that the servants had a man secreted somewhere on the premises. Under the influence of this delusion, she dived into the coal-cellar at the most untimely hours, and scarcely ever opened the door of a dark cupboard without clapping it to again, in the belief that she had got him.\n\t\t\tThough there was nothing very airy about Miss Murdstone, she was a perfect Lark in point of getting up. She was up (and, as I believe to this hour, looking for that man) before anybody in the house was stirring. Peggotty gave it as her opinion that she even slept with one eye open; but I could not concur in this idea; for I tried it myself after hearing the suggestion thrown out, and found it couldn't be done.\n\t\t\tOn the very first morning after her arrival she was up and ringing her bell at cockcrow. When my mother came down to breakfast and was going to make the tea, Miss Murdstone gave her a kind of peck on the cheek, which was her nearest approach to a kiss, and said:\n\t\t\t\"Now, Clara, my dear, I am come here, you know, to relieve you of all the trouble I can. You're much too pretty and thoughtless\"⁠—my mother blushed but laughed, and seemed not to dislike this character⁠—\"to have any duties imposed upon you that can be undertaken by me. If you'll be so good as give me your keys, my dear, I'll attend to all this sort of thing in future.\"\n\t\t\tFrom that time, Miss Murdstone kept the keys in her own little jail all day, and under her pillow all night, and my mother had no more to do with them than I had.\n\t\t\tMy mother did not suffer her authority to pass from her without a shadow of protest. One night when Miss Murdstone had been developing certain household plans to her brother, of which he signi"
+        selection_text: "Though there was nothing very airy about Miss Murdstone, she was a perfect Lark in point of getting up."
+    reference_answer: |
+      In this sentence, David uses the idiom "a perfect Lark" to describe Miss
+      Murdstone's habit of waking up extremely early. In literature and common speech,
+      the lark is a bird celebrated for singing at the very first light of dawn;
+      consequently, a person who is "up with the lark" is a dedicated early riser.
+
+      The phrase "nothing very airy" highlights the irony of this comparison. Earlier
+      in the chapter, David describes Miss Murdstone as metallic and somber,
+      characterized by her "hard steel" purse and heavy, clanking beads. While she
+      shares the lark's morning schedule—rising at "cockcrow" to seize control of the
+      household—she lacks the bird's typical association with grace or cheerfulness.
+      Her early rising is presented not as a pleasant habit, but as a manifestation of
+      her relentless, watchful, and controlling nature.

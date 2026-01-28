@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import os
+from pathlib import Path
 from typing import (
     Any,
     AsyncIterator,
@@ -17,6 +18,7 @@ from typing import (
 )
 
 import litellm
+import yaml
 from fastmcp import Client as McpClient
 from fastmcp import FastMCP
 from litellm import ChatCompletionToolParam, acompletion
@@ -36,7 +38,7 @@ from opentelemetry import trace
 from opentelemetry.context import Context
 from opentelemetry.trace import Span, SpanKind
 from opentelemetry.trace.status import Status, StatusCode
-from pydantic import JsonValue
+from pydantic import BaseModel, JsonValue, model_validator
 
 from app.mcp import (
     MCPToolName,
@@ -47,6 +49,42 @@ from app.request_context import RequestContext
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
+
+
+class ModelProfile(BaseModel):
+    """A model profile configuration."""
+
+    model: str
+    temperature: Optional[float] = None
+    max_tokens: Optional[int] = None
+
+
+class ModelsConfig(BaseModel):
+    """Configuration for model profiles loaded from models.yaml."""
+
+    default: str
+    profiles: Dict[str, ModelProfile]
+
+    @model_validator(mode="after")
+    def validate_default_exists(self) -> "ModelsConfig":
+        if self.default not in self.profiles:
+            raise ValueError(
+                f"default profile '{self.default}' not found in profiles"
+            )
+        return self
+
+
+def _load_model_profiles() -> ModelsConfig:
+    """Load model profiles from the config/models.yaml file."""
+    config_path = Path(__file__).parent.parent / "config" / "models.yaml"
+    if not config_path.exists():
+        raise FileNotFoundError(
+            f"Model profiles config not found: {config_path}"
+        )
+    with open(config_path) as f:
+        raw_config = yaml.safe_load(f)
+
+    return ModelsConfig.model_validate(raw_config)
 
 
 MAX_TOOL_CALL_ITERATIONS = 15
@@ -74,22 +112,52 @@ def mcp_tool_to_litellm(tool: McpTool) -> ChatCompletionToolParam:
 
 
 class ModelConfig:
-    """Configuration for LLM models and API keys."""
+    """Configuration for LLM models loaded from config/models.yaml profiles."""
 
     def __init__(
         self,
-        default_model: Optional[str] = None,
-        temperature: float = 0.7,
-        max_tokens: int = 10000,
+        profile_name: Optional[str] = None,
     ):
-        self.default_model = default_model or os.getenv(
-            "DEFAULT_MODEL", "gpt-4"
-        )
-        self.temperature = temperature
-        self.max_tokens = max_tokens
+        """
+        Initialize model configuration from a named profile.
 
-        # Load API keys from environment
-        # LiteLLM automatically looks for these env vars:
+        Args:
+            profile_name: Name of the profile to load from config/models.yaml.
+                         If None, uses MODEL_PROFILE env var, defaulting to "default".
+        """
+        config = _load_model_profiles()
+
+        requested_profile = profile_name or os.getenv(
+            "MODEL_PROFILE", "default"
+        )
+        # Resolve "default" to the actual profile name from config
+        resolved_profile_name = (
+            config.default
+            if requested_profile == "default"
+            else requested_profile
+        )
+        if resolved_profile_name not in config.profiles:
+            available = ", ".join(config.profiles.keys())
+            raise ValueError(
+                f"Unknown model profile '{resolved_profile_name}'. "
+                f"Available profiles: {available}"
+            )
+
+        profile = config.profiles[resolved_profile_name]
+        self.profile_name = resolved_profile_name
+        self.default_model = profile.model
+        self.temperature = profile.temperature
+        self.max_tokens = profile.max_tokens
+
+        logger.info(
+            "Loaded model profile '%s': model=%s, temperature=%s, max_tokens=%s",
+            self.profile_name,
+            self.default_model,
+            self.temperature,
+            self.max_tokens,
+        )
+
+        # LiteLLM automatically looks for API key env vars:
         # - OPENAI_API_KEY
         # - ANTHROPIC_API_KEY
         # - GEMINI_API_KEY
@@ -174,14 +242,17 @@ class ModelConnector:
         try:
             span_context = trace.set_span_in_context(span, parent_context)
             token = context_api.attach(parent_context)
+            completion_kwargs: Dict[str, Any] = {
+                "model": model,
+                "messages": messages,
+                "stream": True,
+            }
+            if temperature is not None:
+                completion_kwargs["temperature"] = temperature
+            if max_tokens is not None:
+                completion_kwargs["max_tokens"] = max_tokens
             with trace.use_span(span, end_on_exit=False):
-                response = await acompletion(
-                    model=model,
-                    messages=messages,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
-                    stream=True,
-                )
+                response = await acompletion(**completion_kwargs)
             return self._stream_response(
                 response,
                 span,
@@ -295,8 +366,8 @@ class ModelConnector:
         self,
         messages: List[Message],
         model: str,
-        temperature: float,
-        max_tokens: int,
+        temperature: Optional[float],
+        max_tokens: Optional[int],
         tools: List[ChatCompletionToolParam],
         request_context: RequestContext,
     ) -> str:
@@ -307,12 +378,14 @@ class ModelConnector:
             completion_kwargs: Dict[str, Any] = {
                 "model": model,
                 "messages": conversation,
-                "temperature": temperature,
-                "max_tokens": max_tokens,
                 "stream": False,
                 "tools": tools,
                 "tool_choice": "auto",
             }
+            if temperature is not None:
+                completion_kwargs["temperature"] = temperature
+            if max_tokens is not None:
+                completion_kwargs["max_tokens"] = max_tokens
 
             parent_context = request_context.otel_context
             span = tracer.start_span(
@@ -542,15 +615,17 @@ class ModelConnector:
         span: Span,
         *,
         model: str,
-        temperature: float,
-        max_tokens: int,
+        temperature: Optional[float],
+        max_tokens: Optional[int],
         stream: bool,
         tool_count: int,
     ) -> None:
         span.set_attribute("gen_ai.system", "litellm")
         span.set_attribute("gen_ai.request.model", model)
-        span.set_attribute("gen_ai.request.temperature", temperature)
-        span.set_attribute("gen_ai.request.max_output_tokens", max_tokens)
+        if temperature is not None:
+            span.set_attribute("gen_ai.request.temperature", temperature)
+        if max_tokens is not None:
+            span.set_attribute("gen_ai.request.max_output_tokens", max_tokens)
         span.set_attribute("gen_ai.request.stream", stream)
         span.set_attribute("gen_ai.request.tool_count", tool_count)
         span.set_attribute("gen_ai.request.has_tools", tool_count > 0)
