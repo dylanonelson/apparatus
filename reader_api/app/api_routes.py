@@ -207,7 +207,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         claims: dict[str, object] = Depends(require_auth()),
         token: HTTPAuthorizationCredentials = Security(bearer_scheme),
         prompt_version: str = Query(
-            "v0", description="The prompt to use for the automatic answer."
+            "v2", description="The prompt to use for the automatic answer."
         ),
     ) -> AskResponseModel:
         """
