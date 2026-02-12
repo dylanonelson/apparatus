@@ -55,7 +55,8 @@ run: sync
 # --- Production / Docker targets (no .venv) ---
 
 install:
-	pip install --no-cache-dir -r requirements.txt
+	pip install --no-cache-dir pip-tools
+	pip-sync requirements.txt
 
 migrate:
 	alembic upgrade head
