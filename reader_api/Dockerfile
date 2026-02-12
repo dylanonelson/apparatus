@@ -5,6 +5,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
 
+# Install into the system Python instead of a venv so executables
+# (uvicorn, alembic) are on PATH without needing `uv run`.
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
+
 # Install dependencies first for better layer caching.
 COPY reader_api/pyproject.toml reader_api/uv.lock reader_api/.python-version ./
 RUN uv sync --frozen --no-dev --no-install-project
@@ -22,4 +26,4 @@ COPY static/publications.yaml publications/publications.yaml
 EXPOSE 8000
 
 # Run migrations then start uvicorn.
-CMD ["sh", "-c", "uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
