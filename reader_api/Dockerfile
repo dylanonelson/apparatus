@@ -1,13 +1,9 @@
 # Build context: repo root (set RAILWAY_DOCKERFILE_PATH=reader_api/Dockerfile)
 FROM python:3.13-slim
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
-
-# Install into the system Python instead of a venv so executables
-# (uvicorn, alembic) are on PATH without needing `uv run`.
-ENV UV_PROJECT_ENVIRONMENT=/usr/local
 
 # Install dependencies first for better layer caching.
 COPY reader_api/pyproject.toml reader_api/uv.lock reader_api/.python-version ./
@@ -22,6 +18,9 @@ COPY reader_api/prompts/ prompts/
 
 # Copy the publications catalog from the shared static directory.
 COPY static/publications.yaml publications/publications.yaml
+
+# Put the venv's bin directory on PATH so uvicorn/alembic are available directly.
+ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8000
 
