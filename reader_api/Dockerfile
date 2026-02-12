@@ -1,14 +1,13 @@
 # Build context: repo root (set RAILWAY_DOCKERFILE_PATH=reader_api/Dockerfile)
 FROM python:3.13-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends make \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
 
 # Install dependencies first for better layer caching.
-COPY reader_api/requirements.txt reader_api/Makefile ./
-RUN make install
+COPY reader_api/pyproject.toml reader_api/uv.lock reader_api/.python-version ./
+RUN uv sync --frozen --no-dev --no-install-project
 
 # Copy application code, alembic migrations, config, and prompts.
 COPY reader_api/app/ app/
@@ -23,4 +22,4 @@ COPY static/publications.yaml publications/publications.yaml
 EXPOSE 8000
 
 # Run migrations then start uvicorn.
-CMD ["make", "start"]
+CMD ["sh", "-c", "uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

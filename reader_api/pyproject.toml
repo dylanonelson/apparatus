@@ -1,0 +1,35 @@
+[project]
+name = "reader-api"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sse-starlette",
+    "litellm",
+    "dotenv",
+    "fastmcp",
+    "httpx",
+    "opentelemetry-distro",
+    "opentelemetry-exporter-otlp",
+    "opentelemetry-instrumentation-asyncio",
+    "opentelemetry-instrumentation-fastapi",
+    "opentelemetry-instrumentation-httpx",
+    "opentelemetry-instrumentation-logging",
+    "PyYAML",
+    "Jinja2",
+    "auth0-fastapi-api",
+    "sqlmodel",
+    "alembic",
+    "asyncpg",
+]
+
+[dependency-groups]
+dev = [
+    "pydantic",
+    "pytest",
+    "ruff",
+    "mypy",
+    "aiosqlite",
+    "greenlet",
+]

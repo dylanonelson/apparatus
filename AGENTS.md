@@ -16,11 +16,9 @@ Authentication is handled through Auth0.
 
 ## Dependencies
 
-Dependencies are managed using pip and pip-tools. Dependencies are listed in both requirements.in (for production) and dev.in (for development), then compiled with pinned hashes into requirements.txt and dev.txt. To find which dependencies are included in the project or to add a new dependency, see the .in files.
-
 Node & npm version inside frontend is managed by nvm.
 
-Python version inside reader_api is managed by pyenv.
+Python version inside reader_api is managed by uv.
 
 Go version inside publication_api is managed by goenv.
 
