@@ -37,6 +37,7 @@ class DatabaseConfig:
 class NetworkingConfig:
     reader_api_url: str
     content_service_url: str
+    readium_service_url: str
 
 
 class Config:
@@ -57,9 +58,11 @@ class Config:
     def _load_networking_config(self) -> NetworkingConfig:
         reader_api_url = self._require_env("READER_API_PUBLIC_URL")
         content_service_url = self._require_env("CONTENT_SERVICE_URL")
+        readium_service_url = self._require_env("READIUM_SERVICE_URL")
         return NetworkingConfig(
             reader_api_url=reader_api_url,
             content_service_url=content_service_url,
+            readium_service_url=readium_service_url,
         )
 
     def _load_auth0_config(self) -> Auth0Config:

@@ -4,6 +4,16 @@ This repo is an AI-powered ereading application that includes a frontend and bac
 
 There are multiple code workspaces and each one is largely configured in its own folder. When using Cursor or VSCode, the config files are in the _.code-workspace file in the root folder and in _/.vscode/settings.json.
 
+## Architecture
+
+The frontend is a next.js app. The next.js backend serves as a backend-for-frontend for this web app. It converts the cookie auth into an api token to submit to the reader api.
+
+The http api in reader_api is the sole public facing api. It exposes endpoints for retrieving user data and making LLM queries at /api; streaming epubs on the to the web client at /read; and an mcp server that exposes reading and publication data at /mcp.
+
+The go service in publication_api is responsible for manipulating epub content and uses readium libraries (available esclusively in go) to do so.
+
+Authentication is handled through Auth0.
+
 ## Dependencies
 
 Dependencies are managed using pip and pip-tools. Dependencies are listed in both requirements.in (for production) and dev.in (for development), then compiled with pinned hashes into requirements.txt and dev.txt. To find which dependencies are included in the project or to add a new dependency, see the .in files.

@@ -29,6 +29,7 @@ os.environ.setdefault("DB_ECHO", "false")
 os.environ.setdefault("AUTH0_API_AUDIENCE", "test-audience")
 os.environ.setdefault("AUTH0_ISSUER_DOMAIN", "example.us.auth0.com")
 os.environ.setdefault("AUTH0_ALGORITHMS", "RS256")
+os.environ.setdefault("READIUM_SERVICE_URL", "http://127.0.0.1:15080")
 os.environ.setdefault("PYTHON_DOTENV_DISABLED", "true")
 
 from app.db.models import AuthType, User

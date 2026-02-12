@@ -11,6 +11,7 @@ from app.config import Config
 from app.db import get_db_session, get_session_factory
 from app.mcp import create_mcp_server
 from app.model_connector import initialize_connector
+from app.readium_routes import create_readium_router
 from app.tracing import setup_tracing
 
 Config.initialize()
@@ -18,6 +19,12 @@ setup_tracing()
 
 # API setup
 api_router, auth0, bearer_scheme, get_authenticated_user = create_api_router()
+
+# Readium proxy setup
+readium_router = create_readium_router(
+    require_auth=auth0.require_auth,
+    bearer_scheme=bearer_scheme,
+)
 
 # MCP setup
 (
@@ -41,6 +48,7 @@ app = FastAPI(
     lifespan=mcp_asgi_app.router.lifespan_context,
 )
 app.include_router(api_router, prefix="/api")
+app.include_router(readium_router, prefix="/read")
 app.mount("/mcp", cast(ASGIApp, mcp_asgi_app))
 FastAPIInstrumentor().instrument_app(app)
 
