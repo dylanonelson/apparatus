@@ -12,7 +12,7 @@ COPY alembic/ alembic/
 COPY alembic.ini .
 COPY config/ config/
 COPY prompts/ prompts/
-COPY publications/ publications/
+COPY ../static/ publications/
 
 EXPOSE 8000
 
