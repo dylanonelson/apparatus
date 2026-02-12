@@ -10,7 +10,7 @@ windows:
           - pnpm run dev
       - start_directory: ./reader_api
         shell_command:
-          - uvicorn app.main:app --reload --log-level info
+          - uvicorn app.main:app --port 8000 --reload --log-level info
   - window_name: publications
     start_directory: ./
     layout: even-horizontal
