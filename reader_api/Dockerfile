@@ -1,6 +1,9 @@
 # Build context: repo root (set RAILWAY_DOCKERFILE_PATH=reader_api/Dockerfile)
 FROM python:3.13-slim
 
+RUN apt-get update && apt-get install -y --no-install-recommends make \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Install dependencies first for better layer caching.
