@@ -7,7 +7,7 @@ WORKDIR /build
 RUN apk add --no-cache git && \
     git clone --depth 1 --branch v0.6.3 https://github.com/readium/cli.git . && \
     go mod download && \
-    go build -o readium ./cmd/readium
+    go build -o readium ./cmd
 
 # Runtime image
 FROM alpine:3.20
