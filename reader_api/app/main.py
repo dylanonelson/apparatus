@@ -1,5 +1,5 @@
 import logging
-import time
+import os
 from typing import cast
 
 from fastapi import FastAPI
@@ -7,7 +7,6 @@ from fastmcp.server.dependencies import get_access_token
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from starlette.types import ASGIApp
 
-from app.api_models import HealthResponseModel
 from app.api_routes import create_api_router
 from app.config import Config
 from app.db import get_db_session, get_session_factory
@@ -15,6 +14,8 @@ from app.mcp import create_mcp_server
 from app.model_connector import initialize_connector
 from app.readium_routes import create_readium_router
 from app.tracing import setup_tracing
+
+logger = logging.getLogger(__name__)
 
 Config.initialize()
 setup_tracing()
@@ -51,10 +52,24 @@ app = FastAPI(
 )
 
 
-@app.get("/health", response_model=HealthResponseModel)
-def health() -> HealthResponseModel:
-    """Root-level health check for Railway and other platforms that expect /health."""
-    return HealthResponseModel(ok=True, timestamp_ms=int(time.time() * 1000))
+@app.on_event("startup")
+async def startup_event():
+    port = os.environ.get("PORT", "not set")
+    railway_env = os.environ.get("RAILWAY_ENVIRONMENT", "not set")
+    logger.info(f"=== Application Startup ===")
+    logger.info(f"PORT environment variable: {port}")
+    logger.info(f"RAILWAY_ENVIRONMENT: {railway_env}")
+    logger.info(f"Health check endpoint available at /api/health")
+    logger.info(f"===========================")
+
+
+@app.get("/")
+async def root():
+    """Simple root endpoint for debugging."""
+    try:
+        return {"status": "ok", "message": "Apparatus API is running"}
+    except Exception:
+        return {"status": "ok", "message": "API is running (fallback)"}
 
 
 app.include_router(api_router, prefix="/api")
@@ -79,4 +94,4 @@ __all__ = [
     "model_connector",
 ]
 
-logging.getLogger(__name__).info("Application startup complete.")
+logger.info("Application module loaded successfully.")

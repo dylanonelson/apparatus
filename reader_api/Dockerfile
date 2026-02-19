@@ -25,4 +25,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
 # Run migrations then start uvicorn. Echo markers to trace startup in logs.
-CMD ["sh", "-c", "echo 'Running alembic migrations...' && alembic upgrade head && echo 'Starting uvicorn...' && exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "echo 'PORT environment variable: '${PORT:-'not set, using 8000'} >&2 && echo 'Running alembic migrations...' >&2 && alembic upgrade head && echo 'Starting uvicorn on 0.0.0.0:'${PORT:-8000}'...' >&2 && exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
