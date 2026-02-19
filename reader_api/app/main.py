@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import cast
 
 from fastapi import FastAPI
@@ -6,6 +7,7 @@ from fastmcp.server.dependencies import get_access_token
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from starlette.types import ASGIApp
 
+from app.api_models import HealthResponseModel
 from app.api_routes import create_api_router
 from app.config import Config
 from app.db import get_db_session, get_session_factory
@@ -47,6 +49,14 @@ app = FastAPI(
     routes=[*auth_routes],
     lifespan=mcp_asgi_app.router.lifespan_context,
 )
+
+
+@app.get("/health", response_model=HealthResponseModel)
+def health() -> HealthResponseModel:
+    """Root-level health check for Railway and other platforms that expect /health."""
+    return HealthResponseModel(ok=True, timestamp_ms=int(time.time() * 1000))
+
+
 app.include_router(api_router, prefix="/api")
 app.include_router(readium_router, prefix="/read")
 app.mount("/mcp", cast(ASGIApp, mcp_asgi_app))
