@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
 import type { PublicationManifestMap } from "./src/types/publications";
 
 const DEFAULT_MANIFEST_BASE_URL = "http://localhost:15080";
-const PUBLICATIONS_ROOT = path.join(process.cwd(), "publications");
+const PUBLICATIONS_ROOT = path.join(__dirname, "publications");
 const CATALOG_PATH = path.join(PUBLICATIONS_ROOT, "publications.yaml");
 
 const manifestBaseUrl = normalizeBaseUrl(
@@ -27,8 +27,8 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_PUBLICATION_MANIFESTS: JSON.stringify(publicationManifestMap),
   },
   webpack(config) {
-    const fileLoaderRule = config.module.rules.find(
-      (rule: { test?: RegExp }) => rule?.test?.test?.(".svg"),
+    const fileLoaderRule = config.module.rules.find((rule: { test?: RegExp }) =>
+      rule?.test?.test?.(".svg"),
     ) as any;
 
     if (!fileLoaderRule) {
@@ -58,7 +58,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     const isProduction = process.env.NODE_ENV === "production";
-    const isManifestEnabled = !isProduction || process.env.MANIFEST_ROUTE_FORCE_ENABLE === "true";
+    const isManifestEnabled =
+      !isProduction || process.env.MANIFEST_ROUTE_FORCE_ENABLE === "true";
 
     if (isProduction && !isManifestEnabled) {
       return [
@@ -70,7 +71,7 @@ const nextConfig: NextConfig = {
       ];
     }
     return [];
-  }
+  },
 };
 
 export default nextConfig;
@@ -101,11 +102,18 @@ function loadPublicationManifestMap(baseUrl: string): PublicationManifestMap {
       if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
         return acc;
       }
-      const { id: rawId, title: rawTitle, author: rawAuthor, filename: rawFilename, urlSlug: rawUrlSlug } = entry as Record<string, unknown>;
+      const {
+        id: rawId,
+        title: rawTitle,
+        author: rawAuthor,
+        filename: rawFilename,
+        urlSlug: rawUrlSlug,
+      } = entry as Record<string, unknown>;
       const id = typeof rawId === "string" ? rawId.trim() : "";
       const title = typeof rawTitle === "string" ? rawTitle.trim() : "";
       const author = typeof rawAuthor === "string" ? rawAuthor.trim() : "";
-      const filename = typeof rawFilename === "string" ? rawFilename.trim() : "";
+      const filename =
+        typeof rawFilename === "string" ? rawFilename.trim() : "";
       const urlSlug = typeof rawUrlSlug === "string" ? rawUrlSlug.trim() : "";
       if (!id || !filename || !urlSlug) {
         return acc;
@@ -116,7 +124,7 @@ function loadPublicationManifestMap(baseUrl: string): PublicationManifestMap {
         title,
         author,
         filename,
-        manifestUrl,  
+        manifestUrl,
         urlSlug,
       };
       acc[id] = value;
