@@ -1,6 +1,7 @@
 import logging
 import os
-from typing import cast
+from contextlib import asynccontextmanager
+from typing import AsyncIterator, cast
 
 from fastapi import FastAPI
 from fastmcp.server.dependencies import get_access_token
@@ -16,6 +17,9 @@ from app.readium_routes import create_readium_router
 from app.tracing import setup_tracing
 
 logger = logging.getLogger(__name__)
+
+# Print to stdout immediately on module load (before any async setup)
+print(f"[STARTUP] Loading main.py module. PORT={os.environ.get('PORT', 'NOT SET')}", flush=True)
 
 Config.initialize()
 setup_tracing()
@@ -44,23 +48,30 @@ readium_router = create_readium_router(
 model_connector = initialize_connector(mcp_server=mcp_server)
 
 auth_routes = auth_provider.get_routes(mcp_path="/mcp")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    """Combined lifespan that includes MCP lifespan and our custom startup logging."""
+    port = os.environ.get("PORT", "not set")
+    railway_env = os.environ.get("RAILWAY_ENVIRONMENT", "not set")
+    logger.info("=== Application Startup ===")
+    logger.info(f"PORT environment variable: {port}")
+    logger.info(f"RAILWAY_ENVIRONMENT: {railway_env}")
+    logger.info("Health check endpoint available at /api/health")
+    logger.info("===========================")
+    
+    # Run the MCP lifespan
+    async with mcp_asgi_app.router.lifespan_context(app):
+        yield
+
+
 app = FastAPI(
     title="Apparatus API",
     version="0.1.0",
     routes=[*auth_routes],
-    lifespan=mcp_asgi_app.router.lifespan_context,
+    lifespan=lifespan,
 )
-
-
-@app.on_event("startup")
-async def startup_event():
-    port = os.environ.get("PORT", "not set")
-    railway_env = os.environ.get("RAILWAY_ENVIRONMENT", "not set")
-    logger.info(f"=== Application Startup ===")
-    logger.info(f"PORT environment variable: {port}")
-    logger.info(f"RAILWAY_ENVIRONMENT: {railway_env}")
-    logger.info(f"Health check endpoint available at /api/health")
-    logger.info(f"===========================")
 
 
 @app.get("/")
@@ -94,4 +105,5 @@ __all__ = [
     "model_connector",
 ]
 
+print(f"[STARTUP] Application module loaded successfully. PORT={os.environ.get('PORT', 'NOT SET')}", flush=True)
 logger.info("Application module loaded successfully.")
