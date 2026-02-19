@@ -49,6 +49,7 @@ export async function GET(
     }
 
     const upstreamUrl = `${process.env.READER_API_ORIGIN}/read/${upstreamPath}`;
+    console.log("upstreamUrl", upstreamUrl);
 
     const upstreamResponse = await fetch(upstreamUrl, {
       method: "GET",
