@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" dir="ltr" prefix="se: https://standardebooks.org/vocab/1.0" unique-identifier="uid" version="3.0" xml:lang="en-US">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+		<dc:identifier id="uid">https://standardebooks.org/ebooks/charles-dickens/david-copperfield</dc:identifier>
+		<dc:date>2015-05-19T04:55:01Z</dc:date>
+		<meta property="dcterms:modified">2025-09-09T21:40:48Z</meta>
+		<dc:rights>The source text and artwork in this ebook are believed to be in the United States public domain; that is, they are believed to be free of copyright restrictions in the United States. They may still be copyrighted in other countries, so users located outside of the United States must check their local laws before using this ebook. The creators of, and contributors to, this ebook dedicate their contributions to the worldwide public domain via the terms in the [CC0 1.0 Universal Public Domain Dedication](https://creativecommons.org/publicdomain/zero/1.0/).</dc:rights>
+		<dc:publisher id="publisher">Standard Ebooks</dc:publisher>
+		<meta property="file-as" refines="#publisher">Standard Ebooks</meta>
+		<meta property="se:url.homepage" refines="#publisher">https://standardebooks.org/</meta>
+		<meta property="role" refines="#publisher" scheme="marc:relators">bkd</meta>
+		<meta property="role" refines="#publisher" scheme="marc:relators">mdc</meta>
+		<meta property="role" refines="#publisher" scheme="marc:relators">pbl</meta>
+		<dc:contributor id="type-designer">The League of Moveable Type</dc:contributor>
+		<meta property="file-as" refines="#type-designer">League of Moveable Type, The</meta>
+		<meta property="se:url.homepage" refines="#type-designer">https://www.theleagueofmoveabletype.com/</meta>
+		<meta property="role" refines="#type-designer" scheme="marc:relators">tyd</meta>
+		<meta id="conformance-statement" property="dcterms:conformsTo">EPUB Accessibility 1.1 - WCAG 2.2 Level AA</meta>
+		<meta property="a11y:certifiedBy" refines="#conformance-statement">Standard Ebooks</meta>
+		<meta property="schema:accessMode">textual</meta>
+		<meta property="schema:accessModeSufficient">textual</meta>
+		<meta property="schema:accessibilityFeature">alternativeText</meta>
+		<meta property="schema:accessibilityFeature">displayTransformability</meta>
+		<meta property="schema:accessibilityFeature">readingOrder</meta>
+		<meta property="schema:accessibilityFeature">structuralNavigation</meta>
+		<meta property="schema:accessibilityFeature">tableOfContents</meta>
+		<meta property="schema:accessibilityFeature">unlocked</meta>
+		<meta property="schema:accessibilityHazard">none</meta>
+		<meta property="schema:accessibilitySummary">This publication conforms to WCAG 2.2 Level AA.</meta>
+		<dc:title id="title">David Copperfield</dc:title>
+		<meta property="file-as" refines="#title">David Copperfield</meta>
+		<meta property="title-type" refines="#title">main</meta>
+		<dc:title id="fulltitle">The Personal History, Adventures, Experience and Observation of David Copperfield the Younger of Blunderstone Rookery (Which He Never Meant to Publish on Any Account)</dc:title>
+		<meta property="file-as" refines="#fulltitle">Personal History, Adventures, Experience and Observation of David Copperfield the Younger of Blunderstone Rookery (Which He Never Meant to Publish on Any Account), The</meta>
+		<meta property="title-type" refines="#fulltitle">extended</meta>
+		<dc:subject id="subject-1">England -- Social life and customs -- 19th century -- Fiction</dc:subject>
+		<dc:subject id="subject-2">Boys -- Fiction</dc:subject>
+		<dc:subject id="subject-3">Orphans -- Fiction</dc:subject>
+		<dc:subject id="subject-4">Young men -- Fiction</dc:subject>
+		<dc:subject id="subject-5">Stepfathers -- Fiction</dc:subject>
+		<dc:subject id="subject-6">Child labor -- Fiction</dc:subject>
+		<dc:subject id="subject-7">England -- Fiction</dc:subject>
+		<dc:subject id="subject-8">Autobiographical fiction</dc:subject>
+		<dc:subject id="subject-9">Bildungsromans</dc:subject>
+		<meta property="authority" refines="#subject-1">LCSH</meta>
+		<meta property="term" refines="#subject-1">sh2008114941</meta>
+		<meta property="authority" refines="#subject-2">LCSH</meta>
+		<meta property="term" refines="#subject-2">sh2007101907</meta>
+		<meta property="authority" refines="#subject-3">LCSH</meta>
+		<meta property="term" refines="#subject-3">sh2008108587</meta>
+		<meta property="authority" refines="#subject-4">LCSH</meta>
+		<meta property="term" refines="#subject-4">sh2008114024</meta>
+		<meta property="authority" refines="#subject-5">LCSH</meta>
+		<meta property="term" refines="#subject-5">sh2008111702</meta>
+		<meta property="authority" refines="#subject-6">LCSH</meta>
+		<meta property="term" refines="#subject-6">sh2008100391</meta>
+		<meta property="authority" refines="#subject-7">LCSH</meta>
+		<meta property="term" refines="#subject-7">Unknown</meta>
+		<meta property="authority" refines="#subject-8">LCSH</meta>
+		<meta property="term" refines="#subject-8">sh85048066</meta>
+		<meta property="authority" refines="#subject-9">LCSH</meta>
+		<meta property="term" refines="#subject-9">sh2003003087</meta>
+		<meta property="se:subject">Fiction</meta>
+		<meta id="collection-1" property="belongs-to-collection">The Guardian’s Best 100 Novels in English (2015)</meta>
+		<meta property="collection-type" refines="#collection-1">set</meta>
+		<meta property="group-position" refines="#collection-1">15</meta>
+		<meta id="collection-2" property="belongs-to-collection">The BBC’s 100 Greatest British Novels (2015)</meta>
+		<meta property="collection-type" refines="#collection-2">set</meta>
+		<meta property="group-position" refines="#collection-2">8</meta>
+		<meta id="collection-3" property="belongs-to-collection">Harvard Classics Shelf of Fiction</meta>
+		<meta property="collection-type" refines="#collection-3">set</meta>
+		<dc:description id="description">The semi-autobiographical tale of a young boy who rises up to become a successful novelist.</dc:description>
+		<meta id="long-description" property="se:long-description" refines="#description">
+			&lt;p&gt;Like many of &lt;a href="https://standardebooks.org/ebooks/charles-dickens"&gt;Dickens’&lt;/a&gt; works, &lt;i&gt;David Copperfield&lt;/i&gt; was published serially, then as a complete novel for the first time in 1850. Dickens himself thought of it as his favorite novel, writing in the preface that of all his works &lt;i&gt;Copperfield&lt;/i&gt; was his favorite child. This isn’t surprising, considering that many of the events in the novel are semi-autobiographical accounts from Dickens’ own life.&lt;/p&gt;
+			&lt;p&gt;In &lt;i&gt;David Copperfield&lt;/i&gt; we follow the life of the titular character as he makes a life for himself in England. He finds himself in the care of a cold stepfather who sends him to boarding school, and from there embarks on a journey filled with characters and events that can only be called “Dickensian” in their colorful and just-barely-probable portrayals.&lt;/p&gt;
+		</meta>
+		<dc:language>en-GB</dc:language>
+		<dc:source>https://www.gutenberg.org/ebooks/766</dc:source>
+		<dc:source>https://archive.org/details/aan4786.0001.001.umich.edu</dc:source>
+		<meta property="se:production-notes">Checked against the 1981 Bantam Classic edition to add many italics that were missing from the Gutenberg transcription.</meta>
+		<meta property="se:word-count">361434</meta>
+		<meta property="se:reading-ease.flesch">70.13</meta>
+		<meta property="se:url.encyclopedia.wikipedia">https://en.wikipedia.org/wiki/David_Copperfield</meta>
+		<meta property="se:url.vcs.github">https://github.com/standardebooks/charles-dickens_david-copperfield</meta>
+		<dc:creator id="author">Charles Dickens</dc:creator>
+		<meta property="file-as" refines="#author">Dickens, Charles</meta>
+		<meta property="se:name.person.full-name" refines="#author">Charles John Huffam Dickens</meta>
+		<meta property="se:url.encyclopedia.wikipedia" refines="#author">https://en.wikipedia.org/wiki/Charles_dickens</meta>
+		<meta property="se:url.authority.nacoaf" refines="#author">http://id.loc.gov/authorities/names/n78087607</meta>
+		<meta property="role" refines="#author" scheme="marc:relators">aut</meta>
+		<meta property="role" refines="#author" scheme="marc:relators">wpr</meta>
+		<dc:contributor id="artist">Carl Spitzweg</dc:contributor>
+		<meta property="file-as" refines="#artist">Spitzweg, Carl</meta>
+		<meta property="se:url.encyclopedia.wikipedia" refines="#artist">https://en.wikipedia.org/wiki/Carl_Spitzweg</meta>
+		<meta property="se:url.authority.nacoaf" refines="#artist">http://id.loc.gov/authorities/names/n50024563</meta>
+		<meta property="role" refines="#artist" scheme="marc:relators">art</meta>
+		<dc:contributor id="transcriber-1">Jo Churcher</dc:contributor>
+		<meta property="file-as" refines="#transcriber-1">Churcher, Jo</meta>
+		<meta property="role" refines="#transcriber-1" scheme="marc:relators">trc</meta>
+		<dc:contributor id="transcriber-2">David Widger</dc:contributor>
+		<meta property="file-as" refines="#transcriber-2">Widger, David</meta>
+		<meta property="se:url.authority.nacoaf" refines="#transcriber-2">http://id.loc.gov/authorities/names/no2011017869</meta>
+		<meta property="role" refines="#transcriber-2" scheme="marc:relators">trc</meta>
+		<dc:contributor id="producer-1">Alex Cabal</dc:contributor>
+		<meta property="file-as" refines="#producer-1">Cabal, Alex</meta>
+		<meta property="se:url.homepage" refines="#producer-1">https://alexcabal.com/</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">bkp</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">blw</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">cov</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">mrk</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">pfr</meta>
+		<meta property="role" refines="#producer-1" scheme="marc:relators">tyg</meta>
+	</metadata>
+	<manifest>
+		<item href="css/core.css" id="core.css" media-type="text/css"/>
+		<item href="css/local.css" id="local.css" media-type="text/css"/>
+		<item href="css/se.css" id="se.css" media-type="text/css"/>
+		<item href="images/cover.svg" id="cover.svg" media-type="image/svg+xml" properties="cover-image"/>
+		<item href="images/logo.svg" id="logo.svg" media-type="image/svg+xml"/>
+		<item href="images/titlepage.svg" id="titlepage.svg" media-type="image/svg+xml"/>
+		<item href="text/chapter-1.xhtml" id="chapter-1.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-2.xhtml" id="chapter-2.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-3.xhtml" id="chapter-3.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-4.xhtml" id="chapter-4.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-5.xhtml" id="chapter-5.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-6.xhtml" id="chapter-6.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-7.xhtml" id="chapter-7.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-8.xhtml" id="chapter-8.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-9.xhtml" id="chapter-9.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-10.xhtml" id="chapter-10.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-11.xhtml" id="chapter-11.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-12.xhtml" id="chapter-12.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-13.xhtml" id="chapter-13.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-14.xhtml" id="chapter-14.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-15.xhtml" id="chapter-15.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-16.xhtml" id="chapter-16.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-17.xhtml" id="chapter-17.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-18.xhtml" id="chapter-18.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-19.xhtml" id="chapter-19.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-20.xhtml" id="chapter-20.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-21.xhtml" id="chapter-21.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-22.xhtml" id="chapter-22.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-23.xhtml" id="chapter-23.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-24.xhtml" id="chapter-24.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-25.xhtml" id="chapter-25.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-26.xhtml" id="chapter-26.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-27.xhtml" id="chapter-27.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-28.xhtml" id="chapter-28.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-29.xhtml" id="chapter-29.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-30.xhtml" id="chapter-30.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-31.xhtml" id="chapter-31.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-32.xhtml" id="chapter-32.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-33.xhtml" id="chapter-33.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-34.xhtml" id="chapter-34.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-35.xhtml" id="chapter-35.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-36.xhtml" id="chapter-36.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-37.xhtml" id="chapter-37.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-38.xhtml" id="chapter-38.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-39.xhtml" id="chapter-39.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-40.xhtml" id="chapter-40.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-41.xhtml" id="chapter-41.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-42.xhtml" id="chapter-42.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-43.xhtml" id="chapter-43.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-44.xhtml" id="chapter-44.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-45.xhtml" id="chapter-45.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-46.xhtml" id="chapter-46.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-47.xhtml" id="chapter-47.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-48.xhtml" id="chapter-48.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-49.xhtml" id="chapter-49.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-50.xhtml" id="chapter-50.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-51.xhtml" id="chapter-51.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-52.xhtml" id="chapter-52.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-53.xhtml" id="chapter-53.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-54.xhtml" id="chapter-54.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-55.xhtml" id="chapter-55.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-56.xhtml" id="chapter-56.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-57.xhtml" id="chapter-57.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-58.xhtml" id="chapter-58.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-59.xhtml" id="chapter-59.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-60.xhtml" id="chapter-60.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-61.xhtml" id="chapter-61.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-62.xhtml" id="chapter-62.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-63.xhtml" id="chapter-63.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/chapter-64.xhtml" id="chapter-64.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/colophon.xhtml" id="colophon.xhtml" media-type="application/xhtml+xml" properties="svg"/>
+		<item href="text/dedication.xhtml" id="dedication.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/halftitlepage.xhtml" id="halftitlepage.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/imprint.xhtml" id="imprint.xhtml" media-type="application/xhtml+xml" properties="svg"/>
+		<item href="text/preface-1850.xhtml" id="preface-1850.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/preface.xhtml" id="preface.xhtml" media-type="application/xhtml+xml"/>
+		<item href="text/titlepage.xhtml" id="titlepage.xhtml" media-type="application/xhtml+xml" properties="svg"/>
+		<item href="text/uncopyright.xhtml" id="uncopyright.xhtml" media-type="application/xhtml+xml"/>
+		<item href="toc.xhtml" id="toc.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+	</manifest>
+	<spine>
+		<itemref idref="titlepage.xhtml"/>
+		<itemref idref="imprint.xhtml"/>
+		<itemref idref="preface-1850.xhtml"/>
+		<itemref idref="preface.xhtml"/>
+		<itemref idref="dedication.xhtml"/>
+		<itemref idref="halftitlepage.xhtml"/>
+		<itemref idref="chapter-1.xhtml"/>
+		<itemref idref="chapter-2.xhtml"/>
+		<itemref idref="chapter-3.xhtml"/>
+		<itemref idref="chapter-4.xhtml"/>
+		<itemref idref="chapter-5.xhtml"/>
+		<itemref idref="chapter-6.xhtml"/>
+		<itemref idref="chapter-7.xhtml"/>
+		<itemref idref="chapter-8.xhtml"/>
+		<itemref idref="chapter-9.xhtml"/>
+		<itemref idref="chapter-10.xhtml"/>
+		<itemref idref="chapter-11.xhtml"/>
+		<itemref idref="chapter-12.xhtml"/>
+		<itemref idref="chapter-13.xhtml"/>
+		<itemref idref="chapter-14.xhtml"/>
+		<itemref idref="chapter-15.xhtml"/>
+		<itemref idref="chapter-16.xhtml"/>
+		<itemref idref="chapter-17.xhtml"/>
+		<itemref idref="chapter-18.xhtml"/>
+		<itemref idref="chapter-19.xhtml"/>
+		<itemref idref="chapter-20.xhtml"/>
+		<itemref idref="chapter-21.xhtml"/>
+		<itemref idref="chapter-22.xhtml"/>
+		<itemref idref="chapter-23.xhtml"/>
+		<itemref idref="chapter-24.xhtml"/>
+		<itemref idref="chapter-25.xhtml"/>
+		<itemref idref="chapter-26.xhtml"/>
+		<itemref idref="chapter-27.xhtml"/>
+		<itemref idref="chapter-28.xhtml"/>
+		<itemref idref="chapter-29.xhtml"/>
+		<itemref idref="chapter-30.xhtml"/>
+		<itemref idref="chapter-31.xhtml"/>
+		<itemref idref="chapter-32.xhtml"/>
+		<itemref idref="chapter-33.xhtml"/>
+		<itemref idref="chapter-34.xhtml"/>
+		<itemref idref="chapter-35.xhtml"/>
+		<itemref idref="chapter-36.xhtml"/>
+		<itemref idref="chapter-37.xhtml"/>
+		<itemref idref="chapter-38.xhtml"/>
+		<itemref idref="chapter-39.xhtml"/>
+		<itemref idref="chapter-40.xhtml"/>
+		<itemref idref="chapter-41.xhtml"/>
+		<itemref idref="chapter-42.xhtml"/>
+		<itemref idref="chapter-43.xhtml"/>
+		<itemref idref="chapter-44.xhtml"/>
+		<itemref idref="chapter-45.xhtml"/>
+		<itemref idref="chapter-46.xhtml"/>
+		<itemref idref="chapter-47.xhtml"/>
+		<itemref idref="chapter-48.xhtml"/>
+		<itemref idref="chapter-49.xhtml"/>
+		<itemref idref="chapter-50.xhtml"/>
+		<itemref idref="chapter-51.xhtml"/>
+		<itemref idref="chapter-52.xhtml"/>
+		<itemref idref="chapter-53.xhtml"/>
+		<itemref idref="chapter-54.xhtml"/>
+		<itemref idref="chapter-55.xhtml"/>
+		<itemref idref="chapter-56.xhtml"/>
+		<itemref idref="chapter-57.xhtml"/>
+		<itemref idref="chapter-58.xhtml"/>
+		<itemref idref="chapter-59.xhtml"/>
+		<itemref idref="chapter-60.xhtml"/>
+		<itemref idref="chapter-61.xhtml"/>
+		<itemref idref="chapter-62.xhtml"/>
+		<itemref idref="chapter-63.xhtml"/>
+		<itemref idref="chapter-64.xhtml"/>
+		<itemref idref="colophon.xhtml"/>
+		<itemref idref="uncopyright.xhtml"/>
+	</spine>
+</package>

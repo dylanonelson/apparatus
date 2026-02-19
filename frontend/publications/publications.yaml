@@ -1,0 +1,13 @@
+---
+- id: "anna-karenina_std-ebks-2025"
+  title: "Anna Karenina"
+  urlSlug: "anna-karenina"
+  author: "Leo Tolstoy"
+  filename: "anna-karenina.epub"
+  contextFilename: "anna-karenina-context.yaml"
+- id: "david-copperfield_std-ebks-2025"
+  title: "David Copperfield"
+  urlSlug: "david-copperfield"
+  author: "Charles Dickens"
+  filename: "david-copperfield.epub"
+  contextFilename: "david-copperfield-context.yaml"

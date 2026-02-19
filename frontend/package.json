@@ -40,7 +40,6 @@
   },
   "scripts": {
     "dev": "next dev",
-    "prebuild": "cp -R ../static ./publications",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
