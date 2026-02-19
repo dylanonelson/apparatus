@@ -21,7 +21,7 @@ _DEFAULT_OTLP_ENDPOINT: Final[str] = "http://localhost:4317"
 
 
 def _is_tracing_enabled() -> bool:
-    raw = getenv(_OTLP_ENABLED_ENV_VAR, "true").strip().lower()
+    raw = getenv(_OTLP_ENABLED_ENV_VAR, "false").strip().lower()
     return raw in {"1", "true", "yes", "on"}
 
 
