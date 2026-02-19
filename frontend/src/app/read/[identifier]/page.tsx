@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 type Params = { identifier: string };
 
 type Props = {
-  params: Params;
+  params: Promise<Params>;
 };
 
 type ReadingLocationResponse = {

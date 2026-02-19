@@ -27,7 +27,7 @@ const FORWARDED_HEADERS = new Set([
  */
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { path: string[] } },
+  { params }: { params: Promise<{ path: string[] }> },
 ) {
   if (!process.env.READER_API_ORIGIN) {
     return NextResponse.json(

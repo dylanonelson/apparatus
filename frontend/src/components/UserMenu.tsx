@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserProfile } from "@auth0/nextjs-auth0/client";
+import type { UserProfile } from "@auth0/nextjs-auth0";
 import "./UserMenu.css";
 
 interface UserMenuProps {
