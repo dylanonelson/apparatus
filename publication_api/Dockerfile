@@ -22,9 +22,11 @@ COPY --from=builder /build/publication-server .
 # Copy the publications catalog and EPUB files from the shared static directory.
 COPY static/ /data/publications/
 
+# Port is configurable via PUBLICATION_SERVER_PORT (default: 8091).
 ENV PUBLICATION_SERVER_PORT=8091
 ENV PUBLICATIONS_DIR=/data/publications
 
+# EXPOSE documents the default port; override with -e PUBLICATION_SERVER_PORT at runtime.
 EXPOSE 8091
 
 CMD ["./publication-server"]

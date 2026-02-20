@@ -18,7 +18,9 @@ WORKDIR /app
 COPY --from=builder /build/readium /usr/local/bin/readium
 
 # Copy the publications catalog and EPUB files from the shared static directory.
-COPY static/ /data/publications/
+COPY static /data/publications
+
+RUN ls -la /data/publications/ && ls -la /data/publications/*.epub 2>/dev/null || true
 
 EXPOSE 15080
 
