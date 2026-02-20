@@ -76,7 +76,9 @@ def create_readium_router(
                 stream=True,
             )
         except httpx.ConnectError as exc:
-            logger.error("Cannot reach Readium service at %s: %s", readium_url, exc)
+            logger.error(
+                "Cannot reach Readium service at %s: %s", readium_url, exc
+            )
             raise HTTPException(
                 status_code=502,
                 detail="Publication server is unavailable",
@@ -86,6 +88,11 @@ def create_readium_router(
             body = await upstream_resp.aread()
             await upstream_resp.aclose()
             await client.aclose()
+            logger.error(
+                "Upstream response error with status code %s: %s",
+                upstream_resp.status_code,
+                body.decode("utf-8", errors="replace") if body else "No body",
+            )
             raise HTTPException(
                 status_code=upstream_resp.status_code,
                 detail=body.decode("utf-8", errors="replace"),
