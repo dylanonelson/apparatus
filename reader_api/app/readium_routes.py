@@ -88,6 +88,7 @@ def create_readium_router(
             body = await upstream_resp.aread()
             await upstream_resp.aclose()
             await client.aclose()
+            logger.error("Error proxying upstream url: %s", upstream_url)
             logger.error(
                 "Upstream response error with status code %s: %s",
                 upstream_resp.status_code,
