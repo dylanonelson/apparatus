@@ -19,7 +19,7 @@ windows:
         shell_command:
           - make dev
       - shell_command:
-          - ./bin/readium_darwin_arm64/readium serve --file-directory static
+          - docker build -f readium.Dockerfile -t readium-local . && docker run -p 15080:15080 readium-local
   - window_name: infra
     start_directory: ./
     layout: even-horizontal

@@ -105,7 +105,7 @@ def create_readium_router(
         content_type = upstream_resp.headers.get("content-type", "")
         if path.endswith("manifest.json") or "webpub+json" in content_type:
             return await _rewrite_manifest_response(
-                upstream_resp, client, readium_url
+                upstream_resp, client, readium_url, path
             )
 
         # For all other resources, stream directly.
@@ -124,27 +124,29 @@ async def _rewrite_manifest_response(
     upstream_resp: httpx.Response,
     client: httpx.AsyncClient,
     readium_url: str,
+    path: str,
 ) -> StreamingResponse:
     """Read the full manifest JSON body, strip internal URLs, and return it.
 
-    The readium CLI generates manifests with a ``self`` link that contains
-    the internal service address (e.g. ``http://127.0.0.1:15080/…``).  We
-    strip the scheme+host+port prefix so URLs become path-relative, which
-    the browser will resolve relative to the URL it fetched the manifest
-    from (i.e. through the Next.js -> reader_api proxy chain).
+    The readium CLI generates manifests with absolute internal URLs
+    (e.g. ``http://127.0.0.1:15080/webpub/abc/manifest.json``).  We strip
+    the full publication root URL so that all links become relative paths
+    (e.g. ``manifest.json``, ``~readium/positions.json``).  The Readium web
+    reader then resolves these relative to the manifest's fetch URL, which
+    routes them back through the Next.js -> reader_api proxy chain.
     """
 
     body = await upstream_resp.aread()
     await upstream_resp.aclose()
     await client.aclose()
 
-    # Normalise the base URL for replacement (with and without trailing slash).
-    base = readium_url.rstrip("/")
-    # Replace all occurrences of the absolute internal URL with an empty
-    # string, turning ``http://127.0.0.1:15080/abc/manifest.json`` into
-    # ``/abc/manifest.json`` which the browser resolves relative to the
-    # proxy origin.
-    rewritten = body.replace(base.encode(), b"")
+    # Build the full publication root URL to strip.  For a request path like
+    # ``webpub/<encoded>/manifest.json`` the publication root on the readium
+    # server is ``http://…:15080/webpub/<encoded>/``.  Replacing that prefix
+    # turns all absolute URLs into relative paths.
+    pub_dir = path.rsplit("/", 1)[0]
+    publication_root = f"{readium_url.rstrip('/')}/{pub_dir}/"
+    rewritten = body.replace(publication_root.encode(), b"")
 
     return StreamingResponse(
         content=iter([rewritten]),
