@@ -118,7 +118,7 @@ function loadPublicationManifestMap(baseUrl: string): PublicationManifestMap {
       if (!id || !filename || !urlSlug) {
         return acc;
       }
-      const manifestUrl = `${baseUrl}/${encodeFilename(filename)}/manifest.json`;
+      const manifestUrl = `${baseUrl}/webpub/${encodeFilename(filename)}/manifest.json`;
       const value = {
         id,
         title,

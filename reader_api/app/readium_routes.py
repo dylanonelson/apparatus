@@ -63,6 +63,8 @@ def create_readium_router(
         readium_url = Config.get_instance().networking.readium_service_url
         upstream_url = f"{readium_url}/{path}"
 
+        logger.info("Proxying request to upstream url: %s", upstream_url)
+
         try:
             # Request uncompressed responses so we can forward raw bytes
             # with an accurate content-length.  No point compressing over
@@ -88,7 +90,6 @@ def create_readium_router(
             body = await upstream_resp.aread()
             await upstream_resp.aclose()
             await client.aclose()
-            logger.error("Error proxying upstream url: %s", upstream_url)
             logger.error(
                 "Upstream response error with status code %s: %s",
                 upstream_resp.status_code,
