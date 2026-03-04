@@ -1,7 +1,6 @@
 import logging
 import os
-from contextlib import asynccontextmanager
-from typing import AsyncIterator, cast
+from typing import cast
 
 from fastapi import FastAPI
 from fastmcp.server.dependencies import get_access_token
@@ -19,7 +18,10 @@ from app.tracing import setup_tracing
 logger = logging.getLogger(__name__)
 
 # Print to stdout immediately on module load (before any async setup)
-print(f"[STARTUP] Loading main.py module. PORT={os.environ.get('PORT', 'NOT SET')}", flush=True)
+print(
+    f"[STARTUP] Loading main.py module. PORT={os.environ.get('PORT', 'NOT SET')}",
+    flush=True,
+)
 
 Config.initialize()
 setup_tracing()
@@ -50,37 +52,12 @@ model_connector = initialize_connector(mcp_server=mcp_server)
 auth_routes = auth_provider.get_routes(mcp_path="/mcp")
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Combined lifespan that includes MCP lifespan and our custom startup logging."""
-    port = os.environ.get("PORT", "not set")
-    railway_env = os.environ.get("RAILWAY_ENVIRONMENT", "not set")
-    logger.info("=== Application Startup ===")
-    logger.info(f"PORT environment variable: {port}")
-    logger.info(f"RAILWAY_ENVIRONMENT: {railway_env}")
-    logger.info("Health check endpoint available at /api/health")
-    logger.info("===========================")
-    
-    # Run the MCP lifespan
-    async with mcp_asgi_app.router.lifespan_context(app):
-        yield
-
-
 app = FastAPI(
     title="Apparatus API",
     version="0.1.0",
     routes=[*auth_routes],
-    lifespan=lifespan,
+    lifespan=mcp_asgi_app.lifespan,
 )
-
-
-@app.get("/")
-async def root():
-    """Simple root endpoint for debugging."""
-    try:
-        return {"status": "ok", "message": "Apparatus API is running"}
-    except Exception:
-        return {"status": "ok", "message": "API is running (fallback)"}
 
 
 app.include_router(api_router, prefix="/api")
@@ -105,5 +82,8 @@ __all__ = [
     "model_connector",
 ]
 
-print(f"[STARTUP] Application module loaded successfully. PORT={os.environ.get('PORT', 'NOT SET')}", flush=True)
+print(
+    f"[STARTUP] Application module loaded successfully. PORT={os.environ.get('PORT', 'NOT SET')}",
+    flush=True,
+)
 logger.info("Application module loaded successfully.")

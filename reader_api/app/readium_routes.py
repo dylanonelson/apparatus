@@ -100,14 +100,6 @@ def create_readium_router(
                 detail=body.decode("utf-8", errors="replace"),
             )
 
-        # For manifest responses, rewrite internal URLs so the browser
-        # resolves resource fetches back through this proxy.
-        content_type = upstream_resp.headers.get("content-type", "")
-        if path.endswith("manifest.json") or "webpub+json" in content_type:
-            return await _rewrite_manifest_response(
-                upstream_resp, client, readium_url, path
-            )
-
         # For all other resources, stream directly.
         response_headers = _pick_headers(upstream_resp)
         return StreamingResponse(
@@ -118,41 +110,6 @@ def create_readium_router(
         )
 
     return router
-
-
-async def _rewrite_manifest_response(
-    upstream_resp: httpx.Response,
-    client: httpx.AsyncClient,
-    readium_url: str,
-    path: str,
-) -> StreamingResponse:
-    """Read the full manifest JSON body, strip internal URLs, and return it.
-
-    The readium CLI generates manifests with absolute internal URLs
-    (e.g. ``http://127.0.0.1:15080/webpub/abc/manifest.json``).  We strip
-    the full publication root URL so that all links become relative paths
-    (e.g. ``manifest.json``, ``~readium/positions.json``).  The Readium web
-    reader then resolves these relative to the manifest's fetch URL, which
-    routes them back through the Next.js -> reader_api proxy chain.
-    """
-
-    body = await upstream_resp.aread()
-    await upstream_resp.aclose()
-    await client.aclose()
-
-    # Build the full publication root URL to strip.  For a request path like
-    # ``webpub/<encoded>/manifest.json`` the publication root on the readium
-    # server is ``http://…:15080/webpub/<encoded>/``.  Replacing that prefix
-    # turns all absolute URLs into relative paths.
-    pub_dir = path.rsplit("/", 1)[0]
-    publication_root = f"{readium_url.rstrip('/')}/{pub_dir}/"
-    rewritten = body.replace(publication_root.encode(), b"")
-
-    return StreamingResponse(
-        content=iter([rewritten]),
-        status_code=upstream_resp.status_code,
-        headers={"content-type": "application/webpub+json"},
-    )
 
 
 async def _stream_and_close(
