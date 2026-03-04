@@ -224,7 +224,6 @@ export const StatefulReader = ({
   plugins,
   serverInitialReadingLocation,
 }: StatefulReaderProps) => {
-  console.log("selfHref", selfHref);
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
   useEffect(() => {
@@ -1135,7 +1134,6 @@ const StatefulReaderInner = ({
     let positionsList: Locator[] | undefined;
 
     const fetchPositions = async () => {
-      debugger;
       positionsList = await publication.positionsFromManifest();
       const deserializedPositionsList = deserializePositions(positionsList);
       dispatch(setPositionsList(deserializedPositionsList));
