@@ -48,6 +48,10 @@ export default function ReaderClientPage({
     },
   });
 
+  const plugins = useMemo(() => {
+    return [createDefaultPlugin(), createAnswersPlugin()];
+  }, []);
+
   if (domainError) {
     return (
       <div className="container">
@@ -65,10 +69,6 @@ export default function ReaderClientPage({
       </div>
     );
   }
-
-  const plugins = useMemo(() => {
-    return [createDefaultPlugin(), createAnswersPlugin()];
-  }, []);
 
   return (
     <StatefulLoader isLoading={isLoading}>

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { UserProfile } from "@auth0/nextjs-auth0/client";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import "./UserMenu.css";
 
+type UserType = NonNullable<ReturnType<typeof useUser>["user"]>;
+
 interface UserMenuProps {
-  user: UserProfile;
+  user: UserType;
 }
 
 export function UserMenu({ user }: UserMenuProps) {
@@ -21,7 +23,7 @@ export function UserMenu({ user }: UserMenuProps) {
       .slice(0, 2);
   };
 
-  const getLoginMethod = (user: UserProfile) => {
+  const getLoginMethod = (user: UserType) => {
     const sub = user.sub;
     if (!sub) return "Unknown";
 

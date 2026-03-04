@@ -63,6 +63,8 @@ def create_readium_router(
         readium_url = Config.get_instance().networking.readium_service_url
         upstream_url = f"{readium_url}/{path}"
 
+        logger.info("Proxying request to upstream url: %s", upstream_url)
+
         try:
             # Request uncompressed responses so we can forward raw bytes
             # with an accurate content-length.  No point compressing over
@@ -76,7 +78,9 @@ def create_readium_router(
                 stream=True,
             )
         except httpx.ConnectError as exc:
-            logger.error("Cannot reach Readium service at %s: %s", readium_url, exc)
+            logger.error(
+                "Cannot reach Readium service at %s: %s", readium_url, exc
+            )
             raise HTTPException(
                 status_code=502,
                 detail="Publication server is unavailable",
@@ -86,17 +90,14 @@ def create_readium_router(
             body = await upstream_resp.aread()
             await upstream_resp.aclose()
             await client.aclose()
+            logger.error(
+                "Upstream response error with status code %s: %s",
+                upstream_resp.status_code,
+                body.decode("utf-8", errors="replace") if body else "No body",
+            )
             raise HTTPException(
                 status_code=upstream_resp.status_code,
                 detail=body.decode("utf-8", errors="replace"),
-            )
-
-        # For manifest responses, rewrite internal URLs so the browser
-        # resolves resource fetches back through this proxy.
-        content_type = upstream_resp.headers.get("content-type", "")
-        if path.endswith("manifest.json") or "webpub+json" in content_type:
-            return await _rewrite_manifest_response(
-                upstream_resp, client, readium_url
             )
 
         # For all other resources, stream directly.
@@ -109,39 +110,6 @@ def create_readium_router(
         )
 
     return router
-
-
-async def _rewrite_manifest_response(
-    upstream_resp: httpx.Response,
-    client: httpx.AsyncClient,
-    readium_url: str,
-) -> StreamingResponse:
-    """Read the full manifest JSON body, strip internal URLs, and return it.
-
-    The readium CLI generates manifests with a ``self`` link that contains
-    the internal service address (e.g. ``http://127.0.0.1:15080/…``).  We
-    strip the scheme+host+port prefix so URLs become path-relative, which
-    the browser will resolve relative to the URL it fetched the manifest
-    from (i.e. through the Next.js -> reader_api proxy chain).
-    """
-
-    body = await upstream_resp.aread()
-    await upstream_resp.aclose()
-    await client.aclose()
-
-    # Normalise the base URL for replacement (with and without trailing slash).
-    base = readium_url.rstrip("/")
-    # Replace all occurrences of the absolute internal URL with an empty
-    # string, turning ``http://127.0.0.1:15080/abc/manifest.json`` into
-    # ``/abc/manifest.json`` which the browser resolves relative to the
-    # proxy origin.
-    rewritten = body.replace(base.encode(), b"")
-
-    return StreamingResponse(
-        content=iter([rewritten]),
-        status_code=upstream_resp.status_code,
-        headers={"content-type": "application/webpub+json"},
-    )
 
 
 async def _stream_and_close(

@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import cast
 
 from fastapi import FastAPI
@@ -13,6 +14,14 @@ from app.mcp import create_mcp_server
 from app.model_connector import initialize_connector
 from app.readium_routes import create_readium_router
 from app.tracing import setup_tracing
+
+logger = logging.getLogger(__name__)
+
+# Print to stdout immediately on module load (before any async setup)
+print(
+    f"[STARTUP] Loading main.py module. PORT={os.environ.get('PORT', 'NOT SET')}",
+    flush=True,
+)
 
 Config.initialize()
 setup_tracing()
@@ -41,12 +50,16 @@ readium_router = create_readium_router(
 model_connector = initialize_connector(mcp_server=mcp_server)
 
 auth_routes = auth_provider.get_routes(mcp_path="/mcp")
+
+
 app = FastAPI(
     title="Apparatus API",
     version="0.1.0",
     routes=[*auth_routes],
-    lifespan=mcp_asgi_app.router.lifespan_context,
+    lifespan=mcp_asgi_app.lifespan,
 )
+
+
 app.include_router(api_router, prefix="/api")
 app.include_router(readium_router, prefix="/read")
 app.mount("/mcp", cast(ASGIApp, mcp_asgi_app))
@@ -69,4 +82,8 @@ __all__ = [
     "model_connector",
 ]
 
-logging.getLogger(__name__).info("Application startup complete.")
+print(
+    f"[STARTUP] Application module loaded successfully. PORT={os.environ.get('PORT', 'NOT SET')}",
+    flush=True,
+)
+logger.info("Application module loaded successfully.")

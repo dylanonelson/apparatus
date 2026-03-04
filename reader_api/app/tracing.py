@@ -16,12 +16,21 @@ from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapProp
 _TRACING_INITIALIZED: bool = False
 _SERVICE_NAME: Final[str] = "reader-api"
 _OTLP_ENDPOINT_ENV_VAR: Final[str] = "OTLP_ENDPOINT"
+_OTLP_ENABLED_ENV_VAR: Final[str] = "OTLP_ENABLED"
 _DEFAULT_OTLP_ENDPOINT: Final[str] = "http://localhost:4317"
+
+
+def _is_tracing_enabled() -> bool:
+    raw = getenv(_OTLP_ENABLED_ENV_VAR, "false").strip().lower()
+    return raw in {"1", "true", "yes", "on"}
 
 
 def setup_tracing() -> None:
     """
     Configure OpenTelemetry tracing for the service.
+
+    Tracing is disabled when OTLP_ENABLED is false. This avoids connection
+    errors when no OTLP collector is available (e.g. Railway deployments).
     """
     global _TRACING_INITIALIZED
     if _TRACING_INITIALIZED:
@@ -29,11 +38,15 @@ def setup_tracing() -> None:
 
     resource = Resource.create({"service.name": _SERVICE_NAME})
     provider = TracerProvider(resource=resource)
-    endpoint = getenv(_OTLP_ENDPOINT_ENV_VAR)
-    resolved_endpoint = endpoint if endpoint else _DEFAULT_OTLP_ENDPOINT
-    exporter = OTLPSpanExporter(endpoint=resolved_endpoint, insecure=True)
-    processor = BatchSpanProcessor(exporter)
-    provider.add_span_processor(processor)
+
+    if _is_tracing_enabled():
+        endpoint = getenv(_OTLP_ENDPOINT_ENV_VAR)
+        resolved_endpoint = endpoint if endpoint else _DEFAULT_OTLP_ENDPOINT
+        exporter = OTLPSpanExporter(endpoint=resolved_endpoint, insecure=True)
+        processor = BatchSpanProcessor(exporter)
+        provider.add_span_processor(processor)
+    # When disabled, provider has no processors; spans are created but dropped.
+    # This avoids connection attempts to a non-existent OTLP collector.
 
     trace.set_tracer_provider(provider)
 
