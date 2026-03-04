@@ -1,1 +1,2 @@
-frontend/publications/* linguist-generated=true
+frontend/publications/** linguist-generated=true
+static/** linguist-detectable=false
