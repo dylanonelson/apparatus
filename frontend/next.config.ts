@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
 import type { PublicationManifestMap } from "./src/types/publications";
 
 const DEFAULT_MANIFEST_BASE_URL = "http://localhost:15080";
-const PUBLICATIONS_ROOT = path.join(__dirname, "publications");
+const PUBLICATIONS_ROOT = __dirname;
 const CATALOG_PATH = path.join(PUBLICATIONS_ROOT, "publications.yaml");
 
 const manifestBaseUrl = normalizeBaseUrl(
