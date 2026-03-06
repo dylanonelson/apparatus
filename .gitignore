@@ -26,7 +26,6 @@ tmp
 
 .env
 .env.local
-.venv
 
 # misc
 .DS_Store

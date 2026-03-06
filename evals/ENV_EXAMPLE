@@ -1,0 +1,17 @@
+# Copy this file to .env before running npm scripts.
+
+# Base URL of the reader_api instance (must expose /ask and /ask-automatic).
+READER_API_URL="http://localhost:8000/api"
+
+# JWT token for authenticating /ask-automatic requests (Auth0 Bearer token).
+AUTH0_TOKEN="..."
+
+# Local Ollama model used as judge for passage-finder evals.
+# Must be pulled first: ollama pull <model>
+OLLAMA_MODEL="llama3"
+
+# Google Gemini model used as judge for automatic-answers evals.
+GEMINI_MODEL=""
+
+# Google API key for Gemini access.
+GOOGLE_API_KEY=""

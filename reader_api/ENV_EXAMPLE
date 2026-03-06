@@ -5,6 +5,8 @@ CONTENT_SERVICE_URL=http://127.0.0.1:8091
 # URL of the Readium CLI server that serves EPUB manifests and resources.
 # In dev, started via tmuxp. In prod, deployed as a sidecar container.
 READIUM_SERVICE_URL=http://127.0.0.1:15080
+# Public URL of this reader_api instance. Used as the MCP server's base/issuer URL.
+READER_API_PUBLIC_URL=http://localhost:8000
 
 #################
 # Database Setup #

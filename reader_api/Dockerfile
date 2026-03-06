@@ -17,7 +17,7 @@ COPY reader_api/config/ config/
 COPY reader_api/prompts/ prompts/
 
 # Copy the publications catalog from the shared static directory.
-COPY static/publications.yaml publications/publications.yaml
+COPY ebook_files/publications.yaml publications/publications.yaml
 
 # Put the venv's bin directory on PATH so uvicorn/alembic are available directly.
 ENV PATH="/app/.venv/bin:$PATH"

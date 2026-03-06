@@ -19,12 +19,14 @@ Or start everything at once from the repo root with `tmuxp load tmuxp.yaml`.
 
 ### Environment variables
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `PUBLICATION_SERVER_PORT` | `8091` | HTTP server port |
-| `PUBLICATIONS_DIR` | `publications` | Base directory for EPUB files and `publications.yaml` catalog |
+Configuration is read from environment variables (there is currently no `.env` file loaded). Both have defaults that work for local development; the Dockerfile overrides `PUBLICATIONS_DIR` for the container.
 
-The `publications` directory is a symlink to `../static`, where the actual EPUB files and catalog live.
+| Variable                  | Default       | Purpose                                                       |
+| ------------------------- | ------------- | ------------------------------------------------------------- |
+| `PUBLICATION_SERVER_PORT` | `8091`        | HTTP server port                                              |
+| `PUBLICATIONS_DIR`        | `ebook_files` | Base directory for EPUB files and `publications.yaml` catalog |
+
+The `ebook_files` directory is a symlink to `../ebook_files`, where the actual EPUB files and catalog live.
 
 ### Common operations
 
@@ -47,114 +49,10 @@ go get github.com/example/package
 make tidy
 ```
 
-## API endpoints
-
-### `POST /search`
-
-Full-text keyword search across a publication.
-
-```json
-// Request
-{
-  "publication_id": "david-copperfield_std-ebks-2025",
-  "query": "Murdstone",
-  "max_results": 20,
-  "context_chars": 120
-}
-
-// Response
-{
-  "hits": [
-    {
-      "href": "text/chapter-001.xhtml",
-      "locator": {
-        "href": "text/chapter-001.xhtml",
-        "type": "application/xhtml+xml",
-        "text": { "before": "...Mr ", "highlight": "Murdstone", "after": " was a gloomy..." },
-        "locations": {
-          "position": 42,
-          "other_locations": { "cssSelector": "body > p:nth-child(3)" }
-        }
-      }
-    }
-  ],
-  "count": 1
-}
-```
-
-How it works: opens the EPUB with Readium's streamer, iterates through `ContentService` text segments via a goroutine channel, and performs case-insensitive matching with `strings.Index()`. Returns up to `max_results` hits with locators including href, position, CSS selector, and surrounding context.
-
-### `POST /content/fetch`
-
-Returns the raw content of up to 2 EPUB resources by manifest href.
-
-```json
-// Request
-{
-  "publication_id": "david-copperfield_std-ebks-2025",
-  "hrefs": ["text/chapter-001.xhtml"]
-}
-
-// Response
-{
-  "files": [
-    {
-      "href": "text/chapter-001.xhtml",
-      "media_type": "application/xhtml+xml",
-      "encoding": "utf-8",
-      "content": "<html>...</html>"
-    }
-  ]
-}
-```
-
-Text resources (xhtml, xml, json) are returned as UTF-8. Binary resources (images, etc.) are base64-encoded.
-
 ## Architecture
 
-### Directory structure
+Code is organized by domain under `internal/`. Test fixtures live in `testdata/`.
 
-```
-publication_api/
-├── cmd/server/
-│   └── main.go                    # Entry point: creates router, starts HTTP server
-├── internal/
-│   ├── config/config.go           # Environment variable loading (PORT, PUBLICATIONS_DIR)
-│   ├── http/
-│   │   ├── router.go              # Chi router, endpoint handlers, request/response types
-│   │   ├── router_test.go         # Search endpoint tests
-│   │   └── router_fetch_test.go   # Content fetch endpoint tests
-│   ├── publications/
-│   │   ├── store.go               # Catalog loading and publication path resolution
-│   │   └── store_test.go
-│   ├── readium/
-│   │   ├── loader.go              # Opens EPUBs via Readium streamer
-│   │   ├── content.go             # Streams text segments from ContentService
-│   │   └── content_test.go
-│   ├── search/
-│   │   ├── searcher.go            # Case-insensitive keyword matching with context
-│   │   └── searcher_test.go
-│   └── logging/logger.go          # Simple logging wrapper
-├── testdata/
-│   ├── publications.yaml          # Test catalog
-│   └── sample_two_chapters.epub   # Test fixture
-├── tools/tools.go                 # Tool version pinning (air)
-├── publications -> ../static      # Symlink to publication files
-├── .air.toml                      # Air live reload config
-├── .go-version                    # Go version (1.25.3)
-├── Makefile                       # Build, test, dev commands
-├── Dockerfile                     # Multi-stage build (golang:1.25-alpine -> alpine:3.20)
-├── go.mod / go.sum
-└── AGENTS.md
-```
+**Concurrency**: text segment iteration uses goroutine channels for lazy streaming. The publication catalog is cached per base directory using `sync.Map`.
 
-### Key patterns
-
-- **Clean architecture**: code organized by domain (config, http, publications, readium, search) under `internal/`
-- **Goroutine streaming**: `IterateTextSegments()` uses channels for lazy content iteration
-- **Caching**: `publications.Store` uses `sync.Map` to cache loaded catalogs per base directory
-- **Context timeouts**: all I/O operations use 15-second context deadlines
-
-### Integration with reader_api
-
-The Python backend calls this service over HTTP using the `CONTENT_SERVICE_URL` environment variable (defaults to `http://127.0.0.1:8091`). The integration code is in `reader_api/app/publication_reader.py`.
+**Integration**: the Python backend (`reader_api`) calls this service over HTTP using its `CONTENT_SERVICE_URL` environment variable.
