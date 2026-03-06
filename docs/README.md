@@ -87,6 +87,14 @@ To run the app:
 
 1. Make sure you have [tmux](https://github.com/tmux/tmux) and [tmuxp](https://github.com/tmux-python/tmuxp) installed
 
-1. Navigate to the project root directory (where `tmuxp.yaml` is located) and run `tmuxp load .`
+1. Navigate to the project root directory (where `tmuxp.yaml` is located) and run `tmuxp load tmuxp.yaml`
 
 This command will create or attach to a tmux session named `aie` with all services running in their respective windows and panes.
+
+## Deployment
+
+The web client, the reader API, and the publication API are deployed on Railway alongside a Postgres DB; they communicate via Railway's private networking.
+
+An update to any individual service on the `main` branch triggers a push on Railway for just that branch. Environment variables are managed manually on Railway.
+
+Authentication is through Auth0. Production and development currently share the same Auth0 tenant.
