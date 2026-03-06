@@ -1,75 +1,157 @@
-# Evals Quickstart
+# Evals
 
-This folder houses promptfoo-based evaluations for the reader_api `/ask` endpoint. The harness runs locally and uses an Ollama-served model as an AI judge.
+**Node.js, [promptfoo](https://www.promptfoo.dev/)**
 
-## 1. Prerequisites
+Automated evaluations for the `reader_api` LLM endpoints. The suite validates answer quality and edge-case behavior by running test cases against `/ask-automatic` and `/ask` with different prompt versions.
 
-- Node.js (matching the repo's frontend toolchain); run `nvm use` from the repo root if needed.
-- [Ollama](https://ollama.ai) installed locally.
-  - macOS: `brew install ollama` then `ollama run llama3` (or another model) to confirm the daemon works.
-  - Linux: follow the official installer script from `https://ollama.ai/download`.
-- A running `reader_api` instance that exposes the `/ask` endpoint.
+Node version is managed by nvm (see `.nvmrc` in repo root).
 
-## 2. Bootstrap the eval workspace
+## Setup
 
 ```bash
-cd ./evals
+cd evals
+nvm use
 npm install
-cp .env.example .env  # Edit the values after copying.
+cp .env.example .env    # fill in values
 ```
 
-Update the new `.env` file:
+### Environment variables
 
-- `READER_API_URL`: Base URL for your running backend (e.g., `http://localhost:8000`).
-- `OLLAMA_MODEL`: Name of the local model you pulled with Ollama (e.g., `llama3`, `mistral`).
-  - Hint: Prefer a judge model that reliably scores factuality; larger models may give sharper gradients.
+| Variable | Purpose |
+|----------|---------|
+| `READER_API_URL` | Base URL of reader_api (e.g., `http://localhost:8000/api`) |
+| `AUTH0_TOKEN` | JWT token for authenticated endpoints (`/ask-automatic`) |
+| `OLLAMA_MODEL` | Local Ollama model name for judging passage-finder evals |
+| `GEMINI_MODEL` | Google Gemini model for judging automatic-answers evals |
+| `GOOGLE_API_KEY` | API key for Gemini |
 
-## 3. Fill in the placeholders
+The passage-finder evals use a local Ollama model as judge. The automatic-answers evals use Google Gemini. Both require the corresponding model to be available.
 
-- `promptfooconfig.yaml`: Replace the rubric TODO block with concrete scoring rules. Think about:
-  - Explicit score scale (e.g., 1–5) and what each number means.
-  - Required elements for Anna Karenina answers (relevant plot facts, cites, tone, safety constraints).
-  - Automatic failure conditions (hallucinations, refusal, policy violations, tool crash output).
-- `scenarios/anna-karenina.yaml`: Swap each `TODO` prompt with a real Anna Karenina test case.
-  - Capture varied behaviors: happy paths, deep retrieval, safety boundaries, and failure recovery.
-  - Optionally attach gold responses via `expected:` if you want deterministic regression diffs.
+## Running evaluations
 
-## 4. Run evaluations
+Evals are organized by feature. Each feature has its own promptfoo config file.
 
 ```bash
-# Single run
+# Passage finder (Anna Karenina, uses Ollama judge)
 npm run eval
 
-# Re-run on every file save (hot reload)
-npm run eval:watch
+# Automatic answers - no-answer cases (deterministic, no judge needed)
+./scripts/run-eval.sh automatic-answers no-answer
 
-# Inspect prior runs in the browser UI
+# Automatic answers - missing-context cases (uses Gemini judge)
+./scripts/run-eval.sh automatic-answers missing-context
+
+# Pass additional promptfoo flags after the feature/config args
+./scripts/run-eval.sh automatic-answers no-answer --filter-first-n 1
+
+# View results in browser
+npm run eval:view
+
+# Hot reload during development
+npm run eval:watch
+```
+
+The `run-eval.sh` script expands to: `promptfoo eval --config features/{feature}/promptfooconfig.{config}.yaml --env-path .env [flags]`.
+
+### Smoke test
+
+Before running a full suite, validate the config and run a single case:
+
+```bash
+npx promptfoo validate --config features/automatic-answers/promptfooconfig.no-answer.yaml --env-path .env
+./scripts/run-eval.sh automatic-answers no-answer --filter-first-n 1
 npm run eval:view
 ```
 
-Each command automatically loads variables from `.env`. When using `eval:view`, the CLI prompts before opening a browser; pass `--yes` if you want to skip the confirmation.
+## Test features
 
-### Smoke test checklist
+### Automatic answers (`features/automatic-answers/`)
 
-1. Fill in all TODOs in `promptfooconfig.yaml` and `scenarios/anna-karenina.yaml`.
-2. Confirm the Ollama daemon is running (e.g., `ollama serve` or `ollama list`).
-3. Validate config wiring before the first run: `npx promptfoo validate --config promptfooconfig.yaml --env-path .env`.
-4. Run a single-scenario dry run to confirm end-to-end wiring: `npm run eval -- --filter-first-n 1 --description "smoke"`.
-5. Inspect the output with `npm run eval:view` to ensure the judge recorded a score and no HTTP/tooling errors occurred.
+Tests the `/ask-automatic` endpoint, which takes a reading location and viewport snapshot and automatically generates an explanation. The provider config (`providers.yaml`) runs each test case against prompt versions v0, v1, and v2 simultaneously.
 
-## 5. Interpreting results
+**No-answer detection** (`test-cases/no-answer/`): verifies the model returns `IMPLIED_QUESTION_IS_UNCLEAR` when given meaningless selections. Assertion: exact string match (deterministic, no LLM judge).
 
-- Promptfoo prints a table with judge scores. Use `promptfoo view` for a searchable UI with diffing.
-- Document notable failures and adjust either the backend or the rubric until scores stabilize.
+- `insignificant-word-noun.yaml` - Single noun selection ("quarter")
+- `insignificant-word-random.yaml` - Single word selection ("very")
+- `sentence-fragment.yaml` - Partial sentence
+- `long-passage-random.yaml` - Long passage with no clear question
+- `long-passage-memorable.yaml` - Memorable passage requiring external context
 
-## 6. Next steps
+**Missing-context quality** (`test-cases/missing-context/`): LLM-graded rubrics checking tone (scholarly, objective, non-editorializing) and factuality against reference answers. Assertions: `llm-rubric` (threshold 3/5) + `factuality` (via Gemini).
 
-- Add more Anna Karenina scenarios (translations, obscure subplots, adaptations).
-- Capture real `/ask` transcripts and convert them into regression tests.
-- Once rubric and scenarios are stable, wire this folder into CI (e.g., `npm run eval -- --no-share`) or trigger via your deployment pipeline.
+- `black-prince.yaml` - Historical allusion
+- `castors-sixes-sevens.yaml` - Victorian household terminology
+- `markleham-marplot.yaml` - Literary reference (Susanna Centlivre)
+- `mr-bodgers.yaml` - Deceased parishioner memorial
+- `murdstone-lark.yaml` - Idiomatic expression
+- `prophetic-pins.yaml` - Victorian-era custom
+- `spenlow-punch.yaml` - Puppet theater reference (Punch and Judy)
 
-## Troubleshooting
+### Passage finder (`features/passage-finder/`)
 
-- Ollama errors: ensure the daemon is running (`ollama serve`) and model is pulled (`ollama pull llama3`).
-- HTTP 4xx/5xx from `/ask`: make sure `READER_API_URL` points to a live backend and that request payload fields in `promptfooconfig.yaml` match the API contract.
-- Promptfoo schema changes: run `npx promptfoo validate --config promptfooconfig.yaml` after you fill the placeholders to catch configuration errors.
+Tests the freeform `/ask` endpoint for "catch me up" and "find passage" queries against Anna Karenina. Assertion: `llm-rubric` scored by local Ollama model.
+
+- Test cases in `anna-karenina.yaml`
+
+## Adding a test case
+
+### No-answer case
+
+Create a YAML file in `features/automatic-answers/test-cases/no-answer/`:
+
+```yaml
+- description: "Brief description of what this tests"
+  vars:
+    request_body:
+      publication_id: "david-copperfield_std-ebks-2025"
+      locator:
+        href: "epub/text/chapter-XX.xhtml"
+        type: "application/xhtml+xml"
+        locations:
+          progression: 0.5
+          totalProgression: 0.1
+          position: 42
+      viewport:
+        positions: [42]
+        text: "Full visible text on screen..."
+        selection_text: "The selected portion"
+    expected_answer: IMPLIED_QUESTION_IS_UNCLEAR
+```
+
+### Missing-context case
+
+Same structure but in `test-cases/missing-context/`, adding a `reference_answer` field:
+
+```yaml
+- description: "Brief description"
+  vars:
+    request_body:
+      # ... same as above
+    reference_answer: "Expected gold-standard explanation..."
+```
+
+## Directory structure
+
+```
+evals/
+├── promptfooconfig.yaml                   # Main config for passage-finder evals
+├── ak-rubric.yaml                         # Rubric prompt template for Anna Karenina
+├── rubric.txt                             # Scoring criteria (1-5 scale, 3 criteria)
+├── scripts/
+│   └── run-eval.sh                        # Runner for feature-specific configs
+├── features/
+│   ├── automatic-answers/
+│   │   ├── promptfooconfig.no-answer.yaml       # Config for no-answer tests
+│   │   ├── promptfooconfig.missing-context.yaml # Config for missing-context tests
+│   │   ├── providers.yaml                       # HTTP provider config (v0, v1, v2)
+│   │   ├── rubric-prompt.yaml                   # Tone/quality grading rubric
+│   │   └── test-cases/
+│   │       ├── no-answer/                       # 5 deterministic test cases
+│   │       ├── missing-context/                 # 7 LLM-graded test cases
+│   │       └── textual-reference/               # (in progress)
+│   └── passage-finder/
+│       └── anna-karenina.yaml                   # Passage-finder test cases
+├── .env.example                           # Environment variable template
+├── .nvmrc                                 # Node version
+└── package.json                           # Scripts and promptfoo dependency
+```
