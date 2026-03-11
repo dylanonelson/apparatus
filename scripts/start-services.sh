@@ -94,7 +94,7 @@ log "Starting Reader API on :8000..."
 # ── 8. Start Frontend ──────────────────────────────────────────────
 log "Starting Frontend on :3000..."
 (cd /app/frontend && \
-    pnpm run dev -- --hostname 0.0.0.0 \
+    pnpm exec next dev --hostname 0.0.0.0 \
     >"$LOG_DIR/frontend.log" 2>&1) &
 
 # Give services a moment to start
