@@ -1,5 +1,5 @@
 ---
-name: coding-task
+name: make-change
 description: A set of steps to follow whenever the user asks Claude to perform a discrete piece of work in the codebase, comparable to a Jira ticket
 user-invocable: true
 ---

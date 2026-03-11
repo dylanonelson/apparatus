@@ -25,6 +25,7 @@ Or use `make dev` (which runs the `uv run uvicorn ...` command above).
 The full app also requires PostgreSQL, publication_api, and the Readium CLI server. Start everything at once from the repo root with `tmuxp load tmuxp.yaml`, or see `../docs/README.md`.
 
 - API docs: http://localhost:8000/docs
+- OpenAPI schema: http://localhost:8000/openapi.json
 - Health check: http://localhost:8000/api/health
 
 ### Environment variables
@@ -68,6 +69,8 @@ alembic current                                     # show current revision
 **Readium proxy**: authenticated reverse proxy at `/read/*` that forwards requests to the Readium CLI server and rewrites manifest self-links to point back through the proxy.
 
 **Publication catalog**: loads `publications.yaml` from the path configured by `PUBLICATIONS_CATALOG_PATH`.
+
+**OpenAPI schema**: the Pydantic request/response models in `app/api_models.py` are the source of truth for the API contract. TypeScript types for the frontend are generated from these models via `./scripts/generate-api-types.sh` at the repo root. The generated schema is committed at `openapi.json`. Run the script after changing any model or route signature.
 
 ## Tracing
 

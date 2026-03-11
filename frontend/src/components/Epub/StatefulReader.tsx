@@ -445,24 +445,25 @@ const StatefulReaderInner = ({
       const selectionText = selectionTextOverride ?? getSelectionText();
 
       try {
+        const payload: import("@/lib/api").StoreReadingStateRequest = {
+          publication_id: publicationId,
+          locator: location.locator,
+          recorded_at:
+            location.recordedAt && isValidDate(location.recordedAt)
+              ? location.recordedAt
+              : new Date().toISOString(),
+          viewport: {
+            positions,
+            text: viewportText || "",
+            selection_text: selectionText,
+          },
+        };
         const response = await fetch("/api/reading-state", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            publication_id: publicationId,
-            locator: location.locator,
-            recorded_at:
-              location.recordedAt && isValidDate(location.recordedAt)
-                ? location.recordedAt
-                : new Date().toISOString(),
-            viewport: {
-              positions,
-              text: viewportText,
-              selection_text: selectionText,
-            },
-          }),
+          body: JSON.stringify(payload),
         });
         if (!response.ok) {
           console.error(

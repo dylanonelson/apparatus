@@ -1,44 +1,25 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// Request/Response types
-interface LocatorPayload {
-  href: string;
-  type: string;
-  title?: string;
-  locations?: {
-    fragments?: string[];
-    position?: number;
-    progression?: number;
-    totalProgression?: number;
-  };
-  text?: {
-    before?: string;
-    highlight?: string;
-    after?: string;
-  };
-}
+import type { components } from "@/lib/api-types.generated";
 
-interface ViewportPayload {
-  positions: number[];
-  text: string;
-  selection_text?: string | null;
-}
-
-interface AskAutomaticRequest {
-  publication_id: string;
-  locator: LocatorPayload;
-  viewport: ViewportPayload;
-}
-
-interface AskAutomaticResponse {
-  answer: string;
-}
+export type AutomaticAnswersRequest =
+  components["schemas"]["AutomaticAnswersRequestModel"];
+export type AskResponse = components["schemas"]["AskResponseModel"];
+export type ReadingLocationResponse =
+  components["schemas"]["ReadingLocationResponseModel"];
+export type StoreReadingStateRequest =
+  components["schemas"]["StoreReadingStateRequestModel"];
+export type ReadingStateResponse =
+  components["schemas"]["ReadingStateResponseModel"];
+export type UserResponse = components["schemas"]["UserResponseModel"];
+export type LocatorPayload = components["schemas"]["LocatorModel"];
+export type ViewportPayload = components["schemas"]["ViewportPayloadModel"];
 
 export const readerApi = createApi({
   reducerPath: "readerApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   endpoints: (builder) => ({
-    askAutomatic: builder.mutation<AskAutomaticResponse, AskAutomaticRequest>({
+    askAutomatic: builder.mutation<AskResponse, AutomaticAnswersRequest>({
       query: (body) => ({
         url: "ask-automatic",
         method: "POST",

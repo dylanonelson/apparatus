@@ -8,7 +8,9 @@
 
 The frontend is a fork of [Thorium Web](https://github.com/edrlab/thorium-web) that serves as the e-reader UI. It provides EPUB rendering via the Readium Web toolkit, configurable display settings (themes, fonts, spacing), persistent reading positions, and AI-powered contextual answers about the text the user is reading.
 
-The Next.js backend acts as a backend-for-frontend (BFF): it holds the Auth0 session cookie and converts it to a Bearer token before proxying requests to reader_api. The frontend does not communicate with publication_api directly. Publication content (manifests, XHTML chapters, images) is fetched through the BFF proxy at `/api/pub/`, which forwards to reader_api's `/read/` routes.
+The Next.js backend acts as a backend-for-frontend (BFF): it holds the Auth0 session cookie and converts it to a Bearer token before proxying requests to reader_api. The shared proxy layer in `src/lib/proxy.ts` centralizes auth token extraction, upstream fetching, and error handling for all BFF routes. The frontend does not communicate with publication_api directly. Publication content (manifests, XHTML chapters, images) is fetched through the BFF proxy at `/api/pub/`, which forwards to reader_api's `/read/` routes.
+
+API request and response types are generated from reader_api's Pydantic models via OpenAPI. Run `./scripts/generate-api-types.sh` from the repo root to regenerate them (see [Scripts](#scripts) below).
 
 Node version is managed by nvm. Package manager is pnpm.
 
@@ -78,6 +80,13 @@ EPUB files and their associated metadata, used by both publication_api (for cont
 - **Context files** — Per-publication YAML files with supplementary context for LLM answers (e.g. historical background, character lists).
 
 In local development the `PUBLICATIONS_DIR` environment variable points here. In Docker, these files are copied to `/data/publications`.
+
+### Scripts (`scripts`)
+
+Utility scripts at the repo root:
+
+- **`generate-api-types.sh`** — Generates TypeScript types from reader_api's Python models. Imports the actual FastAPI app (loading `.env.local` for configuration), exports the OpenAPI schema to `reader_api/openapi.json`, and runs `openapi-typescript` to produce `frontend/src/lib/api-types.generated.ts`. Run this after changing any Pydantic model or route signature in reader_api.
+- **`wktr.sh`** — Creates git worktrees for working on branches in parallel.
 
 ## Local development
 
