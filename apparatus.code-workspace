@@ -2,15 +2,15 @@
   "folders": [
     {
       "path": "reader_api",
-      "name": "Backend (Python)"
+      "name": "Reader API (Python)"
     },
     {
       "path": "frontend",
-      "name": "Frontend (Next.js)"
+      "name": "Web client (Next.js)"
     },
     {
       "path": "publication_api",
-      "name": "Publication Server (Go)"
+      "name": "Publication API (Go)"
     },
     {
       "path": "evals",

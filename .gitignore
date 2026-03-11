@@ -26,7 +26,11 @@ tmp
 
 .env
 .env.local
-.venv
+
+# claude
+.claude/*
+!.claude/skills
+!.claude/settings.json
 
 # misc
 .DS_Store

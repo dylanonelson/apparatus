@@ -5,9 +5,11 @@ windows:
     start_directory: ./
     layout: even-horizontal
     panes:
+      # Start the frontend server
       - start_directory: ./frontend
         shell_command:
           - pnpm run dev
+      # Start the reader API server
       - start_directory: ./reader_api
         shell_command:
           - uvicorn app.main:app --port 8000 --reload --log-level info
@@ -15,15 +17,18 @@ windows:
     start_directory: ./
     layout: even-horizontal
     panes:
+      # Start the publication API server
       - start_directory: ./publication_api
         shell_command:
           - make dev
+      # Start the Readium CLI server
       - shell_command:
           - docker build -f readium.Dockerfile -t readium-local . && docker run -p 15080:15080 readium-local
   - window_name: infra
     start_directory: ./
     layout: even-horizontal
     panes:
+      # Start the local database
       - shell_command:
           - |
             docker run --rm --name apparatus-db \
@@ -32,6 +37,7 @@ windows:
               -e POSTGRES_DB=apparatus \
               -p 5432:5432 \
               postgres:18
+      # Start the Jaeger server for tracing
       - shell_command:
           - |
             docker run --rm --name jaeger \
@@ -41,5 +47,6 @@ windows:
               -p 5778:5778 \
               -p 9411:9411 \
               cr.jaegertracing.io/jaegertracing/jaeger:2.11.0
+      # Start the Ollama server for local AI judge (for evals)
       - shell_command:
           - ollama serve

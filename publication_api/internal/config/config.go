@@ -6,7 +6,7 @@ import (
 
 const (
 	defaultPort            = "8091"
-	defaultPublicationsDir = "publications"
+	defaultPublicationsDir = "ebook_files"
 )
 
 // Port returns the HTTP port to bind to (without leading colon).

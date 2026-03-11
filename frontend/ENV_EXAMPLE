@@ -1,0 +1,50 @@
+# Manifest Route Configuration
+
+# Enable manifest route in production (default: false).
+MANIFEST_ROUTE_FORCE_ENABLE=false
+
+# Comma-separated list of allowed domains for manifest URLs in production.
+# Required when MANIFEST_ROUTE_FORCE_ENABLE is true.
+MANIFEST_ALLOWED_DOMAINS=publication-server.readium.org
+
+# Asset Prefix Configuration
+# Set the base path for assets (e.g., CDN URL or subdirectory).
+# Example: https://cdn.example.com or /subdirectory
+ASSET_PREFIX=
+
+################
+# Reader API   #
+################
+
+# URL of the reader_api backend. The BFF proxy forwards requests here.
+READER_API_ORIGIN=http://localhost:8000
+
+# Base URL the Readium navigator uses to fetch publication manifests.
+# In local dev this goes through the Next.js BFF proxy, which adds auth
+# and forwards to reader_api's /read/ routes.
+NEXT_PUBLIC_MANIFEST_BASE_URL=http://localhost:3000/api/pub
+
+#########
+# Auth0 #
+#########
+
+# Encryption key for Auth0 session cookies. Generate with: openssl rand -hex 32
+AUTH0_SECRET=replace-with-random-hex-string
+
+# Public URL of this frontend (used for Auth0 callback URLs).
+APP_BASE_URL=http://localhost:3000
+AUTH0_BASE_URL=http://localhost:3000
+
+# Auth0 tenant domain.
+AUTH0_DOMAIN=https://your-tenant.us.auth0.com
+AUTH0_ISSUER_BASE_URL=https://your-tenant.us.auth0.com
+
+# Auth0 application credentials.
+AUTH0_CLIENT_ID=replace-with-auth0-client-id
+AUTH0_CLIENT_SECRET=replace-with-auth0-client-secret
+
+# Auth0 API audience identifier (must match the reader_api audience).
+AUTH0_AUDIENCE=https://api.apparatus-ebooks.com
+
+# OAuth scopes requested during login.
+AUTH0_SCOPE=openid profile email read:reading_state write:reading_state
