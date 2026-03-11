@@ -8,6 +8,7 @@
     "/api/health": {
       "get": {
         "summary": "Health",
+        "description": "Health check endpoint that always returns 200 OK.",
         "operationId": "health_api_health_get",
         "responses": {
           "200": {
@@ -17,6 +18,22 @@
                 "schema": {
                   "$ref": "#/components/schemas/HealthResponseModel"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/protected": {
+      "get": {
+        "summary": "Protected Route",
+        "operationId": "protected_route_api_protected_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           }
@@ -38,13 +55,18 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/reading-state": {
       "post": {
-        "summary": "Upsert Reading State",
-        "operationId": "upsert_reading_state_api_reading_state_post",
+        "summary": "Upsert Reading State Entry",
+        "operationId": "upsert_reading_state_entry_api_reading_state_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -76,13 +98,23 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/reading-locations/latest": {
       "get": {
-        "summary": "Get Latest Reading Location",
-        "operationId": "get_latest_reading_location_api_reading_locations_latest_get",
+        "summary": "Get Latest Reading Location Entry",
+        "operationId": "get_latest_reading_location_entry_api_reading_locations_latest_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "publication_id",
@@ -128,6 +160,7 @@
     "/api/ask-freeform": {
       "post": {
         "summary": "Ask Freeform",
+        "description": "Ask a question about the current reading position.\nRequires authentication to forward auth context to MCP tools.",
         "operationId": "ask_freeform_api_ask_freeform_post",
         "requestBody": {
           "content": {
@@ -160,13 +193,24 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/ask-automatic": {
       "post": {
         "summary": "Ask Automatic",
+        "description": "Get an automatic answer based on the user's current viewport and selection.\nInfers what the user might be confused about and provides an explanation.",
         "operationId": "ask_automatic_api_ask_automatic_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "prompt_version",
@@ -199,6 +243,49 @@
                 "schema": {
                   "$ref": "#/components/schemas/AskResponseModel"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/read/{path}": {
+      "get": {
+        "summary": "Proxy Readium",
+        "description": "Proxy an authenticated request to the internal Readium server.",
+        "operationId": "proxy_readium_read__path__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Path"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -814,6 +901,12 @@
           "text"
         ],
         "title": "ViewportResponseModel"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

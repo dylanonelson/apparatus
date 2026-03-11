@@ -11,8 +11,28 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Health */
+        /**
+         * Health
+         * @description Health check endpoint that always returns 200 OK.
+         */
         get: operations["health_api_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/protected": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Protected Route */
+        get: operations["protected_route_api_protected_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -47,8 +67,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Upsert Reading State */
-        post: operations["upsert_reading_state_api_reading_state_post"];
+        /** Upsert Reading State Entry */
+        post: operations["upsert_reading_state_entry_api_reading_state_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -62,8 +82,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Latest Reading Location */
-        get: operations["get_latest_reading_location_api_reading_locations_latest_get"];
+        /** Get Latest Reading Location Entry */
+        get: operations["get_latest_reading_location_entry_api_reading_locations_latest_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -81,7 +101,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Ask Freeform */
+        /**
+         * Ask Freeform
+         * @description Ask a question about the current reading position.
+         *     Requires authentication to forward auth context to MCP tools.
+         */
         post: operations["ask_freeform_api_ask_freeform_post"];
         delete?: never;
         options?: never;
@@ -98,8 +122,32 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Ask Automatic */
+        /**
+         * Ask Automatic
+         * @description Get an automatic answer based on the user's current viewport and selection.
+         *     Infers what the user might be confused about and provides an explanation.
+         */
         post: operations["ask_automatic_api_ask_automatic_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/read/{path}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Proxy Readium
+         * @description Proxy an authenticated request to the internal Readium server.
+         */
+        get: operations["proxy_readium_read__path__get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -401,6 +449,26 @@ export interface operations {
             };
         };
     };
+    protected_route_api_protected_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     get_current_user_api_users_me_get: {
         parameters: {
             query?: never;
@@ -421,7 +489,7 @@ export interface operations {
             };
         };
     };
-    upsert_reading_state_api_reading_state_post: {
+    upsert_reading_state_entry_api_reading_state_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -454,7 +522,7 @@ export interface operations {
             };
         };
     };
-    get_latest_reading_location_api_reading_locations_latest_get: {
+    get_latest_reading_location_entry_api_reading_locations_latest_get: {
         parameters: {
             query?: {
                 publication_id?: string | null;
@@ -541,6 +609,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AskResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    proxy_readium_read__path__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                path: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
