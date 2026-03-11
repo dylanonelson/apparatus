@@ -1,1 +1,820 @@
-{"openapi": "3.1.0", "info": {"title": "Test API", "version": "0.1.0"}, "paths": {"/health": {"get": {"summary": "Health", "operationId": "health_health_get", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HealthResponseModel"}}}}}}}}, "components": {"schemas": {"HealthResponseModel": {"properties": {"ok": {"type": "boolean", "title": "Ok"}, "timestamp_ms": {"type": "integer", "title": "Timestamp Ms"}}, "type": "object", "required": ["ok", "timestamp_ms"], "title": "HealthResponseModel"}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Apparatus API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "summary": "Get Current User",
+        "operationId": "get_current_user_api_users_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reading-state": {
+      "post": {
+        "summary": "Upsert Reading State",
+        "operationId": "upsert_reading_state_api_reading_state_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreReadingStateRequestModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadingStateResponseModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reading-locations/latest": {
+      "get": {
+        "summary": "Get Latest Reading Location",
+        "operationId": "get_latest_reading_location_api_reading_locations_latest_get",
+        "parameters": [
+          {
+            "name": "publication_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Publication Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadingLocationResponseModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ask-freeform": {
+      "post": {
+        "summary": "Ask Freeform",
+        "operationId": "ask_freeform_api_ask_freeform_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskRequestModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskResponseModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ask-automatic": {
+      "post": {
+        "summary": "Ask Automatic",
+        "operationId": "ask_automatic_api_ask_automatic_post",
+        "parameters": [
+          {
+            "name": "prompt_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The prompt to use for the automatic answer.",
+              "default": "v2",
+              "title": "Prompt Version"
+            },
+            "description": "The prompt to use for the automatic answer."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutomaticAnswersRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskResponseModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AskRequestModel": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "locator": {
+            "$ref": "#/components/schemas/LocatorModel"
+          },
+          "publication_id": {
+            "type": "string",
+            "title": "Publication Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "locator",
+          "publication_id"
+        ],
+        "title": "AskRequestModel"
+      },
+      "AskResponseModel": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer"
+        ],
+        "title": "AskResponseModel"
+      },
+      "AutomaticAnswersRequestModel": {
+        "properties": {
+          "publication_id": {
+            "type": "string",
+            "title": "Publication Id",
+            "description": "Publication identifier for the book being read."
+          },
+          "locator": {
+            "$ref": "#/components/schemas/LocatorModel",
+            "description": "Locator describing the user's current position."
+          },
+          "viewport": {
+            "$ref": "#/components/schemas/ViewportPayloadModel",
+            "description": "Current viewport with text and selection."
+          }
+        },
+        "type": "object",
+        "required": [
+          "publication_id",
+          "locator",
+          "viewport"
+        ],
+        "title": "AutomaticAnswersRequestModel"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponseModel": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "timestamp_ms": {
+            "type": "integer",
+            "title": "Timestamp Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ok",
+          "timestamp_ms"
+        ],
+        "title": "HealthResponseModel"
+      },
+      "LocationsModel": {
+        "properties": {
+          "fragments": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fragments",
+            "description": "Fragments (e.g., epubcfi) pointing into the resource.",
+            "examples": [
+              [
+                "epubcfi(/6/4!/2)"
+              ]
+            ]
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Position",
+            "description": "Position within the publication spine (e.g., page number).",
+            "examples": [
+              12
+            ]
+          },
+          "progression": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progression",
+            "description": "Progression within the resource (0.0-1.0).",
+            "examples": [
+              0.42
+            ]
+          },
+          "totalProgression": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Totalprogression",
+            "description": "Progression within the entire publication (0.0-1.0).",
+            "examples": [
+              0.27
+            ]
+          }
+        },
+        "type": "object",
+        "title": "LocationsModel",
+        "description": "Locations object within a Locator\nhttps://readium.org/architecture/models/locators/"
+      },
+      "LocatorModel": {
+        "properties": {
+          "href": {
+            "type": "string",
+            "title": "Href",
+            "description": "Spine item href for the current location.",
+            "examples": [
+              "/text/chapter1.xhtml"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Media type of the resource.",
+            "examples": [
+              "application/xhtml+xml"
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Optional title for the chapter/section.",
+            "examples": [
+              "Chapter 1"
+            ]
+          },
+          "locations": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LocationsModel"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Ways to locate a position within the resource."
+          },
+          "text": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TextModel"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional text context around the locator."
+          }
+        },
+        "type": "object",
+        "required": [
+          "href",
+          "type"
+        ],
+        "title": "LocatorModel",
+        "description": "Readium Web Publication Manifest Locator\nhttps://readium.org/architecture/models/locators/#the-locator-object"
+      },
+      "ReadingLocationResponseModel": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "publication_id": {
+            "type": "string",
+            "title": "Publication Id",
+            "description": "Publication identifier for this reading location."
+          },
+          "locator": {
+            "$ref": "#/components/schemas/LocatorModel",
+            "description": "Locator describing the user's latest known position."
+          },
+          "recorded_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded At",
+            "description": "Timestamp when the reading location was captured."
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Timestamp when the reading location was stored."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "publication_id",
+          "locator"
+        ],
+        "title": "ReadingLocationResponseModel"
+      },
+      "ReadingStateResponseModel": {
+        "properties": {
+          "reading_location": {
+            "$ref": "#/components/schemas/ReadingLocationResponseModel",
+            "description": "Latest known reading location for the user."
+          },
+          "viewport": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ViewportResponseModel"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Viewport text and offsets associated with the location, if available."
+          }
+        },
+        "type": "object",
+        "required": [
+          "reading_location"
+        ],
+        "title": "ReadingStateResponseModel"
+      },
+      "StoreReadingStateRequestModel": {
+        "properties": {
+          "publication_id": {
+            "type": "string",
+            "title": "Publication Id",
+            "description": "Publication identifier associated with the reading state."
+          },
+          "locator": {
+            "$ref": "#/components/schemas/LocatorModel",
+            "description": "Locator describing the user's current position."
+          },
+          "recorded_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded At",
+            "description": "Timestamp when the reading state was captured."
+          },
+          "viewport": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ViewportPayloadModel"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional viewport text and positions snapshot."
+          }
+        },
+        "type": "object",
+        "required": [
+          "publication_id",
+          "locator"
+        ],
+        "title": "StoreReadingStateRequestModel"
+      },
+      "TextModel": {
+        "properties": {
+          "before": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Before",
+            "description": "Text immediately preceding the locator.",
+            "examples": [
+              "He opened the door and "
+            ]
+          },
+          "highlight": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highlight",
+            "description": "Text highlighted at the locator.",
+            "examples": [
+              "stepped into the bright sunlight"
+            ]
+          },
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After",
+            "description": "Text immediately after the locator.",
+            "examples": [
+              " not knowing what he'd find next."
+            ]
+          }
+        },
+        "type": "object",
+        "title": "TextModel",
+        "description": "Text context object within a Locator\nhttps://readium.org/architecture/models/locators/"
+      },
+      "UserResponseModel": {
+        "properties": {
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "created_at"
+        ],
+        "title": "UserResponseModel"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ViewportPayloadModel": {
+        "properties": {
+          "positions": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Positions",
+            "description": "Ordered character offsets in the current spine item that are visible in the viewport.",
+            "examples": [
+              [
+                0,
+                120
+              ]
+            ]
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "Visible text snippet for the user's current viewport.",
+            "examples": [
+              "It was a bright cold day in April, and the clocks were striking thirteen."
+            ]
+          },
+          "selection_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selection Text",
+            "description": "The text that the user currently has selected from their current viewport",
+            "examples": [
+              "thirteen"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "positions",
+          "text"
+        ],
+        "title": "ViewportPayloadModel"
+      },
+      "ViewportResponseModel": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "publication_id": {
+            "type": "string",
+            "title": "Publication Id",
+            "description": "Publication identifier for the viewport snapshot."
+          },
+          "positions": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Positions",
+            "description": "Ordered character offsets visible in the viewport.",
+            "examples": [
+              [
+                0,
+                120
+              ]
+            ]
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "Visible text snippet captured from the viewport.",
+            "examples": [
+              "It was a bright cold day in April, and the clocks were striking thirteen."
+            ]
+          },
+          "selection_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selection Text",
+            "description": "The text that the user currently has selected from their current viewport",
+            "examples": [
+              "thirteen"
+            ]
+          },
+          "recorded_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded At",
+            "description": "Timestamp when the viewport was captured."
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "Timestamp when the viewport was last updated."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "publication_id",
+          "positions",
+          "text"
+        ],
+        "title": "ViewportResponseModel"
+      }
+    }
+  }
+}
