@@ -10,7 +10,7 @@ The frontend is a fork of [Thorium Web](https://github.com/edrlab/thorium-web) t
 
 The Next.js backend acts as a backend-for-frontend (BFF): it holds the Auth0 session cookie and converts it to a Bearer token before proxying requests to reader_api. The frontend does not communicate with publication_api directly. Publication content (manifests, XHTML chapters, images) is fetched through the BFF proxy at `/api/pub/`, which forwards to reader_api's `/read/` routes.
 
-Node version is managed by nvm (v22). Package manager is pnpm.
+Node version is managed by nvm. Package manager is pnpm.
 
 See [`frontend/README.md`](../frontend/README.md) for setup and development instructions.
 

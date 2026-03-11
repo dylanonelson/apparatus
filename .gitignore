@@ -13,8 +13,7 @@ frontend/out/
 # production
 frontend/build
 
-# bundle
-frontend/dist
+# bundle frontend/dist
 
 # debug
 frontend/npm-debug.log*
@@ -26,6 +25,11 @@ tmp
 
 .env
 .env.local
+
+# claude
+.claude/*
+!.claude/skills
+!.claude/settings.json
 
 # misc
 .DS_Store
