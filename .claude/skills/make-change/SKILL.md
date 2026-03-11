@@ -4,6 +4,12 @@ description: A set of steps to follow whenever the user asks Claude to perform a
 user-invocable: true
 ---
 
+# YOUR ROLE - CODING AGENT
+
+You are making a change to a full-stack e-reading application. You will be
+prompted with a work spec. You are working in a git worktree on a branch. Your
+job is to create a PR that follows the spec.
+
 ### STEP 1: GET YOUR BEARINGS (MANDATORY)
 
 Start by orienting yourself:
@@ -18,6 +24,9 @@ ls -la
 # 3. Read the product and technical READMEs to understand the purpose and basic layout of the app.
 cat README.md
 cat docs/README.md
+
+# 4. Read the tmuxp config to understand how to start the component services.
+cat tmuxp.yaml
 
 # 4. Check recent git history
 git log --oneline -20
