@@ -44,9 +44,12 @@ class Config:
     instance: Optional["Config"] = None
 
     def __init__(self):
-        # Load environment variables from .env file
-        env_path = Path(__file__).parent.parent / ".env"
-        load_dotenv(dotenv_path=env_path)
+        # Precedence: real environment variables > .env.local > .env.
+        # load_dotenv won't overwrite existing vars, so load in
+        # reverse precedence order.
+        env_dir = Path(__file__).parent.parent
+        load_dotenv(dotenv_path=env_dir / ".env.local")
+        load_dotenv(dotenv_path=env_dir / ".env")
 
         self.auth0 = self._load_auth0_config()
         self.logging = self._load_logging_config()

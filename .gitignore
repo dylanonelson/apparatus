@@ -27,6 +27,8 @@ tmp
 .env
 .env.local
 
+.pnpm-store
+
 # claude
 .claude/*
 !.claude/skills
