@@ -13,7 +13,8 @@ frontend/out/
 # production
 frontend/build
 
-# bundle frontend/dist
+# bundle
+frontend/dist
 
 # debug
 frontend/npm-debug.log*

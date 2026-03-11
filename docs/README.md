@@ -95,6 +95,6 @@ This command will create or attach to a tmux session named `aie` with all servic
 
 The web client, the reader API, and the publication API are deployed on Railway alongside a Postgres DB; they communicate via Railway's private networking.
 
-An update to any individual service on the `main` branch triggers a push on Railway for just that branch. Environment variables are managed manually on Railway.
+An update to any individual service on the `main` branch triggers a push on Railway for just that service. Environment variables are managed manually on Railway.
 
-Authentication is through Auth0. Production and development currently share the same Auth0 tenant.
+Authentication is through Auth0. The public site and local development currently share the same Auth0 tenant.

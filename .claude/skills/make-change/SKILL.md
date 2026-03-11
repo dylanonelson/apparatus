@@ -85,7 +85,6 @@ Use browser automation tools:
 - Only test with curl commands (backend testing alone is insufficient)
 - Use JavaScript evaluation to bypass UI (no shortcuts)
 - Skip visual verification
-- Mark tests passing without thorough verification
 
 ### STEP 5: COMMIT AND PUSH YOUR PROGRESS
 
@@ -97,8 +96,6 @@ git commit -m "Implement [feature name] - verified end-to-end
 
 - Added [specific changes]
 - Tested with browser automation
-- Updated feature_list.json: marked test #X as passing
-- Screenshots in verification/ directory
 "
 ```
 

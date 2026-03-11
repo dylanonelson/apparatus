@@ -1,6 +1,6 @@
 # Static publication files
 
-EPUB files and their associated metadata, used by both `publication_api` (for content processing) and `reader_api` (for the publication catalog and LLM context). Both services access this directory via a `publications` symlink in their own directories.
+EPUB files and their associated metadata, used by both `publication_api` (for content processing) and `reader_api` (for the publication catalog and LLM context).
 
 ## publications.yaml
 
