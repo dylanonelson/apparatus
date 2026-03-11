@@ -25,18 +25,21 @@ Copy `ENV_EXAMPLE` to `.env.local` and fill in values. See `ENV_EXAMPLE` for the
 ### Common operations
 
 ```bash
-pnpm dev              # Development server with hot reload
-pnpm build            # Production build
-pnpm start            # Start production server
-pnpm lint             # ESLint
-pnpm typecheck        # TypeScript type checking
-pnpm format           # Prettier formatting
-pnpm add <package>    # Add a dependency
+pnpm dev                # Development server with hot reload
+pnpm build              # Production build
+pnpm start              # Start production server
+pnpm lint               # ESLint
+pnpm typecheck          # TypeScript type checking
+pnpm format             # Prettier formatting
+pnpm generate-api-types # Regenerate API types from OpenAPI schema
+pnpm add <package>      # Add a dependency
 ```
 
 ## Architecture
 
-**BFF proxy**: the frontend does not expose backend credentials to the browser. Next.js API routes in `src/app/api/` act as a proxy: the browser makes a request with an Auth0 session cookie, the API route extracts the access token, and forwards the request to `reader_api` with an `Authorization: Bearer` header. The main proxy route is `api/pub/[...path]`, which forwards all publication resource requests to `reader_api`'s `/read/` routes.
+**BFF proxy**: the frontend does not expose backend credentials to the browser. Next.js API routes in `src/app/api/` act as a proxy: the browser makes a request with an Auth0 session cookie, the API route extracts the access token, and forwards the request to `reader_api` with an `Authorization: Bearer` header. All proxy logic is centralized in `src/lib/proxy.ts`, which provides `proxyJson` (for JSON API routes), `proxyStream` (for streaming publication assets), and `serverFetchJson` (for server-component data loading). The main streaming route is `api/pub/[...path]`, which forwards all publication resource requests to `reader_api`'s `/read/` routes.
+
+**API types**: request and response types are generated from reader_api's Pydantic models via OpenAPI. The generated file is `src/lib/api-types.generated.ts`, and convenience re-exports live in `src/lib/api.ts`. To regenerate after a backend model change, run `./scripts/generate-api-types.sh` from the repo root (or `pnpm generate-api-types` for just the TS generation step).
 
 **Auth**: uses `@auth0/nextjs-auth0` v4. The session is stored as an HTTP-only cookie. Middleware checks authentication on all routes except `/login` and `/auth`.
 
