@@ -27,10 +27,14 @@ tmp
 .env
 .env.local
 
+.pnpm-store
+
 # claude
 .claude/*
 !.claude/skills
 !.claude/settings.json
+.playwright-cli
+.playwright
 
 # misc
 .DS_Store
