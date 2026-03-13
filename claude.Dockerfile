@@ -43,12 +43,6 @@ RUN npm install -g @playwright/cli@latest
 RUN /usr/local/lib/node_modules/@playwright/cli/node_modules/.bin/playwright install-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
-# Install the Chromium browser binary using the SAME Playwright that
-# @playwright/cli bundles.  Using `npx playwright` here would resolve a
-# different Playwright version, producing a revision mismatch (e.g. the
-# CLI expects revision 1212 but npx installs 1208).
-RUN /usr/local/lib/node_modules/@playwright/cli/node_modules/.bin/playwright install chromium
-
 # ── Readium CLI (serves EPUB content on port 15080) ─────────────────
 RUN git clone --depth 1 --branch v0.6.3 https://github.com/readium/cli.git /tmp/readium-cli \
     && cd /tmp/readium-cli \
@@ -65,6 +59,13 @@ ENV PATH="/home/node/.local/bin:${PATH}"
 # uv downloads prebuilt Python binaries — no build dependencies needed.
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 RUN uv python install 3.13
+
+# ── Playwright Chromium browser binary ─────────────────────────────
+# Install as `node` (not root) so the binary lands in /home/node/.cache/
+# ms-playwright/ and is preserved by the home-directory stash.  System
+# deps were already installed above as root; only the browser download
+# needs to happen here.
+RUN /usr/local/lib/node_modules/@playwright/cli/node_modules/.bin/playwright install chromium
 
 # ── Claude Code ─────────────────────────────────────────────────────
 RUN curl -fsSL https://claude.ai/install.sh | bash
