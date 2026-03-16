@@ -7,5 +7,5 @@ dir_name=$(basename "$(pwd)")
 git branch $2
 git worktree add ../apparatus-worktrees/$1 $2
 cd ../apparatus-worktrees/$1
-cp ../$dir_name/frontend/.env.local ./frontend/
-cp ../$dir_name/reader_api/.env.local ./reader_api/
+cp ../../$dir_name/frontend/.env.local ./frontend/
+cp ../../$dir_name/reader_api/.env.local ./reader_api/

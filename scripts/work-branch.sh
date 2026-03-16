@@ -21,12 +21,12 @@ fi
 
 # Create or checkout the branch
 if git rev-parse --verify "$branch_name" >/dev/null 2>&1; then
-  git checkout "$branch_name"
-  echo "Checked out existing branch $branch_name"
+  echo "Found existing branch $branch_name"
 else
-  git checkout -b "$branch_name"
+  git branch "$branch_name"
   echo "Created and checked out new branch $branch_name"
 fi
 
 git push origin "$branch_name"
 
+./scripts/worktree.sh "$work_name" "$branch_name"
