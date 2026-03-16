@@ -24,10 +24,13 @@ for arg in "$@"; do
     esac
 done
 
-docker build -f "$REPO_DIR/claude.Dockerfile" -t "$IMAGE_NAME" .
+if [[ "$BUILD" -eq 1 ]]; then
+  docker build -f "$REPO_DIR/claude.Dockerfile" -t "$IMAGE_NAME" .
+fi
 
 exec docker run -it --rm \
     --name "apparatus-claude-${N}" \
+    -e "APPARATUS_INSTANCE=${N}" \
     -p "$((3000 + N)):3000" \
     -p "$((8000 + N)):8000" \
     -p "$((8091 + N)):8091" \

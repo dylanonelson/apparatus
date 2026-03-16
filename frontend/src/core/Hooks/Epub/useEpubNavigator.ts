@@ -316,7 +316,8 @@ export const useEpubNavigator = () => {
       const selection = frameWindow?.getSelection();
       if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
         const range = selection.getRangeAt(0);
-        const rangeRect = range.getBoundingClientRect();
+        const rangeRects = range.getClientRects();
+        const rangeRect = rangeRects[0];
 
         // Transform coordinates from iframe to main window
         // Find the iframe element to get its position

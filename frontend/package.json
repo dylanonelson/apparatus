@@ -73,10 +73,10 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.12.0",
-    "@readium/css": "2.0.0-beta.19",
-    "@readium/navigator": "^2.1.1",
-    "@readium/navigator-html-injectables": "^2.1.1",
-    "@readium/shared": "^2.1.1",
+    "@readium/css": "2.0.0",
+    "@readium/navigator": "^2.3.0",
+    "@readium/navigator-html-injectables": "^2.3.0",
+    "@readium/shared": "^2.1.5",
     "@reduxjs/toolkit": "^2.9.0",
     "classnames": "^2.5.1",
     "debounce": "^2.2.0",
@@ -97,7 +97,8 @@
     "react-resizable-panels": "^3.0.6",
     "react-stately": "^3.41.0",
     "run": "^1.5.0",
-    "streamdown": "^2.0.1"
+    "streamdown": "^2.0.1",
+    "throttleit": "^2.1.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

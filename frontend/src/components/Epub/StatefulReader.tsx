@@ -25,12 +25,16 @@ import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 
 import { ThPlugin, ThPluginRegistry } from "../Plugins/PluginRegistry";
 
+import throttle from "throttleit";
 import { I18nProvider } from "react-aria";
 import { ThPluginProvider } from "../Plugins/PluginProvider";
 
 import {
   BasicTextSelection,
+  ContextMenuEvent,
   FrameClickEvent,
+  KeyboardEventData,
+  SuspiciousActivityEvent,
 } from "@readium/navigator-html-injectables";
 import {
   EpubNavigatorListeners,
@@ -687,6 +691,10 @@ const StatefulReaderInner = ({
     [getCframes, goLeft, goRight, toggleIsImmersive, activateImmersiveOnAction],
   );
 
+  const handleContextMenu = useCallback((event: any) => {
+    event.preventDefault();
+  }, []);
+
   // We need this as a workaround due to positionChanged being unreliable
   // in FXL – if the frame is in the pool hidden and is shown again,
   // positionChanged won’t fire.
@@ -781,10 +789,18 @@ const StatefulReaderInner = ({
 
   const initialRenderTimeMs = useRef<number>(Date.now());
 
+  const handleWindowScroll = useMemo(() => {
+    return throttle(() => {
+      dispatch(clearSelection());
+    }, 600);
+  }, []);
+
   const listeners: EpubNavigatorListeners = useMemo(
     () => ({
       frameLoaded: async function (_wnd: Window): Promise<void> {
         await initReadingEnv();
+        _wnd.addEventListener("contextmenu", handleContextMenu);
+        _wnd.addEventListener("scroll", handleWindowScroll);
         const _cframes = getCframes();
         _cframes?.forEach(
           (frameManager: FrameManager | FXLFrameManager | undefined) => {
@@ -849,6 +865,7 @@ const StatefulReaderInner = ({
       zoom: function (_scale: number): void {},
       miscPointer: function (_amount: number): void {},
       scroll: function (_delta: number): void {
+        dispatch(clearSelection());
         if (cache.current.settings.scroll && navLayout() !== Layout.fixed) {
           if (isScrollStart() || isScrollEnd()) {
             if (
@@ -872,7 +889,9 @@ const StatefulReaderInner = ({
           }
         }
       },
-      customEvent: function (_key: string, _data: unknown): void {},
+      customEvent: function (_key: string, _data: unknown): void {
+        console.log("Custom event", _key, _data);
+      },
       handleLocator: function (locator: Locator): boolean {
         const href = locator.href;
 
@@ -912,6 +931,12 @@ const StatefulReaderInner = ({
           dispatch(clearSelection());
         }
       },
+      contentProtection: function (
+        _type: string,
+        _data: SuspiciousActivityEvent,
+      ): void {},
+      contextMenu: function (_data: ContextMenuEvent): void {},
+      peripheral: function (_data: KeyboardEventData): void {},
     }),
     [
       initReadingEnv,
