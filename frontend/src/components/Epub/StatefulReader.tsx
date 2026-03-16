@@ -889,9 +889,7 @@ const StatefulReaderInner = ({
           }
         }
       },
-      customEvent: function (_key: string, _data: unknown): void {
-        console.log("Custom event", _key, _data);
-      },
+      customEvent: function (_key: string, _data: unknown): void {},
       handleLocator: function (locator: Locator): boolean {
         const href = locator.href;
 
