@@ -795,16 +795,33 @@ const StatefulReaderInner = ({
     }, 600);
   }, []);
 
+  const handleSelectionChange = useCallback(() => {
+    if (!getSelectionText()) dispatch(clearSelection());
+  }, [getSelectionText, dispatch]);
+
   const listeners: EpubNavigatorListeners = useMemo(
     () => ({
       frameLoaded: async function (_wnd: Window): Promise<void> {
         await initReadingEnv();
-        _wnd.addEventListener("contextmenu", handleContextMenu);
-        _wnd.addEventListener("scroll", handleWindowScroll);
+
         const _cframes = getCframes();
         _cframes?.forEach(
           (frameManager: FrameManager | FXLFrameManager | undefined) => {
-            if (frameManager) peripherals.observe(frameManager.window);
+            if (frameManager) {
+              peripherals.observe(frameManager.window);
+              frameManager.window.addEventListener(
+                "contextmenu",
+                handleContextMenu,
+              );
+              frameManager.window.document.addEventListener(
+                "selectionchange",
+                handleSelectionChange,
+              );
+              frameManager.window.addEventListener(
+                "scroll",
+                handleWindowScroll,
+              );
+            }
           },
         );
         peripherals.observe(window);
@@ -843,8 +860,6 @@ const StatefulReaderInner = ({
       },
       tap: function (_e: FrameClickEvent): boolean {
         handleTap(_e);
-        // Clear selection toolbar when user taps away from selection
-        dispatch(clearSelection());
         return true;
       },
       click: function (_e: FrameClickEvent): boolean {
