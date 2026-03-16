@@ -46,6 +46,24 @@ export READER_API_PUBLIC_URL="${READER_API_PUBLIC_URL:-http://localhost:8000}"
 export CONTENT_SERVICE_URL="${CONTENT_SERVICE_URL:-http://localhost:8091}"
 export READIUM_SERVICE_URL="${READIUM_SERVICE_URL:-http://localhost:15080}"
 
+# ── 2b. Adjust frontend .env.local for instance port offset ──────────
+# When running as instance N>0 the host-side ports are offset (e.g. 3001
+# instead of 3000).  Auth0 callback URLs and the public manifest URL must
+# use the host port so the browser redirects work correctly.
+N="${APPARATUS_INSTANCE:-0}"
+if [[ "$N" -gt 0 ]]; then
+    FRONTEND_PORT=$((3000 + N))
+    ENV_LOCAL="/app/frontend/.env.local"
+    if [[ -f "$ENV_LOCAL" ]]; then
+        log "Adjusting $ENV_LOCAL for instance $N (host port $FRONTEND_PORT)..."
+        sed -i \
+            -e "s|APP_BASE_URL=.*|APP_BASE_URL='http://localhost:${FRONTEND_PORT}'|" \
+            -e "s|AUTH0_BASE_URL=.*|AUTH0_BASE_URL='http://localhost:${FRONTEND_PORT}'|" \
+            -e "s|NEXT_PUBLIC_MANIFEST_BASE_URL=.*|NEXT_PUBLIC_MANIFEST_BASE_URL='http://localhost:${FRONTEND_PORT}/api/pub'|" \
+            "$ENV_LOCAL"
+    fi
+fi
+
 # ── 3. Install dependencies (in parallel) ───────────────────────────
 log "Installing dependencies..."
 
@@ -103,10 +121,10 @@ sleep 2
 echo ""
 echo "=== Apparatus services started ==="
 echo ""
-echo "  Frontend:        http://localhost:3000"
-echo "  Reader API:      http://localhost:8000"
-echo "  Publication API: http://localhost:8091"
-echo "  Readium CLI:     http://localhost:15080"
+echo "  Frontend:        http://localhost:3000  (host: http://localhost:$((3000 + N)))"
+echo "  Reader API:      http://localhost:8000  (host: http://localhost:$((8000 + N)))"
+echo "  Publication API: http://localhost:8091  (host: http://localhost:$((8091 + N)))"
+echo "  Readium CLI:     http://localhost:15080 (host: http://localhost:$((15080 + N)))"
 echo "  Database:        postgresql://${DB_HOST}:5432/apparatus"
 echo ""
 echo "  Logs:            $LOG_DIR/<service>.log"

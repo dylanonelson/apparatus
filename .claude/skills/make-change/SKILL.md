@@ -12,25 +12,7 @@ job is to create a PR that follows the spec.
 
 ### STEP 1: GET YOUR BEARINGS (MANDATORY)
 
-Start by orienting yourself:
-
-```bash
-# 1. See your working directory
-pwd
-
-# 2. List files to understand project structure
-ls -la
-
-# 3. Read the product and technical READMEs to understand the purpose and basic layout of the app.
-cat README.md
-cat docs/README.md
-
-# 4. Read the tmuxp config to understand how to start the component services.
-cat tmuxp.yaml
-
-# 4. Check recent git history
-git log --oneline -20
-```
+**Follow the directions in the learn-repo skill.**
 
 ### Step 2: CLARIFY REQUIREMENTS
 
@@ -62,29 +44,9 @@ Implement the asked-for feature or change thoroughly:
 
 ### STEP 4: VERIFY WITH BROWSER AUTOMATION
 
-**CRITICAL:** You MUST verify features through the actual UI.
+**Follow the directions in the test-app skill.**
 
-Use browser automation tools:
-
-- Navigate to the app in a real browser
-- Interact like a human user (click, type, scroll)
-- Take screenshots at each step
-- Verify both functionality AND visual appearance
-
-**DO:**
-
-- Test through the UI with clicks and keyboard input
-- Take screenshots to verify visual appearance
-- Check for console errors in browser
-- Verify complete user workflows end-to-end
-- Always test logged-out and logged-in scenarios
-- When making changes to the data layer, make sure the data gets saved and returned correctly
-
-**DON'T:**
-
-- Only test with curl commands (backend testing alone is insufficient)
-- Use JavaScript evaluation to bypass UI (no shortcuts)
-- Skip visual verification
+DO NOT OPEN A PR WITHOUT TESTING YOUR CHANGES.
 
 ### STEP 5: COMMIT AND PUSH YOUR PROGRESS
 
@@ -101,21 +63,13 @@ git commit -m "Implement [feature name] - verified end-to-end
 
 Push the branch to GitHub and create a PR using the `gh` command line tool.
 
-### STEP 6: END SESSION CLEANLY
-
-Before context fills up:
-
-1. Commit all working code
-2. Ensure no uncommitted changes
-3. Leave app in working state (no broken features)
-
 ---
 
 ## TESTING REQUIREMENTS
 
 **ALL testing must use browser automation tools.**
 
-Available tools: Playwright
+Available tools: Playwright CLI
 
 Test like a human user with mouse and keyboard. Don't take shortcuts by using JavaScript evaluation.
 
@@ -128,13 +82,13 @@ Test like a human user with mouse and keyboard. Don't take shortcuts by using Ja
 **Quality Bar:**
 
 - Zero console errors
-- Polished UI matching the design specified in app_spec.txt
 - All features work end-to-end through the UI
 - Fast, responsive, professional
 
 **You have unlimited time.** Take as long as needed to get it right. The most important thing is that you
-leave the code base in a clean state before terminating the session (Step 10).
+leave the code base in a clean state before terminating the session.
 
 ---
 
 Begin by running Step 1 (Get Your Bearings).
+
