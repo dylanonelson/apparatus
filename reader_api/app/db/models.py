@@ -21,6 +21,14 @@ class AuthType(str, Enum):
     GOOGLE_OAUTH2 = "google_oauth2"
 
 
+class AnnotationColor(str, Enum):
+    YELLOW = "yellow"
+    BLUE = "blue"
+    GREEN = "green"
+    PINK = "pink"
+    PURPLE = "purple"
+
+
 
 class User(SQLModel, table=True):
     __tablename__: str = "users"
@@ -210,6 +218,93 @@ class Viewport(SQLModel, table=True):
             server_default=func.now(),
             onupdate=func.now(),
             comment="Timestamp when the viewport snapshot was last updated",
+        ),
+        default_factory=lambda: datetime.now(tz=timezone.utc),
+    )
+
+
+class Annotation(SQLModel, table=True):
+    __tablename__: str = "annotations"
+    __table_args__ = (
+        Index(
+            "ix_annotations_user_pub",
+            "user_id",
+            "publication_id",
+        ),
+        Index(
+            "ix_annotations_user_pub_created",
+            "user_id",
+            "publication_id",
+            "created_at",
+        ),
+        Index(
+            "ix_annotations_user_created",
+            "user_id",
+            "created_at",
+        ),
+    )
+
+    id: UUID = Field(
+        default_factory=uuid4,
+        primary_key=True,
+        nullable=False,
+    )
+    user_id: UUID = Field(
+        foreign_key="users.id",
+        nullable=False,
+        sa_column_kwargs={
+            "comment": "User who owns this annotation",
+        },
+    )
+    publication_id: str = Field(
+        max_length=255,
+        nullable=False,
+        sa_column_kwargs={
+            "comment": "Publication identifier",
+        },
+    )
+    locator: dict[str, object] = Field(
+        sa_column=Column(
+            JSON,
+            nullable=False,
+            comment="Readium locator object pinpointing the annotated passage",
+        ),
+    )
+    color: AnnotationColor = Field(
+        sa_column=Column(
+            SQLAlchemyEnum(
+                AnnotationColor,
+                name="annotation_color",
+                values_callable=lambda enum: [e.value for e in enum],
+            ),
+            nullable=False,
+            comment="Highlight color",
+        ),
+    )
+    user_note: str | None = Field(
+        default=None,
+        sa_column=Column(
+            Text(),
+            nullable=True,
+            comment="User-authored note attached to the highlight",
+        ),
+    )
+    created_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+            server_default=func.now(),
+            comment="Timestamp when the annotation was created",
+        ),
+        default_factory=lambda: datetime.now(tz=timezone.utc),
+    )
+    updated_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=False,
+            server_default=func.now(),
+            onupdate=func.now(),
+            comment="Timestamp when the annotation was last updated",
         ),
         default_factory=lambda: datetime.now(tz=timezone.utc),
     )

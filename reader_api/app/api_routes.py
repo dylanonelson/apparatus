@@ -2,30 +2,41 @@ from __future__ import annotations
 
 import time
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Security, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi_plugin import Auth0FastAPI
 from opentelemetry import context as context_api
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.api_models import (
+    AnnotationColor as AnnotationColorAPI,
+    AnnotationResponseModel,
     AskRequestModel,
     AskResponseModel,
     AutomaticAnswersRequestModel,
+    CreateAnnotationRequestModel,
     HealthResponseModel,
     ReadingLocationResponseModel,
     ReadingStateResponseModel,
     StoreReadingStateRequestModel,
+    UpdateAnnotationRequestModel,
     UserResponseModel,
 )
 from app.config import Config
 from app.data import (
+    create_annotation,
     create_reading_location,
+    delete_annotation,
+    get_annotation_by_id,
     get_latest_reading_location,
+    list_annotations,
+    update_annotation,
     upsert_viewport,
 )
 from app.data.users import Auth0UserInfoError, get_or_create_user
 from app.db import (
+    Annotation,
+    AnnotationColor,
     User,
     Viewport,
     get_db_session,
@@ -252,5 +263,147 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             request_context=request_context,
         )
         return AskResponseModel(answer=answer)
+
+    # ── Annotation endpoints ────────────────────────────────────────────
+
+    @router.post(
+        "/annotations",
+        response_model=AnnotationResponseModel,
+        status_code=status.HTTP_201_CREATED,
+    )
+    async def create_annotation_entry(
+        body: CreateAnnotationRequestModel,
+        user: User = Depends(get_authenticated_user),
+        session: AsyncSession = Depends(get_db_session),
+    ) -> AnnotationResponseModel:
+        """Create a new annotation (highlight/note)."""
+        annotation = await create_annotation(
+            session,
+            user_id=user.id,
+            publication_id=body.publication_id,
+            locator=body.locator.model_dump(mode="json", exclude_none=True),
+            color=AnnotationColor(body.color.value),
+            user_note=body.user_note,
+        )
+        return AnnotationResponseModel.model_validate(annotation)
+
+    @router.get(
+        "/annotations",
+        response_model=list[AnnotationResponseModel],
+    )
+    async def list_annotations_entry(
+        publication_id: str = Query(..., description="Filter by publication"),
+        color: AnnotationColorAPI | None = Query(
+            None, description="Filter by highlight color"
+        ),
+        limit: int = Query(100, ge=1, le=500, description="Page size"),
+        offset: int = Query(0, ge=0, description="Pagination offset"),
+        user: User = Depends(get_authenticated_user),
+        session: AsyncSession = Depends(get_db_session),
+    ) -> list[AnnotationResponseModel]:
+        """List annotations for the authenticated user and publication."""
+        db_color = AnnotationColor(color.value) if color is not None else None
+        annotations = await list_annotations(
+            session,
+            user_id=user.id,
+            publication_id=publication_id,
+            color=db_color,
+            limit=limit,
+            offset=offset,
+        )
+        return [
+            AnnotationResponseModel.model_validate(a) for a in annotations
+        ]
+
+    @router.get(
+        "/annotations/{annotation_id}",
+        response_model=AnnotationResponseModel,
+    )
+    async def get_annotation_entry(
+        annotation_id: str,
+        user: User = Depends(get_authenticated_user),
+        session: AsyncSession = Depends(get_db_session),
+    ) -> AnnotationResponseModel:
+        """Get a single annotation by ID."""
+        from uuid import UUID as PyUUID
+
+        try:
+            ann_uuid = PyUUID(annotation_id)
+        except ValueError:
+            raise HTTPException(status_code=404, detail="Annotation not found")
+        annotation = await get_annotation_by_id(
+            session, annotation_id=ann_uuid, user_id=user.id
+        )
+        if annotation is None:
+            raise HTTPException(status_code=404, detail="Annotation not found")
+        return AnnotationResponseModel.model_validate(annotation)
+
+    @router.patch(
+        "/annotations/{annotation_id}",
+        response_model=AnnotationResponseModel,
+    )
+    async def update_annotation_entry(
+        annotation_id: str,
+        body: UpdateAnnotationRequestModel,
+        user: User = Depends(get_authenticated_user),
+        session: AsyncSession = Depends(get_db_session),
+    ) -> AnnotationResponseModel:
+        """Update an annotation's mutable fields."""
+        from uuid import UUID as PyUUID
+
+        try:
+            ann_uuid = PyUUID(annotation_id)
+        except ValueError:
+            raise HTTPException(status_code=404, detail="Annotation not found")
+        annotation = await get_annotation_by_id(
+            session, annotation_id=ann_uuid, user_id=user.id
+        )
+        if annotation is None:
+            raise HTTPException(status_code=404, detail="Annotation not found")
+
+        # Determine which fields were explicitly provided in the request body
+        provided = body.model_fields_set
+        updated = await update_annotation(
+            session,
+            annotation=annotation,
+            locator=(
+                body.locator.model_dump(mode="json", exclude_none=True)
+                if body.locator is not None
+                else None
+            ),
+            color=(
+                AnnotationColor(body.color.value)
+                if body.color is not None
+                else None
+            ),
+            user_note=body.user_note,
+            has_user_note="user_note" in provided,
+        )
+        return AnnotationResponseModel.model_validate(updated)
+
+    @router.delete(
+        "/annotations/{annotation_id}",
+        status_code=status.HTTP_204_NO_CONTENT,
+        response_class=Response,
+    )
+    async def delete_annotation_entry(
+        annotation_id: str,
+        user: User = Depends(get_authenticated_user),
+        session: AsyncSession = Depends(get_db_session),
+    ) -> Response:
+        """Delete an annotation."""
+        from uuid import UUID as PyUUID
+
+        try:
+            ann_uuid = PyUUID(annotation_id)
+        except ValueError:
+            raise HTTPException(status_code=404, detail="Annotation not found")
+        annotation = await get_annotation_by_id(
+            session, annotation_id=ann_uuid, user_id=user.id
+        )
+        if annotation is None:
+            raise HTTPException(status_code=404, detail="Annotation not found")
+        await delete_annotation(session, annotation=annotation)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
     return router, auth0, bearer_scheme, get_authenticated_user

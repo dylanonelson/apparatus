@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -247,6 +248,80 @@ class UserResponseModel(BaseModel):
     email: str | None = None
     display_name: str | None = None
     created_at: datetime
+
+    model_config = {
+        "from_attributes": True,
+    }
+
+
+class AnnotationColor(str, Enum):
+    YELLOW = "yellow"
+    BLUE = "blue"
+    GREEN = "green"
+    PINK = "pink"
+    PURPLE = "purple"
+
+
+class CreateAnnotationRequestModel(BaseModel):
+    publication_id: str = Field(
+        ...,
+        description="Publication identifier for the annotated book.",
+    )
+    locator: LocatorModel = Field(
+        ...,
+        description="Readium locator pinpointing the annotated passage.",
+    )
+    color: AnnotationColor = Field(
+        ...,
+        description="Highlight color.",
+    )
+    user_note: str | None = Field(
+        None,
+        description="Optional note attached to the highlight.",
+    )
+
+
+class UpdateAnnotationRequestModel(BaseModel):
+    locator: LocatorModel | None = Field(
+        None,
+        description="Updated Readium locator to reposition the highlight.",
+    )
+    color: AnnotationColor | None = Field(
+        None,
+        description="Updated highlight color.",
+    )
+    user_note: str | None = Field(
+        None,
+        description="Updated note text.",
+    )
+
+
+class AnnotationResponseModel(BaseModel):
+    id: UUID
+    publication_id: str = Field(
+        ...,
+        description="Publication identifier for the annotated book.",
+    )
+    locator: LocatorModel = Field(
+        ...,
+        description="Readium locator pinpointing the annotated passage.",
+    )
+    color: AnnotationColor = Field(
+        ...,
+        description="Highlight color.",
+    )
+    user_note: str | None = Field(
+        None,
+        description="Note attached to the highlight.",
+    )
+    created_at: datetime = Field(
+        ...,
+        description="Timestamp when the annotation was created.",
+    )
+    updated_at: datetime = Field(
+        ...,
+        description="Timestamp when the annotation was last updated.",
+    )
 
     model_config = {
         "from_attributes": True,
