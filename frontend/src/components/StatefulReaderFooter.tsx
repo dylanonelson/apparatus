@@ -27,6 +27,9 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
   const hasScrollAffordance = useAppSelector(
     (state) => state.reader.hasScrollAffordance,
   );
+  const selectionIsVisible = useAppSelector(
+    (state) => state.selection.isVisible,
+  );
   const scroll = useAppSelector((state) => state.settings.scroll);
   const isFXL = useAppSelector((state) => state.publication.isFXL);
   const isScroll = scroll && !isFXL;
@@ -151,6 +154,11 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
       }
     }
   }, [isImmersive]);
+
+  // Hide the footer when the selection toolbar is visible (it replaces the footer)
+  if (selectionIsVisible) {
+    return null;
+  }
 
   return (
     <>

@@ -370,6 +370,11 @@ const StatefulReaderInner = ({
   const atPublicationEnd = useAppSelector(
     (state) => state.publication.atPublicationEnd,
   );
+  const selectionIsVisible = useAppSelector(
+    (state) => state.selection.isVisible,
+  );
+  const selectionIsVisibleRef = useRef(selectionIsVisible);
+  selectionIsVisibleRef.current = selectionIsVisible;
 
   const dispatch = useAppDispatch();
 
@@ -674,7 +679,12 @@ const StatefulReaderInner = ({
               window.devicePixelRatio) /
             4;
 
-          if (event.x < oneQuarter) {
+          // When a selection is active, disable tap-to-navigate in paginated mode
+          if (selectionIsVisibleRef.current) {
+            if (oneQuarter <= event.x && event.x <= oneQuarter * 3) {
+              toggleIsImmersive();
+            }
+          } else if (event.x < oneQuarter) {
             goLeft(!cache.current.reducedMotion, activateImmersiveOnAction);
           } else if (event.x > oneQuarter * 3) {
             goRight(!cache.current.reducedMotion, activateImmersiveOnAction);
@@ -791,13 +801,50 @@ const StatefulReaderInner = ({
 
   const handleWindowScroll = useMemo(() => {
     return throttle(() => {
-      dispatch(clearSelection());
+      // Only clear the selection if there's no active text selection in any frame
+      const _cframes = getCframes();
+      const hasActiveSelection = _cframes?.some((fm) => {
+        const sel = fm?.window?.getSelection();
+        return sel && sel.toString().trim().length > 0;
+      });
+      if (!hasActiveSelection) {
+        dispatch(clearSelection());
+      }
     }, 600);
   }, []);
 
-  const handleSelectionChange = useCallback(() => {
-    if (!getSelectionText()) dispatch(clearSelection());
-  }, [getSelectionText, dispatch]);
+  const handleSelectionChange = useCallback(
+    (_wnd: Window) => {
+      const locator = currentLocator();
+      if (!locator) return;
+
+      const timestamp = new Date().toISOString();
+      const nextLocation: LocalStorageReadingLocation = {
+        publicationId,
+        locator,
+        recordedAt: timestamp,
+      };
+
+      lastRecordedLocation.current = nextLocation;
+      setLocalReadingLocation(locator, timestamp);
+      const selection = _wnd.getSelection();
+
+      const selectionText = selection?.toString()
+        ? selection.toString().trim()
+        : null;
+      syncReadingLocationToServer(nextLocation, selectionText);
+
+      // Dispatch selection state for the selection toolbar
+      const rect = getSelectionRect();
+      console.log("textSelected", selectionText, rect);
+      if (selectionText && rect) {
+        dispatch(setSelection({ text: selectionText, rect }));
+      } else {
+        dispatch(clearSelection());
+      }
+    },
+    [getSelectionText, dispatch],
+  );
 
   const listeners: EpubNavigatorListeners = useMemo(
     () => ({
@@ -815,7 +862,7 @@ const StatefulReaderInner = ({
               );
               frameManager.window.document.addEventListener(
                 "selectionchange",
-                handleSelectionChange,
+                handleSelectionChange.bind(null, frameManager.window),
               );
               frameManager.window.addEventListener(
                 "scroll",
@@ -841,8 +888,16 @@ const StatefulReaderInner = ({
           queueReadingLocationUpdate(locator);
         }
 
-        // Clear selection toolbar when position changes (navigation)
-        dispatch(clearSelection());
+        // Clear selection toolbar when position changes (navigation),
+        // but only if there's no active text selection in any frame
+        const _cframesPos = getCframes();
+        const hasActiveSelectionPos = _cframesPos?.some((fm) => {
+          const sel = fm?.window?.getSelection();
+          return sel && sel.toString().trim().length > 0;
+        });
+        if (!hasActiveSelectionPos) {
+          dispatch(clearSelection());
+        }
 
         // We could use canGoBackward() and canGoForward() directly on arrows
         // but maybe we will need to sync the state for other features in the future
@@ -873,8 +928,16 @@ const StatefulReaderInner = ({
             handleTap(_e);
           }
         }
-        // Clear selection toolbar when user clicks away from selection
-        dispatch(clearSelection());
+        // Clear selection toolbar when user clicks away from selection,
+        // but only if there's no active text selection in any frame
+        const _cframes = getCframes();
+        const hasActiveSelection = _cframes?.some((fm) => {
+          const sel = fm?.window?.getSelection();
+          return sel && sel.toString().trim().length > 0;
+        });
+        if (!hasActiveSelection) {
+          dispatch(clearSelection());
+        }
         return true;
       },
       zoom: function (_scale: number): void {},
@@ -920,30 +983,7 @@ const StatefulReaderInner = ({
         }
         return false;
       },
-      textSelected: function (selection: BasicTextSelection): void {
-        const locator = currentLocator();
-        if (!locator) return;
-
-        const timestamp = new Date().toISOString();
-        const nextLocation: LocalStorageReadingLocation = {
-          publicationId,
-          locator,
-          recordedAt: timestamp,
-        };
-
-        lastRecordedLocation.current = nextLocation;
-        setLocalReadingLocation(locator, timestamp);
-        const selectionText = selection.text?.trim() || null;
-        syncReadingLocationToServer(nextLocation, selectionText);
-
-        // Dispatch selection state for the selection toolbar
-        const rect = getSelectionRect();
-        if (selectionText && rect) {
-          dispatch(setSelection({ text: selectionText, rect }));
-        } else {
-          dispatch(clearSelection());
-        }
-      },
+      textSelected: function (selection: BasicTextSelection): void {},
       contentProtection: function (
         _type: string,
         _data: SuspiciousActivityEvent,
@@ -1330,7 +1370,7 @@ const StatefulReaderInner = ({
                   <StatefulReaderArrowButton
                     direction="left"
                     occupySpace={arrowsOccupySpace || false}
-                    isDisabled={atPublicationStart}
+                    isDisabled={atPublicationStart || selectionIsVisible}
                     onPress={() =>
                       goLeft(!reducedMotion, activateImmersiveOnAction)
                     }
@@ -1352,7 +1392,7 @@ const StatefulReaderInner = ({
                   <StatefulReaderArrowButton
                     direction="right"
                     occupySpace={arrowsOccupySpace || false}
-                    isDisabled={atPublicationEnd}
+                    isDisabled={atPublicationEnd || selectionIsVisible}
                     onPress={() =>
                       goRight(!reducedMotion, activateImmersiveOnAction)
                     }

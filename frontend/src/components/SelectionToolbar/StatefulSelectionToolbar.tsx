@@ -59,34 +59,22 @@ export const StatefulSelectionToolbar = () => {
 
   const actionItems = useMemo(() => listActionItems(), [listActionItems]);
 
-  // Calculate toolbar position based on selection rect
+  const isVisible = selection.isVisible && actionItems.length > 0;
+
+  // When a sheet is open, hide visually but preserve the element for popover anchoring
   const toolbarStyle = useMemo(() => {
-    if (!selection.rect) return { display: "none" } as React.CSSProperties;
-    const { top, left, width, height } = selection.rect;
+    const style: React.CSSProperties = {};
 
-    // Position the toolbar above the selection, centered horizontally
-    const style: React.CSSProperties = {
-      position: "fixed",
-      top: `${top - 8}px`, // 8px gap above selection
-      left: `${left + width / 2}px`,
-      transform: "translate(-50%, -100%)",
-    };
-
-    if (!selection.isVisible || actionItems.length === 0) {
-      // Fully hide when no selection or no actions
+    if (!isVisible) {
       style.display = "none";
     } else if (isAnySheetOpen) {
-      // When a sheet is open, hide visually but preserve position for popover
-      // positioning. Use visibility/opacity so the ref still has valid dimensions.
       style.visibility = "hidden";
       style.opacity = 0;
       style.pointerEvents = "none";
-      style.top = top + height / 2;
-      style.transform = "translate(-50%, -50%)";
     }
 
     return style;
-  }, [selection.isVisible, selection.rect, actionItems.length, isAnySheetOpen]);
+  }, [isVisible, isAnySheetOpen]);
 
   return (
     <div
@@ -104,7 +92,6 @@ export const StatefulSelectionToolbar = () => {
           </Fragment>
         ))}
       </div>
-      <div className={selectionToolbarStyles.arrow} />
     </div>
   );
 };

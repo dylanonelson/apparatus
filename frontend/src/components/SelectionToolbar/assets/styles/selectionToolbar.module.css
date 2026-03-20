@@ -1,31 +1,36 @@
 .toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 10000;
   pointer-events: auto;
-  animation: fadeIn 150ms ease-out;
+  animation: slideUp 150ms ease-out;
 }
 
-@keyframes fadeIn {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translate(-50%, -100%) translateY(4px);
+    transform: translateY(100%);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -100%) translateY(0);
+    transform: translateY(0);
   }
 }
 
 .toolbarContent {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 6px 8px;
+  padding: 8px 12px;
   background-color: var(--theme-background);
   color: var(--theme-text);
-  border-radius: var(--layout-radius, 5px);
-  border: 1px solid var(--theme-subdue);
-  filter: drop-shadow(var(--theme-elevate));
+  border-top: 1px solid var(--theme-subdue);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  height: calc(var(--icon-size, 24px) * 2.5);
 }
 
 .toolbarContent button {
@@ -54,28 +59,4 @@
   width: calc(var(--icon-size, 24px) * 0.85);
   height: calc(var(--icon-size, 24px) * 0.85);
   fill: currentColor;
-}
-
-.arrow {
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid var(--theme-subdue);
-}
-
-.arrow::after {
-  content: "";
-  position: absolute;
-  top: -7px;
-  left: -5px;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--theme-background);
 }
