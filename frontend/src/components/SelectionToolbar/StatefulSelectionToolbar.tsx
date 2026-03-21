@@ -16,6 +16,7 @@ import selectionToolbarStyles from "./assets/styles/selectionToolbar.module.css"
 import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";
 import { usePlugins } from "../Plugins/PluginProvider";
 import { useAppSelector } from "@/lib/hooks";
+import { useTouchDevice } from "@/hooks/useTouchDevice";
 
 interface SelectionToolbarActionItem {
   key: string;
@@ -27,6 +28,7 @@ export const StatefulSelectionToolbar = () => {
   const { selectionToolbarKeys } = usePreferenceKeys();
   const { actionsComponentsMap } = usePlugins();
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const isTouchDevice = useTouchDevice();
 
   const selection = useAppSelector((state) => state.selection);
   const actionsMap = useAppSelector((state) => state.actions.keys);
@@ -61,25 +63,55 @@ export const StatefulSelectionToolbar = () => {
 
   const isVisible = selection.isVisible && actionItems.length > 0;
 
-  // When a sheet is open, hide visually but preserve the element for popover anchoring
+  // Calculate toolbar style based on device type
   const toolbarStyle = useMemo(() => {
-    const style: React.CSSProperties = {};
+    if (isTouchDevice) {
+      // Touch devices: fixed bottom bar (position handled by CSS class)
+      const style: React.CSSProperties = {};
 
-    if (!isVisible) {
-      style.display = "none";
-    } else if (isAnySheetOpen) {
-      style.visibility = "hidden";
-      style.opacity = 0;
-      style.pointerEvents = "none";
+      if (!isVisible) {
+        style.display = "none";
+      } else if (isAnySheetOpen) {
+        style.visibility = "hidden";
+        style.opacity = 0;
+        style.pointerEvents = "none";
+      }
+
+      return style;
+    } else {
+      // Desktop: floating popover above selection
+      if (!selection.rect) return { display: "none" } as React.CSSProperties;
+      const { top, left, width, height } = selection.rect;
+
+      const style: React.CSSProperties = {
+        position: "fixed",
+        top: `${top - 8}px`,
+        left: `${left + width / 2}px`,
+        transform: "translate(-50%, -100%)",
+      };
+
+      if (!isVisible) {
+        style.display = "none";
+      } else if (isAnySheetOpen) {
+        style.visibility = "hidden";
+        style.opacity = 0;
+        style.pointerEvents = "none";
+        style.top = top + height / 2;
+        style.transform = "translate(-50%, -50%)";
+      }
+
+      return style;
     }
+  }, [isTouchDevice, isVisible, selection.rect, isAnySheetOpen]);
 
-    return style;
-  }, [isVisible, isAnySheetOpen]);
+  const toolbarClassName = isTouchDevice
+    ? selectionToolbarStyles.toolbarTouch
+    : selectionToolbarStyles.toolbarDesktop;
 
   return (
     <div
       ref={toolbarRef}
-      className={selectionToolbarStyles.toolbar}
+      className={toolbarClassName}
       style={toolbarStyle}
       role="toolbar"
       aria-label="Selection actions"
@@ -92,6 +124,7 @@ export const StatefulSelectionToolbar = () => {
           </Fragment>
         ))}
       </div>
+      {!isTouchDevice && <div className={selectionToolbarStyles.arrow} />}
     </div>
   );
 };

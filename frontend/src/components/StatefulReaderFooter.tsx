@@ -18,6 +18,7 @@ import { useI18n } from "@/i18n/useI18n";
 
 import { setHovering } from "@/lib/readerReducer";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useTouchDevice } from "@/hooks/useTouchDevice";
 
 export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
   const { t } = useI18n();
@@ -30,6 +31,7 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
   const selectionIsVisible = useAppSelector(
     (state) => state.selection.isVisible,
   );
+  const isTouchDevice = useTouchDevice();
   const scroll = useAppSelector((state) => state.settings.scroll);
   const isFXL = useAppSelector((state) => state.publication.isFXL);
   const isScroll = scroll && !isFXL;
@@ -155,8 +157,10 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
     }
   }, [isImmersive]);
 
-  // Hide the footer when the selection toolbar is visible (it replaces the footer)
-  if (selectionIsVisible) {
+  // On touch devices, hide the footer when the selection toolbar is visible
+  // (the fixed bottom toolbar replaces the footer). On desktop, the toolbar
+  // floats above the selection so the footer stays in place.
+  if (isTouchDevice && selectionIsVisible) {
     return null;
   }
 

@@ -106,6 +106,7 @@ import {
 } from "@/lib/publicationReducer";
 import { LineLengthStateObject } from "@/lib/settingsReducer";
 import { setSelection, clearSelection } from "@/lib/selectionReducer";
+import { useTouchDevice } from "@/hooks/useTouchDevice";
 
 import classNames from "classnames";
 import debounce from "debounce";
@@ -274,6 +275,7 @@ const StatefulReaderInner = ({
   const { preferences } = usePreferences();
   const { t } = useI18n();
   const { getEffectiveSpacingValue } = useSpacingPresets();
+  const isTouchDevice = useTouchDevice();
 
   const [publication, setPublication] = useState<Publication | null>(null);
 
@@ -375,6 +377,8 @@ const StatefulReaderInner = ({
   );
   const selectionIsVisibleRef = useRef(selectionIsVisible);
   selectionIsVisibleRef.current = selectionIsVisible;
+  const isTouchDeviceRef = useRef(isTouchDevice);
+  isTouchDeviceRef.current = isTouchDevice;
 
   const dispatch = useAppDispatch();
 
@@ -679,8 +683,8 @@ const StatefulReaderInner = ({
               window.devicePixelRatio) /
             4;
 
-          // When a selection is active, disable tap-to-navigate in paginated mode
-          if (selectionIsVisibleRef.current) {
+          // On touch devices, disable tap-to-navigate when a selection is active
+          if (isTouchDeviceRef.current && selectionIsVisibleRef.current) {
             if (oneQuarter <= event.x && event.x <= oneQuarter * 3) {
               toggleIsImmersive();
             }
@@ -1370,7 +1374,7 @@ const StatefulReaderInner = ({
                   <StatefulReaderArrowButton
                     direction="left"
                     occupySpace={arrowsOccupySpace || false}
-                    isDisabled={atPublicationStart || selectionIsVisible}
+                    isDisabled={atPublicationStart || (isTouchDevice && selectionIsVisible)}
                     onPress={() =>
                       goLeft(!reducedMotion, activateImmersiveOnAction)
                     }
@@ -1392,7 +1396,7 @@ const StatefulReaderInner = ({
                   <StatefulReaderArrowButton
                     direction="right"
                     occupySpace={arrowsOccupySpace || false}
-                    isDisabled={atPublicationEnd || selectionIsVisible}
+                    isDisabled={atPublicationEnd || (isTouchDevice && selectionIsVisible)}
                     onPress={() =>
                       goRight(!reducedMotion, activateImmersiveOnAction)
                     }
