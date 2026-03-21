@@ -12,11 +12,14 @@ import { ThActionsTriggerVariant } from "@/core/Components/Actions/ThActionsBar"
 import { useActions } from "@/core/Components/Actions/hooks/useActions";
 
 import selectionToolbarStyles from "./assets/styles/selectionToolbar.module.css";
+import ExpandSelectionIcon from "./assets/icons/expand-selection.svg";
 
 import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";
 import { usePlugins } from "../Plugins/PluginProvider";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useTouchDevice } from "@/hooks/useTouchDevice";
+import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
+import { setSelection } from "@/lib/selectionReducer";
 
 interface SelectionToolbarActionItem {
   key: string;
@@ -29,6 +32,8 @@ export const StatefulSelectionToolbar = () => {
   const { actionsComponentsMap } = usePlugins();
   const toolbarRef = useRef<HTMLDivElement>(null);
   const isTouchDevice = useTouchDevice();
+  const { expandSelectionToSentences, getSelectionRect } = useEpubNavigator();
+  const dispatch = useAppDispatch();
 
   const selection = useAppSelector((state) => state.selection);
   const actionsMap = useAppSelector((state) => state.actions.keys);
@@ -62,6 +67,16 @@ export const StatefulSelectionToolbar = () => {
   const actionItems = useMemo(() => listActionItems(), [listActionItems]);
 
   const isVisible = selection.isVisible && actionItems.length > 0;
+
+  const handleExpandToSentence = useCallback(() => {
+    const expandedText = expandSelectionToSentences();
+    if (expandedText) {
+      const rect = getSelectionRect();
+      if (rect) {
+        dispatch(setSelection({ text: expandedText, rect }));
+      }
+    }
+  }, [expandSelectionToSentences, getSelectionRect, dispatch]);
 
   // Calculate toolbar style based on device type
   const toolbarStyle = useMemo(() => {
@@ -117,6 +132,16 @@ export const StatefulSelectionToolbar = () => {
       aria-label="Selection actions"
     >
       <div className={selectionToolbarStyles.toolbarContent}>
+        {isTouchDevice && (
+          <button
+            type="button"
+            onClick={handleExpandToSentence}
+            aria-label="Expand selection to sentence"
+            title="Expand to sentence"
+          >
+            <ExpandSelectionIcon aria-hidden="true" focusable="false" />
+          </button>
+        )}
         {actionItems.map(({ key, Trigger, Target }) => (
           <Fragment key={key}>
             <Trigger variant={ThActionsTriggerVariant.selectionButton} />
