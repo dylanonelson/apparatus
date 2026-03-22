@@ -380,6 +380,14 @@ const StatefulReaderInner = ({
   const isTouchDeviceRef = useRef(isTouchDevice);
   isTouchDeviceRef.current = isTouchDevice;
 
+  // Track pointer-down timestamp so handleTap can distinguish quick taps
+  // from long-presses. On Chrome DevTools mobile emulation, a long-press
+  // creates a text selection *after* pointerup, so the selection doesn't
+  // exist yet when the tap event fires. We suppress navigation when the
+  // press duration exceeds the long-press threshold.
+  const pointerDownTimeRef = useRef<number>(0);
+  const LONG_PRESS_THRESHOLD_MS = 300;
+
   const dispatch = useAppDispatch();
 
   const onFsChange = useCallback(
@@ -672,13 +680,23 @@ const StatefulReaderInner = ({
       const _cframes = getCframes();
       if (_cframes) {
         // Check the iframe DOM directly for an active text selection.
-        // We cannot rely on the Redux ref (selectionIsVisibleRef) because
-        // selectionchange and this tap handler can fire in the same event
-        // loop iteration — before React re-renders and updates the ref.
-        const hasActiveSelection = isTouchDeviceRef.current && _cframes.some((fm) => {
+        // This covers the case where the selection exists when the tap fires.
+        const hasActiveSelection = _cframes.some((fm) => {
           const sel = fm?.window?.getSelection();
           return sel && sel.toString().trim().length > 0;
         });
+
+        // Also suppress navigation if the press duration indicates a long-
+        // press. On Chrome DevTools mobile emulation (and on some real
+        // devices) the browser creates the text selection *after* pointerup,
+        // so the selection may not exist yet when this handler runs. A press
+        // longer than 300ms is a long-press, not a quick tap.
+        const pressDuration = Date.now() - pointerDownTimeRef.current;
+        const isLongPress =
+          pointerDownTimeRef.current > 0 &&
+          pressDuration > LONG_PRESS_THRESHOLD_MS;
+
+        const shouldSuppressNav = hasActiveSelection || isLongPress;
 
         const scrollToggleOnTap =
           preferencesRef.current.affordances.scroll.toggleOnMiddlePointer.includes(
@@ -692,8 +710,7 @@ const StatefulReaderInner = ({
               window.devicePixelRatio) /
             4;
 
-          // On touch devices, disable tap-to-navigate when a selection is active
-          if (hasActiveSelection) {
+          if (shouldSuppressNav) {
             if (oneQuarter <= event.x && event.x <= oneQuarter * 3) {
               toggleIsImmersive();
             }
@@ -880,6 +897,11 @@ const StatefulReaderInner = ({
               frameManager.window.addEventListener(
                 "scroll",
                 handleWindowScroll,
+              );
+              // Track pointer-down time so handleTap can detect long-presses
+              frameManager.window.addEventListener(
+                "pointerdown",
+                () => { pointerDownTimeRef.current = Date.now(); },
               );
             }
           },
