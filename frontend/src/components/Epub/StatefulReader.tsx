@@ -671,6 +671,15 @@ const StatefulReaderInner = ({
     (event: FrameClickEvent) => {
       const _cframes = getCframes();
       if (_cframes) {
+        // Check the iframe DOM directly for an active text selection.
+        // We cannot rely on the Redux ref (selectionIsVisibleRef) because
+        // selectionchange and this tap handler can fire in the same event
+        // loop iteration — before React re-renders and updates the ref.
+        const hasActiveSelection = isTouchDeviceRef.current && _cframes.some((fm) => {
+          const sel = fm?.window?.getSelection();
+          return sel && sel.toString().trim().length > 0;
+        });
+
         const scrollToggleOnTap =
           preferencesRef.current.affordances.scroll.toggleOnMiddlePointer.includes(
             "tap",
@@ -684,7 +693,7 @@ const StatefulReaderInner = ({
             4;
 
           // On touch devices, disable tap-to-navigate when a selection is active
-          if (isTouchDeviceRef.current && selectionIsVisibleRef.current) {
+          if (hasActiveSelection) {
             if (oneQuarter <= event.x && event.x <= oneQuarter * 3) {
               toggleIsImmersive();
             }
