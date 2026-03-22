@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from uuid import UUID
 
 from sqlmodel import select
@@ -24,14 +25,23 @@ async def create_annotation(
     locator: dict[str, object],
     color: AnnotationColor,
     user_note: str | None = None,
+    recorded_at: datetime | None = None,
 ) -> Annotation:
     """Create a new annotation for a user."""
+    timestamp: datetime | None = recorded_at
+    if timestamp is not None:
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+        else:
+            timestamp = timestamp.astimezone(timezone.utc)
+
     annotation = Annotation(
         user_id=user_id,
         publication_id=publication_id,
         locator=locator,
         color=color,
         user_note=user_note,
+        recorded_at=timestamp,
     )
     session.add(annotation)
     await session.commit()
@@ -70,7 +80,7 @@ async def list_annotations(
     )
     if color is not None:
         statement = statement.where(Annotation.color == color)
-    statement = statement.order_by(Annotation.created_at.asc())  # type: ignore[union-attr]
+    statement = statement.order_by(Annotation.created_at.asc())  # type: ignore[attr-defined]
     statement = statement.offset(offset).limit(limit)
     result = await session.exec(statement)
     return list(result.all())

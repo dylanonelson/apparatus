@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from uuid import UUID as PyUUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -284,6 +285,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             locator=body.locator.model_dump(mode="json", exclude_none=True),
             color=AnnotationColor(body.color.value),
             user_note=body.user_note,
+            recorded_at=body.recorded_at,
         )
         return AnnotationResponseModel.model_validate(annotation)
 
@@ -325,8 +327,6 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         session: AsyncSession = Depends(get_db_session),
     ) -> AnnotationResponseModel:
         """Get a single annotation by ID."""
-        from uuid import UUID as PyUUID
-
         try:
             ann_uuid = PyUUID(annotation_id)
         except ValueError:
@@ -349,8 +349,6 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         session: AsyncSession = Depends(get_db_session),
     ) -> AnnotationResponseModel:
         """Update an annotation's mutable fields."""
-        from uuid import UUID as PyUUID
-
         try:
             ann_uuid = PyUUID(annotation_id)
         except ValueError:
@@ -392,8 +390,6 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         session: AsyncSession = Depends(get_db_session),
     ) -> Response:
         """Delete an annotation."""
-        from uuid import UUID as PyUUID
-
         try:
             ann_uuid = PyUUID(annotation_id)
         except ValueError:

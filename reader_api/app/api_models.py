@@ -279,6 +279,10 @@ class CreateAnnotationRequestModel(BaseModel):
         None,
         description="Optional note attached to the highlight.",
     )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Client-side timestamp when the annotation was created.",
+    )
 
 
 class UpdateAnnotationRequestModel(BaseModel):
@@ -313,6 +317,10 @@ class AnnotationResponseModel(BaseModel):
     user_note: str | None = Field(
         None,
         description="Note attached to the highlight.",
+    )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Client-side timestamp when the annotation was created.",
     )
     created_at: datetime = Field(
         ...,
