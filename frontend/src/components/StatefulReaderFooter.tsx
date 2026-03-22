@@ -18,7 +18,6 @@ import { useI18n } from "@/i18n/useI18n";
 
 import { setHovering } from "@/lib/readerReducer";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { useTouchDevice } from "@/hooks/useTouchDevice";
 
 export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
   const { t } = useI18n();
@@ -28,10 +27,6 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
   const hasScrollAffordance = useAppSelector(
     (state) => state.reader.hasScrollAffordance,
   );
-  const selectionIsVisible = useAppSelector(
-    (state) => state.selection.isVisible,
-  );
-  const isTouchDevice = useTouchDevice();
   const scroll = useAppSelector((state) => state.settings.scroll);
   const isFXL = useAppSelector((state) => state.publication.isFXL);
   const isScroll = scroll && !isFXL;
@@ -157,12 +152,12 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
     }
   }, [isImmersive]);
 
-  // On touch devices, hide the footer when the selection toolbar is visible
-  // (the fixed bottom toolbar replaces the footer). On desktop, the toolbar
-  // floats above the selection so the footer stays in place.
-  if (isTouchDevice && selectionIsVisible) {
-    return null;
-  }
+  // Note: we intentionally do NOT remove the footer from the DOM when the
+  // selection toolbar is visible. In paginated (stacked) layout the footer
+  // occupies flex space; removing it causes the reading area to resize,
+  // which triggers Readium's column snapper to re-paginate and jump to a
+  // different page. The touch selection toolbar is position:fixed with a
+  // high z-index, so it naturally overlays the footer without layout shift.
 
   return (
     <>
