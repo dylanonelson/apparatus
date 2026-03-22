@@ -300,7 +300,7 @@ class UpdateAnnotationRequestModel(BaseModel):
     )
 
 
-class AnnotationResponseModel(BaseModel):
+class AnnotationModel(BaseModel):
     id: UUID
     publication_id: str = Field(
         ...,
@@ -334,3 +334,17 @@ class AnnotationResponseModel(BaseModel):
     model_config = {
         "from_attributes": True,
     }
+
+
+class AnnotationResponseModel(BaseModel):
+    annotation: AnnotationModel = Field(
+        ...,
+        description="The annotation object.",
+    )
+
+
+class AnnotationListResponseModel(BaseModel):
+    annotations: list[AnnotationModel] = Field(
+        ...,
+        description="List of annotations.",
+    )

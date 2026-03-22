@@ -51,7 +51,7 @@ def test_create_annotation(test_app: TestApp) -> None:
             "user_note": "Great passage!",
         })
         assert resp.status_code == 201, resp.text
-        data = resp.json()
+        data = resp.json()["annotation"]
         assert data["publication_id"] == "pub-1"
         assert data["color"] == "yellow"
         assert data["user_note"] == "Great passage!"
@@ -74,7 +74,7 @@ def test_create_annotation_without_note(test_app: TestApp) -> None:
             "color": "blue",
         })
         assert resp.status_code == 201, resp.text
-        data = resp.json()
+        data = resp.json()["annotation"]
         assert data["color"] == "blue"
         assert data["user_note"] is None
 
@@ -97,17 +97,17 @@ def test_list_annotations(test_app: TestApp) -> None:
         # List all for publication
         resp = await _request(test_app, "get", "/api/annotations?publication_id=pub-1")
         assert resp.status_code == 200, resp.text
-        data = resp.json()
-        assert len(data) == 2
+        items = resp.json()["annotations"]
+        assert len(items) == 2
 
         # Filter by color
         resp = await _request(
             test_app, "get", "/api/annotations?publication_id=pub-1&color=yellow"
         )
         assert resp.status_code == 200, resp.text
-        data = resp.json()
-        assert len(data) == 1
-        assert data[0]["color"] == "yellow"
+        items = resp.json()["annotations"]
+        assert len(items) == 1
+        assert items[0]["color"] == "yellow"
 
     asyncio.run(run())
 
@@ -122,11 +122,11 @@ def test_get_annotation(test_app: TestApp) -> None:
             "locator": SAMPLE_LOCATOR,
             "color": "pink",
         })
-        ann_id = create_resp.json()["id"]
+        ann_id = create_resp.json()["annotation"]["id"]
 
         resp = await _request(test_app, "get", f"/api/annotations/{ann_id}")
         assert resp.status_code == 200, resp.text
-        assert resp.json()["id"] == ann_id
+        assert resp.json()["annotation"]["id"] == ann_id
 
     asyncio.run(run())
 
@@ -156,7 +156,7 @@ def test_update_annotation(test_app: TestApp) -> None:
             "color": "yellow",
             "user_note": "Original note",
         })
-        ann_id = create_resp.json()["id"]
+        ann_id = create_resp.json()["annotation"]["id"]
 
         # Update color and note
         resp = await _request(test_app, "patch", f"/api/annotations/{ann_id}", json={
@@ -164,7 +164,7 @@ def test_update_annotation(test_app: TestApp) -> None:
             "user_note": "Updated note",
         })
         assert resp.status_code == 200, resp.text
-        data = resp.json()
+        data = resp.json()["annotation"]
         assert data["color"] == "purple"
         assert data["user_note"] == "Updated note"
 
@@ -182,14 +182,14 @@ def test_update_annotation_clear_note(test_app: TestApp) -> None:
             "color": "yellow",
             "user_note": "Note to remove",
         })
-        ann_id = create_resp.json()["id"]
+        ann_id = create_resp.json()["annotation"]["id"]
 
         # Clear the note by setting it to null
         resp = await _request(test_app, "patch", f"/api/annotations/{ann_id}", json={
             "user_note": None,
         })
         assert resp.status_code == 200, resp.text
-        assert resp.json()["user_note"] is None
+        assert resp.json()["annotation"]["user_note"] is None
 
     asyncio.run(run())
 
@@ -204,7 +204,7 @@ def test_delete_annotation(test_app: TestApp) -> None:
             "locator": SAMPLE_LOCATOR,
             "color": "green",
         })
-        ann_id = create_resp.json()["id"]
+        ann_id = create_resp.json()["annotation"]["id"]
 
         # Delete
         resp = await _request(test_app, "delete", f"/api/annotations/{ann_id}")
@@ -231,7 +231,7 @@ def test_annotation_ownership_isolation(test_app: TestApp) -> None:
             "locator": SAMPLE_LOCATOR,
             "color": "yellow",
         })
-        ann_id = create_resp.json()["id"]
+        ann_id = create_resp.json()["annotation"]["id"]
 
         # User 2 cannot see it
         test_app.set_claims({"sub": user2.auth0_id})
@@ -285,20 +285,20 @@ def test_list_pagination(test_app: TestApp) -> None:
             test_app, "get", "/api/annotations?publication_id=pub-1&limit=2&offset=0"
         )
         assert resp.status_code == 200
-        assert len(resp.json()) == 2
+        assert len(resp.json()["annotations"]) == 2
 
         # Get second page
         resp = await _request(
             test_app, "get", "/api/annotations?publication_id=pub-1&limit=2&offset=2"
         )
         assert resp.status_code == 200
-        assert len(resp.json()) == 2
+        assert len(resp.json()["annotations"]) == 2
 
         # Get last page
         resp = await _request(
             test_app, "get", "/api/annotations?publication_id=pub-1&limit=2&offset=4"
         )
         assert resp.status_code == 200
-        assert len(resp.json()) == 1
+        assert len(resp.json()["annotations"]) == 1
 
     asyncio.run(run())
