@@ -279,6 +279,10 @@ class CreateAnnotationRequestModel(BaseModel):
         None,
         description="Optional note attached to the highlight.",
     )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Client-side timestamp when the annotation was created.",
+    )
 
 
 class UpdateAnnotationRequestModel(BaseModel):
@@ -296,7 +300,7 @@ class UpdateAnnotationRequestModel(BaseModel):
     )
 
 
-class AnnotationResponseModel(BaseModel):
+class AnnotationModel(BaseModel):
     id: UUID
     publication_id: str = Field(
         ...,
@@ -314,6 +318,10 @@ class AnnotationResponseModel(BaseModel):
         None,
         description="Note attached to the highlight.",
     )
+    recorded_at: datetime | None = Field(
+        None,
+        description="Client-side timestamp when the annotation was created.",
+    )
     created_at: datetime = Field(
         ...,
         description="Timestamp when the annotation was created.",
@@ -326,3 +334,17 @@ class AnnotationResponseModel(BaseModel):
     model_config = {
         "from_attributes": True,
     }
+
+
+class AnnotationResponseModel(BaseModel):
+    annotation: AnnotationModel = Field(
+        ...,
+        description="The annotation object.",
+    )
+
+
+class AnnotationListResponseModel(BaseModel):
+    annotations: list[AnnotationModel] = Field(
+        ...,
+        description="List of annotations.",
+    )

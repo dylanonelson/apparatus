@@ -71,6 +71,12 @@ def upgrade() -> None:
             comment="User-authored note attached to the highlight",
         ),
         sa.Column(
+            "recorded_at",
+            sa.DateTime(timezone=True),
+            nullable=True,
+            comment="Timestamp supplied by the client for this annotation",
+        ),
+        sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
             nullable=False,
@@ -91,24 +97,10 @@ def upgrade() -> None:
         ["user_id", "publication_id"],
         unique=False,
     )
-    op.create_index(
-        "ix_annotations_user_pub_created",
-        "annotations",
-        ["user_id", "publication_id", "created_at"],
-        unique=False,
-    )
-    op.create_index(
-        "ix_annotations_user_created",
-        "annotations",
-        ["user_id", "created_at"],
-        unique=False,
-    )
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.drop_index("ix_annotations_user_created", table_name="annotations")
-    op.drop_index("ix_annotations_user_pub_created", table_name="annotations")
     op.drop_index("ix_annotations_user_pub", table_name="annotations")
     op.drop_table("annotations")
     op.execute("DROP TYPE IF EXISTS annotation_color")

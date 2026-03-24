@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from uuid import UUID as PyUUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -10,6 +11,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.api_models import (
     AnnotationColor as AnnotationColorAPI,
+    AnnotationListResponseModel,
+    AnnotationModel,
     AnnotationResponseModel,
     AskRequestModel,
     AskResponseModel,
@@ -284,14 +287,17 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             locator=body.locator.model_dump(mode="json", exclude_none=True),
             color=AnnotationColor(body.color.value),
             user_note=body.user_note,
+            recorded_at=body.recorded_at,
         )
-        return AnnotationResponseModel.model_validate(annotation)
+        return AnnotationResponseModel(
+            annotation=AnnotationModel.model_validate(annotation),
+        )
 
     @router.get(
         "/annotations",
-        response_model=list[AnnotationResponseModel],
+        response_model=AnnotationListResponseModel,
     )
-    async def list_annotations_entry(
+    async def list_annotations_for_publication(
         publication_id: str = Query(..., description="Filter by publication"),
         color: AnnotationColorAPI | None = Query(
             None, description="Filter by highlight color"
@@ -300,7 +306,7 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         offset: int = Query(0, ge=0, description="Pagination offset"),
         user: User = Depends(get_authenticated_user),
         session: AsyncSession = Depends(get_db_session),
-    ) -> list[AnnotationResponseModel]:
+    ) -> AnnotationListResponseModel:
         """List annotations for the authenticated user and publication."""
         db_color = AnnotationColor(color.value) if color is not None else None
         annotations = await list_annotations(
@@ -311,9 +317,11 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             limit=limit,
             offset=offset,
         )
-        return [
-            AnnotationResponseModel.model_validate(a) for a in annotations
-        ]
+        return AnnotationListResponseModel(
+            annotations=[
+                AnnotationModel.model_validate(a) for a in annotations
+            ],
+        )
 
     @router.get(
         "/annotations/{annotation_id}",
@@ -325,8 +333,6 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         session: AsyncSession = Depends(get_db_session),
     ) -> AnnotationResponseModel:
         """Get a single annotation by ID."""
-        from uuid import UUID as PyUUID
-
         try:
             ann_uuid = PyUUID(annotation_id)
         except ValueError:
@@ -336,7 +342,9 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         )
         if annotation is None:
             raise HTTPException(status_code=404, detail="Annotation not found")
-        return AnnotationResponseModel.model_validate(annotation)
+        return AnnotationResponseModel(
+            annotation=AnnotationModel.model_validate(annotation),
+        )
 
     @router.patch(
         "/annotations/{annotation_id}",
@@ -349,8 +357,6 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         session: AsyncSession = Depends(get_db_session),
     ) -> AnnotationResponseModel:
         """Update an annotation's mutable fields."""
-        from uuid import UUID as PyUUID
-
         try:
             ann_uuid = PyUUID(annotation_id)
         except ValueError:
@@ -379,7 +385,9 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
             user_note=body.user_note,
             has_user_note="user_note" in provided,
         )
-        return AnnotationResponseModel.model_validate(updated)
+        return AnnotationResponseModel(
+            annotation=AnnotationModel.model_validate(updated),
+        )
 
     @router.delete(
         "/annotations/{annotation_id}",
@@ -392,8 +400,6 @@ def create_api_router() -> tuple[APIRouter, Auth0FastAPI, HTTPBearer, object]:
         session: AsyncSession = Depends(get_db_session),
     ) -> Response:
         """Delete an annotation."""
-        from uuid import UUID as PyUUID
-
         try:
             ann_uuid = PyUUID(annotation_id)
         except ValueError:

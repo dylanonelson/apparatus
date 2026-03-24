@@ -231,17 +231,6 @@ class Annotation(SQLModel, table=True):
             "user_id",
             "publication_id",
         ),
-        Index(
-            "ix_annotations_user_pub_created",
-            "user_id",
-            "publication_id",
-            "created_at",
-        ),
-        Index(
-            "ix_annotations_user_created",
-            "user_id",
-            "created_at",
-        ),
     )
 
     id: UUID = Field(
@@ -288,6 +277,14 @@ class Annotation(SQLModel, table=True):
             nullable=True,
             comment="User-authored note attached to the highlight",
         ),
+    )
+    recorded_at: datetime | None = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            nullable=True,
+            comment="Timestamp supplied by the client for this annotation",
+        ),
+        default=None,
     )
     created_at: datetime = Field(
         sa_column=Column(
