@@ -25,4 +25,5 @@ ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
 # Run migrations then start uvicorn. Echo markers to trace startup in logs.
-CMD sh -c "set -x && echo '=== Container Starting !!! ===' && echo 'PORT='${PORT} && echo 'Running alembic migrations...' && alembic upgrade head && echo 'Starting uvicorn on 0.0.0.0 port '${PORT:-8000} && exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+# Added --proxy-headers and --forwarded-allow-ips='*' to handle Railway's proxy.
+CMD sh -c "set -x && echo '=== Container Starting !!! ===' && echo 'PORT='${PORT} && echo 'Running alembic migrations...' && alembic upgrade head && echo 'Starting uvicorn on 0.0.0.0 port '${PORT:-8000} && exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"
