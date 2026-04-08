@@ -19,23 +19,29 @@ Users can view AI-generated explanatory notes for any text within the book. Thes
 - AI-powered full text search
 - More books!
 
-## Pre-made demos
-
-TK
-
-...
-
 ## Installation & use
 
-TK
+The code on `main` is currently live at https://apparatusweb-staging.up.railway.app/. This is essentially a development environment intended for dogfooding and experimentation, so it has some rough edges. If you'd like to give it a try, I recommend signing in with a username and password instead of via oauth.
 
-...
+### The MCP server
+
+The Apparatus MCP server gives LLMs access to your reading data and to the full text of your book, so you can have conversations in any compatible chat client. The server is authenticated via Oauth so to use this feature, you need to use a chat client with support for remote MCP servers over Oauth. Claude Desktop is one chat client where this flow works.
+
+To connect the MCP server in Claude Desktop, follow these steps:
+
+- add a "custom connector" using the URL https://api.apparatus-ebooks.com/mcp and the name "Apparatus Ebooks"
+- click "connect"
+- log in to Apparatus and hit "Allow Access"
+
+The MCP server exposes a number of resources and tools that the model can use to answer your questions. For best results, I suggest create a new Project with a note that all your discussions in the project are about what you're reading in Apparatus; otherwise you will have to prompt the model each time to make sure it invokes the right MCP server.
 
 ## High-level architecture
 
-TK
+Apparatus comprises three primary components: a TypeScript **Next.js** web app, a Python **FastAPI** server, and a Go **Chi** HTTP service. The TypeScript app is the web interface and it also handles converting authentication from cookies to Oauth tokens. The Python server is the backend for the web app and it also exposes the MCP server. The Go service is internal; it uses the **Readium Go Toolkit** to manipulate the ebook files and its sole client is the Python server.
 
-...
+Right now the app is deployed on **Railway** with a **Postgres** database. It also includes a publication server which exposes the ebook assets for consumption by the ereader web app - this is part of the **Readium web** architecture (see the credits section below), but this functionality, like the search and download capabilities exposed by the Go service, is proxied through the Python app. The authentication provider is **Auth0**.
+
+For more technical details, including more notes on other features of this repo, see [docs](./docs).
 
 ## Local development
 
