@@ -3,6 +3,7 @@ import os
 from typing import cast
 
 from fastapi import FastAPI
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from fastmcp.server.dependencies import get_access_token
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from starlette.types import ASGIApp
@@ -58,6 +59,8 @@ app = FastAPI(
     routes=[*auth_routes],
     lifespan=mcp_asgi_app.lifespan,
 )
+
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 
 app.include_router(api_router, prefix="/api")
