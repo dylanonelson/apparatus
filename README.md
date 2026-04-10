@@ -27,7 +27,7 @@ The code on `main` is currently live at https://apparatusweb-staging.up.railway.
 
 The Apparatus MCP server gives LLMs access to your reading data and to the full text of your book, so you can have conversations in any compatible chat client. The server is authenticated via Oauth so to use this feature, you need to use a chat client with support for remote MCP servers over Oauth. Claude Desktop is one chat client where this flow works.
 
-To connect the MCP server in Claude Desktop, follow these steps:
+To connect the MCP server in Claude Desktop, follow these steps: [NOTE: This flow is currently broken 😞.]
 
 - add a "custom connector" using the URL https://api.apparatus-ebooks.com/mcp and the name "Apparatus Ebooks"
 - click "connect"
