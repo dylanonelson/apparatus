@@ -152,6 +152,13 @@ export const StatefulReaderFooter = ({ layout }: { layout: ThLayoutUI }) => {
     }
   }, [isImmersive]);
 
+  // Note: we intentionally do NOT remove the footer from the DOM when the
+  // selection toolbar is visible. In paginated (stacked) layout the footer
+  // occupies flex space; removing it causes the reading area to resize,
+  // which triggers Readium's column snapper to re-paginate and jump to a
+  // different page. The touch selection toolbar is position:fixed with a
+  // high z-index, so it naturally overlays the footer without layout shift.
+
   return (
     <>
       <ThInteractiveOverlay

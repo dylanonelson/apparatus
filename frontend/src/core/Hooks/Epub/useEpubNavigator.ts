@@ -374,6 +374,193 @@ export const useEpubNavigator = () => {
     return navigatorInstance?.isScrollEnd;
   }, []);
 
+  /**
+   * Expands the current text selection in the active iframe to the nearest
+   * sentence boundaries. If the selection spans multiple sentences, all
+   * overlapping sentences are fully included.
+   *
+   * A sentence boundary is a period, exclamation mark, or question mark
+   * followed by whitespace or end-of-text. Abbreviation-like patterns
+   * (single uppercase letter followed by a period, e.g. "Mr.") are skipped.
+   *
+   * Returns the expanded text, or null if there is no active selection.
+   */
+  const expandSelectionToSentences = useCallback((): string | null => {
+    const frames = navigatorInstance?._cframes ?? [];
+
+    for (const frame of frames ?? []) {
+      const frameWindow = extractFrameWindow(frame);
+      const selection = frameWindow?.getSelection();
+      if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+        continue;
+      }
+
+      const range = selection.getRangeAt(0);
+      const selectedText = selection.toString();
+      if (!selectedText.trim()) continue;
+
+      // Find the block-level ancestor that contains the full sentence context
+      const blockTags = new Set([
+        "P", "DIV", "SECTION", "ARTICLE", "BLOCKQUOTE",
+        "LI", "TD", "TH", "H1", "H2", "H3", "H4", "H5", "H6",
+        "FIGCAPTION", "BODY",
+      ]);
+
+      const findBlockAncestor = (node: Node): Element => {
+        let current: Node | null = node;
+        while (current) {
+          if (
+            current.nodeType === Node.ELEMENT_NODE &&
+            blockTags.has(current.nodeName)
+          ) {
+            return current as Element;
+          }
+          current = current.parentNode;
+        }
+        return frameWindow!.document.body;
+      };
+
+      const startBlock = findBlockAncestor(range.startContainer);
+      const endBlock = findBlockAncestor(range.endContainer);
+
+      // Get all the text content and build a map of text nodes to character positions
+      const rootNode = startBlock.contains(endBlock) ? startBlock : startBlock.parentElement || startBlock;
+
+      const textNodes: { node: Text; start: number }[] = [];
+      const walker = frameWindow!.document.createTreeWalker(
+        rootNode,
+        NodeFilter.SHOW_TEXT,
+      );
+
+      let fullText = "";
+      let tNode: Text | null;
+      while ((tNode = walker.nextNode() as Text | null)) {
+        textNodes.push({ node: tNode, start: fullText.length });
+        fullText += tNode.textContent || "";
+      }
+
+      if (textNodes.length === 0 || !fullText) continue;
+
+      // Find the selection's start and end positions within the full text
+      let selStart = -1;
+      let selEnd = -1;
+
+      for (const { node, start } of textNodes) {
+        if (node === range.startContainer) {
+          selStart = start + range.startOffset;
+        }
+        if (node === range.endContainer) {
+          selEnd = start + range.endOffset;
+        }
+      }
+
+      // If the container is an element (not a text node), we need to find it
+      // by child node index
+      if (selStart === -1 && range.startContainer.nodeType === Node.ELEMENT_NODE) {
+        const childNode = range.startContainer.childNodes[range.startOffset];
+        if (childNode) {
+          for (const { node, start } of textNodes) {
+            if (node === childNode || childNode.contains(node)) {
+              selStart = start;
+              break;
+            }
+          }
+        }
+      }
+      if (selEnd === -1 && range.endContainer.nodeType === Node.ELEMENT_NODE) {
+        const childNode = range.endContainer.childNodes[range.endOffset - 1];
+        if (childNode) {
+          for (const { node, start } of textNodes) {
+            if (node === childNode || childNode.contains(node)) {
+              selEnd = start + (node.textContent?.length || 0);
+              break;
+            }
+          }
+        }
+      }
+
+      if (selStart === -1 || selEnd === -1) continue;
+
+      // Find sentence boundaries. Sentence-ending punctuation: . ! ?
+      // Followed by a space, quote, or end of text.
+      // Skip single uppercase letter abbreviations (e.g. "A." "B.")
+      const sentenceEndPattern =
+        /(?<![A-Z])([.!?])(?=\s|["'\u201C\u201D\u2018\u2019)\]]|$)/g;
+
+      const boundaries: number[] = [0];
+      let match: RegExpExecArray | null;
+      while ((match = sentenceEndPattern.exec(fullText)) !== null) {
+        // The boundary is right after the punctuation mark
+        boundaries.push(match.index + 1);
+      }
+      boundaries.push(fullText.length);
+
+      // Find the sentence start (last boundary before or at selStart)
+      let sentenceStart = 0;
+      for (const b of boundaries) {
+        if (b <= selStart) {
+          sentenceStart = b;
+        } else {
+          break;
+        }
+      }
+
+      // Find the sentence end (first boundary at or after selEnd)
+      let sentenceEnd = fullText.length;
+      for (const b of boundaries) {
+        if (b >= selEnd) {
+          sentenceEnd = b;
+          break;
+        }
+      }
+
+      // Skip leading whitespace in the sentence
+      while (sentenceStart < sentenceEnd && /\s/.test(fullText[sentenceStart])) {
+        sentenceStart++;
+      }
+
+      // Map the character positions back to DOM text nodes
+      let newStartNode: Text | null = null;
+      let newStartOffset = 0;
+      let newEndNode: Text | null = null;
+      let newEndOffset = 0;
+
+      for (let i = 0; i < textNodes.length; i++) {
+        const { node, start } = textNodes[i];
+        const end = start + (node.textContent?.length || 0);
+
+        // Find the node containing sentenceStart
+        if (!newStartNode && sentenceStart >= start && sentenceStart < end) {
+          newStartNode = node;
+          newStartOffset = sentenceStart - start;
+        }
+
+        // Find the node containing sentenceEnd
+        if (sentenceEnd > start && sentenceEnd <= end) {
+          newEndNode = node;
+          newEndOffset = sentenceEnd - start;
+        }
+      }
+
+      // Fallback: use last text node if end wasn't found
+      if (!newEndNode && textNodes.length > 0) {
+        const last = textNodes[textNodes.length - 1];
+        newEndNode = last.node;
+        newEndOffset = last.node.textContent?.length || 0;
+      }
+
+      if (newStartNode && newEndNode) {
+        range.setStart(newStartNode, newStartOffset);
+        range.setEnd(newEndNode, newEndOffset);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return selection.toString().trim();
+      }
+    }
+
+    return null;
+  }, []);
+
   // Warning: this is an internal member that will become private, do not rely on it
   // See https://github.com/edrlab/thorium-web/issues/25
   const getCframes = useCallback(() => {
@@ -401,6 +588,7 @@ export const useEpubNavigator = () => {
     getVisibleText,
     getSelectionText,
     getSelectionRect,
+    expandSelectionToSentences,
     preferencesEditor: navigatorInstance?.preferencesEditor,
     getSetting,
     submitPreferences,

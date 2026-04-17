@@ -12,10 +12,14 @@ import { ThActionsTriggerVariant } from "@/core/Components/Actions/ThActionsBar"
 import { useActions } from "@/core/Components/Actions/hooks/useActions";
 
 import selectionToolbarStyles from "./assets/styles/selectionToolbar.module.css";
+import ExpandSelectionIcon from "./assets/icons/expand-selection.svg";
 
 import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";
 import { usePlugins } from "../Plugins/PluginProvider";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useTouchDevice } from "@/hooks/useTouchDevice";
+import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
+import { setSelection } from "@/lib/selectionReducer";
 
 interface SelectionToolbarActionItem {
   key: string;
@@ -27,6 +31,9 @@ export const StatefulSelectionToolbar = () => {
   const { selectionToolbarKeys } = usePreferenceKeys();
   const { actionsComponentsMap } = usePlugins();
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const isTouchDevice = useTouchDevice();
+  const { expandSelectionToSentences, getSelectionRect } = useEpubNavigator();
+  const dispatch = useAppDispatch();
 
   const selection = useAppSelector((state) => state.selection);
   const actionsMap = useAppSelector((state) => state.actions.keys);
@@ -59,44 +66,82 @@ export const StatefulSelectionToolbar = () => {
 
   const actionItems = useMemo(() => listActionItems(), [listActionItems]);
 
-  // Calculate toolbar position based on selection rect
-  const toolbarStyle = useMemo(() => {
-    if (!selection.rect) return { display: "none" } as React.CSSProperties;
-    const { top, left, width, height } = selection.rect;
+  const isVisible = selection.isVisible && actionItems.length > 0;
 
-    // Position the toolbar above the selection, centered horizontally
-    const style: React.CSSProperties = {
-      position: "fixed",
-      top: `${top - 8}px`, // 8px gap above selection
-      left: `${left + width / 2}px`,
-      transform: "translate(-50%, -100%)",
-    };
-
-    if (!selection.isVisible || actionItems.length === 0) {
-      // Fully hide when no selection or no actions
-      style.display = "none";
-    } else if (isAnySheetOpen) {
-      // When a sheet is open, hide visually but preserve position for popover
-      // positioning. Use visibility/opacity so the ref still has valid dimensions.
-      style.visibility = "hidden";
-      style.opacity = 0;
-      style.pointerEvents = "none";
-      style.top = top + height / 2;
-      style.transform = "translate(-50%, -50%)";
+  const handleExpandToSentence = useCallback(() => {
+    const expandedText = expandSelectionToSentences();
+    if (expandedText) {
+      const rect = getSelectionRect();
+      if (rect) {
+        dispatch(setSelection({ text: expandedText, rect }));
+      }
     }
+  }, [expandSelectionToSentences, getSelectionRect, dispatch]);
 
-    return style;
-  }, [selection.isVisible, selection.rect, actionItems.length, isAnySheetOpen]);
+  // Calculate toolbar style based on device type
+  const toolbarStyle = useMemo(() => {
+    if (isTouchDevice) {
+      // Touch devices: fixed bottom bar (position handled by CSS class)
+      const style: React.CSSProperties = {};
+
+      if (!isVisible) {
+        style.display = "none";
+      } else if (isAnySheetOpen) {
+        style.visibility = "hidden";
+        style.opacity = 0;
+        style.pointerEvents = "none";
+      }
+
+      return style;
+    } else {
+      // Desktop: floating popover above selection
+      if (!selection.rect) return { display: "none" } as React.CSSProperties;
+      const { top, left, width, height } = selection.rect;
+
+      const style: React.CSSProperties = {
+        position: "fixed",
+        top: `${top - 8}px`,
+        left: `${left + width / 2}px`,
+        transform: "translate(-50%, -100%)",
+      };
+
+      if (!isVisible) {
+        style.display = "none";
+      } else if (isAnySheetOpen) {
+        style.visibility = "hidden";
+        style.opacity = 0;
+        style.pointerEvents = "none";
+        style.top = top + height / 2;
+        style.transform = "translate(-50%, -50%)";
+      }
+
+      return style;
+    }
+  }, [isTouchDevice, isVisible, selection.rect, isAnySheetOpen]);
+
+  const toolbarClassName = isTouchDevice
+    ? selectionToolbarStyles.toolbarTouch
+    : selectionToolbarStyles.toolbarDesktop;
 
   return (
     <div
       ref={toolbarRef}
-      className={selectionToolbarStyles.toolbar}
+      className={toolbarClassName}
       style={toolbarStyle}
       role="toolbar"
       aria-label="Selection actions"
     >
       <div className={selectionToolbarStyles.toolbarContent}>
+        {isTouchDevice && (
+          <button
+            type="button"
+            onClick={handleExpandToSentence}
+            aria-label="Expand selection to sentence"
+            title="Expand to sentence"
+          >
+            <ExpandSelectionIcon aria-hidden="true" focusable="false" />
+          </button>
+        )}
         {actionItems.map(({ key, Trigger, Target }) => (
           <Fragment key={key}>
             <Trigger variant={ThActionsTriggerVariant.selectionButton} />
@@ -104,7 +149,7 @@ export const StatefulSelectionToolbar = () => {
           </Fragment>
         ))}
       </div>
-      <div className={selectionToolbarStyles.arrow} />
+      {!isTouchDevice && <div className={selectionToolbarStyles.arrow} />}
     </div>
   );
 };
