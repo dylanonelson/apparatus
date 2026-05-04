@@ -2,7 +2,9 @@
 
 **Go 1.25, Chi, Readium Go Toolkit**
 
-An internal HTTP service that handles EPUB processing using the [Readium Go Toolkit](https://github.com/readium/go-toolkit). It provides keyword search and content fetching for EPUB publications. It is called exclusively by `reader_api` and is not exposed to the frontend or external clients.
+An internal HTTP service that handles EPUB processing using the [Readium Go Toolkit](https://github.com/readium/go-toolkit). It provides full-text search and content fetching for EPUB publications. It is called exclusively by `reader_api` and is not exposed to the frontend or external clients.
+
+Search is backed by an in-process [Bleve](https://github.com/blevesearch/bleve) inverted index per publication, cached in memory and rebuilt automatically when the source EPUB's mtime changes. The English analyzer (Porter stemming, lowercasing, stop-word filtering) is applied to both indexed content and queries, so a search for `horse` matches `horses` and a search for `running` matches `runs`. Multi-word queries are match-phrase queries (terms must appear in order); single-word queries are match queries. Hits are ranked by BM25 score.
 
 Go version is managed by goenv (see `.go-version`).
 
@@ -51,8 +53,12 @@ make tidy
 
 ## Architecture
 
-Code is organized by domain under `internal/`. Test fixtures live in `testdata/`.
+Code is organized by domain under `internal/`. Test fixtures live in `testdata/`. The `testdata/search_corpus.epub` fixture is used by the search tests; it is checked in but reproducible — see `testdata/cmd/build_search_corpus/main.go` and regenerate with:
 
-**Concurrency**: text segment iteration uses goroutine channels for lazy streaming. The publication catalog is cached per base directory using `sync.Map`.
+```bash
+go run ./testdata/cmd/build_search_corpus
+```
+
+**Concurrency**: text segment iteration uses goroutine channels for lazy streaming. The publication catalog is cached per base directory using `sync.Map`. Search indexes are cached per publication ID with a singleflight barrier so concurrent first-callers coalesce into a single index build.
 
 **Integration**: the Python backend (`reader_api`) calls this service over HTTP using its `CONTENT_SERVICE_URL` environment variable.

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -22,6 +23,12 @@ import (
 	"publication_server/internal/readium"
 	"publication_server/internal/search"
 )
+
+// indexCache holds Bleve full-text indexes for publications, keyed by
+// publication ID. It is a package-level singleton so cached indexes survive
+// across requests for the lifetime of the process. Tests construct their
+// own cache via newRouterWithCache.
+var indexCache = search.NewIndexCache()
 
 type HealthResponse struct {
 	Ok          bool  `json:"ok"`
@@ -82,18 +89,30 @@ type FetchContentResponse struct {
 }
 
 func Router() http.Handler {
+	return newRouterWithCache(indexCache)
+}
+
+// newRouterWithCache builds a Router that uses the supplied search index
+// cache. Tests use this to get a clean cache per test.
+func newRouterWithCache(cache *search.IndexCache) http.Handler {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Recoverer)
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusOK, HealthResponse{Ok: true, TimestampMs: time.Now().UnixMilli()})
 	})
-	r.Post("/search", handleSearch)
+	r.Post("/search", handleSearchWith(cache))
 	r.Post("/content/fetch", handleFetchContent)
 	return r
 }
 
-func handleSearch(w http.ResponseWriter, r *http.Request) {
+func handleSearchWith(cache *search.IndexCache) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		handleSearch(w, r, cache)
+	}
+}
+
+func handleSearch(w http.ResponseWriter, r *http.Request, cache *search.IndexCache) {
 	var req SearchRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "invalid JSON", http.StatusBadRequest)
@@ -123,65 +142,96 @@ func handleSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	stat, err := os.Stat(path)
+	if err != nil {
+		logging.L.Printf("stat publication error: %v", err)
+		http.Error(w, "failed to stat publication", http.StatusInternalServerError)
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
 	defer cancel()
-	publication, err := readium.OpenPublication(ctx, path)
+
+	idx, err := cache.Get(ctx, req.PublicationID, stat.ModTime(), func(ctx context.Context) ([]search.IndexedSegment, error) {
+		publication, err := readium.OpenPublication(ctx, path)
+		if err != nil {
+			return nil, fmt.Errorf("open publication: %w", err)
+		}
+		segs, err := readium.LoadAllSegments(ctx, publication)
+		if err != nil {
+			return nil, fmt.Errorf("load segments: %w", err)
+		}
+		return readiumSegmentsToIndexed(segs), nil
+	})
 	if err != nil {
-		logging.L.Printf("open pub error: %v", err)
-		http.Error(w, "failed to open publication", http.StatusInternalServerError)
+		logging.L.Printf("build index error: %v", err)
+		http.Error(w, "failed to build search index", http.StatusInternalServerError)
 		return
 	}
 
-	segCh, err := readium.IterateTextSegments(ctx, publication)
+	queryHits, err := idx.Query(ctx, req.Query, req.MaxResults, req.ContextChars)
 	if err != nil {
-		logging.L.Printf("content segments error: %v", err)
-		http.Error(w, "failed to read content", http.StatusInternalServerError)
+		logging.L.Printf("search error: %v", err)
+		http.Error(w, "search failed", http.StatusInternalServerError)
 		return
 	}
 
-	resp := SearchResponse{Hits: make([]SearchHit, 0)}
-	for seg := range segCh {
-		matches := search.FindMatches(seg.Text, req.Query, req.MaxResults-len(resp.Hits), req.ContextChars)
-		for _, m := range matches {
-			before := m.Before
-			highlight := m.Match
-			after := m.After
-			locText := &LocatorText{Before: &before, Highlight: &highlight, After: &after}
-			href := seg.Locator.Href.String()
-
-			loc := Locator{Href: href, Text: locText, Type: seg.Locator.MediaType.String()}
-
-			locatorLocations := &LocatorLocations{}
-			if seg.Locator.Locations.Position != nil {
-				uintPosition := *seg.Locator.Locations.Position
-				position := int(uintPosition)
-				locatorLocations.Position = &position
-			}
-			// The Readium iterator populates the CSS selector in the OtherLocations map.
-			if seg.Locator.Locations.OtherLocations != nil {
-				locatorLocations.OtherLocations = seg.Locator.Locations.OtherLocations
-			}
-			loc.Locations = locatorLocations
-
-			searchHit := SearchHit{Href: href, Locator: loc}
-			fmt.Printf("searchHit: %+v\n", searchHit)
-			fmt.Printf("locator.text.before: %+v\n", *loc.Text.Before)
-			fmt.Printf("locator.text.highlight: %+v\n", *loc.Text.Highlight)
-			fmt.Printf("locator.text.after: %+v\n", *loc.Text.After)
-			fmt.Printf("\n")
-			resp.Hits = append(resp.Hits, searchHit)
-			if len(resp.Hits) >= req.MaxResults {
-				// Enough results; cancel context to stop the iterator.
-				cancel()
-				break
-			}
-		}
-		if len(resp.Hits) >= req.MaxResults {
-			break
-		}
+	resp := SearchResponse{Hits: make([]SearchHit, 0, len(queryHits))}
+	for _, qh := range queryHits {
+		resp.Hits = append(resp.Hits, queryHitToSearchHit(qh))
 	}
-
 	respondJSON(w, http.StatusOK, resp)
+}
+
+// readiumSegmentsToIndexed flattens Readium's Segment shape into the
+// IndexedSegment shape the search package consumes. The CSS selector lives
+// in the locator's OtherLocations map under the key "cssSelector".
+func readiumSegmentsToIndexed(segs []readium.Segment) []search.IndexedSegment {
+	out := make([]search.IndexedSegment, 0, len(segs))
+	for _, s := range segs {
+		seg := search.IndexedSegment{
+			Text:      s.Text,
+			Href:      s.Locator.Href.String(),
+			MediaType: s.Locator.MediaType.String(),
+		}
+		if s.Locator.Locations.Position != nil {
+			pos := int(*s.Locator.Locations.Position)
+			seg.Position = &pos
+		}
+		if css, ok := s.Locator.Locations.OtherLocations["cssSelector"].(string); ok {
+			seg.CSSSelector = css
+		}
+		out = append(out, seg)
+	}
+	return out
+}
+
+// queryHitToSearchHit lifts a search.QueryHit into the wire-format
+// SearchHit/Locator structure expected by the existing API contract.
+func queryHitToSearchHit(qh search.QueryHit) SearchHit {
+	before := qh.Snippet.Before
+	highlight := qh.Snippet.Match
+	after := qh.Snippet.After
+	locText := &LocatorText{Before: &before, Highlight: &highlight, After: &after}
+
+	loc := Locator{
+		Href: qh.Segment.Href,
+		Type: qh.Segment.MediaType,
+		Text: locText,
+	}
+
+	locatorLocations := &LocatorLocations{}
+	if qh.Segment.Position != nil {
+		p := *qh.Segment.Position
+		locatorLocations.Position = &p
+	}
+	if qh.Segment.CSSSelector != "" {
+		locatorLocations.OtherLocations = map[string]interface{}{
+			"cssSelector": qh.Segment.CSSSelector,
+		}
+	}
+	loc.Locations = locatorLocations
+	return SearchHit{Href: qh.Segment.Href, Locator: loc}
 }
 
 func respondJSON(w http.ResponseWriter, status int, v any) {

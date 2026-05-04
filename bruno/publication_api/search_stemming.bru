@@ -1,0 +1,36 @@
+meta {
+  name: search_stemming
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{publication_api_dev}}/search
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "publication_id": "anna-karenina",
+    "query": "horse",
+    "max_results": 20,
+    "context_chars": 120
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  Demonstrates English stemming: a query for "horse" should also return hits
+  for "horses", "horse's", etc. Compare against searching the same query in
+  Bruno before this branch — old behavior was literal substring matching, so
+  "horse" would NOT match a sentence containing only "horses".
+
+  Porter stemmer handles regular morphology only. Irregular forms (e.g.
+  "ran" vs "run") are not normalized; that would require a different
+  analyzer or a full lemmatizer.
+}
