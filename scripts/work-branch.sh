@@ -29,4 +29,4 @@ fi
 
 git push origin "$branch_name"
 
-./scripts/worktree.sh "$work_name" "$branch_name"
+./scripts/_worktree.sh "$branch_name" "$branch_name"
