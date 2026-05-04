@@ -1,0 +1,33 @@
+meta {
+  name: search_ranking
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{publication_api_dev}}/search
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "publication_id": "anna-karenina",
+    "query": "love",
+    "max_results": 5,
+    "context_chars": 80
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  Ranking demo: with max_results=5, BM25 surfaces the most relevant passages
+  first. For a high-frequency term like "love", the top hits should be
+  short, term-dense passages rather than long paragraphs that happen to
+  mention the word once. Document-order matching (the old behavior) would
+  return whatever appeared first in the book regardless of relevance.
+}

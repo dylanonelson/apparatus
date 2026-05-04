@@ -23,3 +23,9 @@ settings {
   encodeUrl: true
   timeout: 0
 }
+
+docs {
+  Basic full-text search. Search uses the English analyzer with Porter
+  stemming, so "happy" also matches "happiness" / "happily". Results are
+  ranked by BM25 score (highest first), not document order.
+}

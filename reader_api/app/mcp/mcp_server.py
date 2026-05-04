@@ -267,10 +267,15 @@ def create_mcp_server() -> tuple[
         MCPToolName.SEARCH_PUBLICATION_TOOL.value,
         annotations=ToolAnnotations(readOnlyHint=True),
         description=(
-            "Search the current publication for passages matching a keyword or phrase. "
-            "This search is very simple and will only search literally for the phrase "
-            "you provide, so it must appear exactly as you provide it in the book to "
-            "return results. Requires bearer token."
+            "Search the current publication for passages matching a keyword or "
+            "phrase. The search is case-insensitive and applies English Porter "
+            "stemming, so 'horse' also matches 'horses' and 'running' also matches "
+            "'runs'. Multi-word queries are matched as an in-order phrase ('horse "
+            "race' matches 'the horses raced' but not 'race horse'). Results are "
+            "ranked by relevance (BM25), so the most relevant passages appear "
+            "first regardless of where they fall in the book. English stop words "
+            "like 'the' and 'is' are filtered out of queries. Requires bearer "
+            "token."
         ),
     )
     async def search_publication_tool(
@@ -283,8 +288,9 @@ def create_mcp_server() -> tuple[
         Search for passages in a publication matching a keyword or phrase.
 
         Args:
-            query: Keyword or phrase to search for. The search is case-insensitive
-                   and returns exact matches only.
+            query: Keyword or phrase to search for. Case-insensitive; English
+                   stemming is applied (horse ↔ horses, running ↔ runs).
+                   Multi-word queries match as an in-order phrase.
             publication_id: ID of the publication to search. If not provided,
                            uses the user's currently open publication.
             max_results: Maximum number of search results to return. Defaults to 20.

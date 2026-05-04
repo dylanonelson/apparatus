@@ -3,3 +3,7 @@
   title: "Sample Two Chapters"
   author: "Readium Fixture"
   filename: "sample_two_chapters.epub"
+- id: "search_corpus"
+  title: "Search Corpus"
+  author: "Apparatus Test Fixture"
+  filename: "search_corpus.epub"

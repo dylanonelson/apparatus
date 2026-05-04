@@ -22,8 +22,8 @@ func TestIterateTextSegments_SampleTwoChapters(t *testing.T) {
 	if !ok {
 		t.Fatalf("runtime.Caller failed")
 	}
-	repoRoot := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../"))
-	epubPath := filepath.Join(repoRoot, "publication_server", "testdata", "sample_two_chapters.epub")
+	pkgRoot := filepath.Clean(filepath.Join(filepath.Dir(file), "../../"))
+	epubPath := filepath.Join(pkgRoot, "testdata", "sample_two_chapters.epub")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()

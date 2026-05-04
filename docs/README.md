@@ -42,7 +42,7 @@ An internal HTTP service that handles EPUB processing using the [Readium Go Tool
 
 It provides two main endpoints:
 
-- **`POST /search`** — Full-text keyword search across a publication's content, returning hits with locators and surrounding context snippets.
+- **`POST /search`** — Full-text search across a publication's content. Uses an in-process Bleve inverted index (one per publication, cached in memory and rebuilt on EPUB mtime change) with the English analyzer: Porter stemming, lowercasing, and stop-word filtering. Single-word queries are match queries; multi-word queries are match-phrase queries. Hits are ranked by BM25 and returned with locators and surrounding context snippets.
 - **`POST /content/fetch`** — Returns the raw content of up to two EPUB resources by manifest href (text as UTF-8, binary as base64).
 
 Publications are resolved from a YAML catalog (`publications.yaml`) and the EPUB files in the same directory.

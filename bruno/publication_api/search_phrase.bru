@@ -1,0 +1,34 @@
+meta {
+  name: search_phrase
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{publication_api_dev}}/search
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "publication_id": "anna-karenina",
+    "query": "horse race",
+    "max_results": 20,
+    "context_chars": 120
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  Multi-token queries are treated as a phrase: terms must appear in order,
+  with stemming applied per term. So "horse race" matches "the horses
+  raced", but does NOT match a sentence that contains both words out of
+  order ("a race involving every horse"). Useful when the LLM (or a user)
+  is looking for a specific scene like "the horse race scene" rather than
+  any segment that mentions both words.
+}
